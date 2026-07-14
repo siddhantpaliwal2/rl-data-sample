@@ -31,8 +31,10 @@ passes - partial fixes score 0.
 ## Gates and measured results
 
 Every task passes four mechanical gates plus two model probes, measured with
-**mini-swe-agent** - the ~100-line open-source recreation of the SWE-bench
-reference agent. We gate on a deliberately *weak* harness: strong scaffolds
+**[mini-swe-agent](https://github.com/SWE-agent/mini-swe-agent)** - the minimal
+(~100-line agent class) agent from the Princeton/Stanford team behind SWE-bench
+and SWE-agent; bash-only, linear history, yet >74% on SWE-bench Verified. We
+gate on a deliberately *simple* harness: strong scaffolds
 (Claude Code-style agent loops with rich tooling) solve these tasks bimodally
 and mask the difficulty signal RL training needs.
 
@@ -109,9 +111,10 @@ uv pip install --python "$(uv tool dir)/mini-swe-agent/bin/python" fastapi orjso
 The probe harness is two pieces: **mini-swe-agent** (the solver) and
 `harness/run_attempt.py` (the runner that wraps one full attempt end to end).
 
-**The solver.** mini-swe-agent is the ~100-line open-source recreation of the
-SWE-bench reference agent: a single LLM loop whose only tool is a bash shell
-inside the task container. No file viewers, no search index, no sub-agents -
+**The solver.** [mini-swe-agent](https://github.com/SWE-agent/mini-swe-agent)
+is the minimal agent from the SWE-bench/SWE-agent authors - a single LLM loop
+(~100 lines) whose only tool is a bash shell inside the task container. The
+runner imports the actual `minisweagent` package; nothing is re-implemented. No file viewers, no search index, no sub-agents -
 the model reads code with `grep`/`cat`/`sed` and edits with shell commands.
 The harness loads its canonical `swebench.yaml` benchmark config verbatim:
 250-step limit, $3 cost cap per attempt, 30-minute wall clock. That weak,
