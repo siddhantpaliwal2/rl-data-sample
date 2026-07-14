@@ -147,18 +147,34 @@ at once (see the concurrency caution below). The solve counts in the table are
 literally `grep -c '"reward": 1'` over those result files; the `.grade.log`
 files are what we used to see which planted defect stopped each failed run.
 
-**4. Run probe attempts** (one agent attempt in a fresh container, graded by
-the hidden verifier, result JSON + full trajectory written to `results/`):
+**4. Run the harness.** `harness/run_attempt.py <task> <attempt-no> <out-dir>`
+is one complete probe attempt: it starts a fresh container from the task image,
+runs mini-swe-agent inside it, grades the result with the hidden verifier, and
+writes the result JSON + full trajectory + grade log to `<out-dir>`. One task's
+row in the table:
 
 ```sh
 PY="$(uv tool dir)/mini-swe-agent/bin/python"
-# difficulty probe (Opus, the default model):
+# difficulty probe (Opus, the default model): 10 attempts
 for i in $(seq 1 10); do "$PY" harness/run_attempt.py latent-credit-normalize "$i" results/; done
-# easiness probe (Sonnet):
+# easiness probe (Sonnet): 5 attempts
 for i in $(seq 1 5); do PROBE_MODEL=anthropic/claude-sonnet-4-6 "$PY" harness/run_attempt.py latent-credit-normalize "$i" results-sonnet/; done
 ```
 
-Count solves: `grep -l '"reward": 1' results/latent-credit-normalize-a*.json | wc -l`
+To reproduce the whole table, run both probes for every task directory (build
+each image first per step 2). Attempts are independent, so parallelize with
+`xargs -P` - just keep total concurrent attempts under ~15 machine-wide:
+
+```sh
+PY="$(uv tool dir)/mini-swe-agent/bin/python"
+for t in $(ls tasks); do
+  docker build -q -t "$t" "tasks/$t/environment"
+  for i in $(seq 1 10); do echo "$t $i"; done
+done | xargs -P 10 -L 1 sh -c "\"$PY\" harness/run_attempt.py \$0 \$1 results/"
+# then the Sonnet pass: same loop with seq 1 5 and PROBE_MODEL=anthropic/claude-sonnet-4-6
+```
+
+Count solves per task: `grep -l '"reward": 1' results/latent-credit-normalize-a*.json | wc -l`
 - that number over 10 is the row in the table above. Keep concurrent attempts
 ≤ 15 machine-wide. A trial that crashes under load records `"reward": null` or
 a non-`Submitted` exit_status - rerun that attempt number; never count a crash
