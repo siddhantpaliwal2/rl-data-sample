@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-07-13 18:18:40",
+ "generated_at": "2026-07-13 18:26:29",
  "jobs": [
   {
    "job": "array-difficulty",
@@ -6238,6 +6238,19 @@
  ],
  "tasks": [
   {
+   "task": ".git",
+   "state": "scaffolding",
+   "f2p": null,
+   "p2p": null,
+   "null_reward": null,
+   "oracle_reward": null,
+   "ease_gate": null,
+   "diff_gate": null,
+   "verdict": "probes pending",
+   "note": "",
+   "spend": 0
+  },
+  {
    "task": "__pycache__",
    "state": "scaffolding",
    "f2p": null,
@@ -6251,45 +6264,17 @@
    "spend": 0
   },
   {
-   "task": "array-credit-report",
-   "state": "verified",
-   "f2p": 10,
-   "p2p": 9,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "array-easiness-restyled2",
-    "solved": 3,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "array-difficulty",
-    "solved": 0,
-    "total": 8,
-    "finished": false
-   },
-   "verdict": "too easy \u2014 sonnet 3/5",
-   "note": "too easy (sonnet 4/5, clean) \u2014 retry option: trim schema detail from instruction",
-   "spend": 29.31
-  },
-  {
-   "task": "array-v2",
-   "state": "verified",
-   "f2p": 19,
-   "p2p": 10,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "array-v2--sonnet-c2",
-    "solved": 2,
-    "total": 5,
-    "finished": true
-   },
+   "task": "approved",
+   "state": "scaffolding",
+   "f2p": null,
+   "p2p": null,
+   "null_reward": null,
+   "oracle_reward": null,
+   "ease_gate": null,
    "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 2/5",
+   "verdict": "probes pending",
    "note": "",
-   "spend": 19.31
+   "spend": 0
   },
   {
    "task": "banked",
@@ -6305,540 +6290,23 @@
    "spend": 0
   },
   {
-   "task": "calls-v2",
-   "state": "verified",
-   "f2p": 14,
-   "p2p": 18,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "nova-pro-calls",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "calls-v2--opus-c2",
-    "solved": 8,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "difficulty too high pass rate 8/10",
-   "note": "",
-   "spend": 27.05
-  },
-  {
-   "task": "chat-context-builder",
-   "state": "verified",
-   "f2p": 12,
-   "p2p": 4,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "chat-context-builder--sonnet-c2",
-    "solved": 4,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 4/5",
-   "note": "",
-   "spend": 6.39
-  },
-  {
-   "task": "cre-qualification-fixes",
-   "state": "verified",
-   "f2p": 7,
-   "p2p": 6,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "cre-easiness",
-    "solved": 5,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 5/5",
-   "note": "too easy (sonnet 5/5) \u2014 parked; display contract can't be unpublished",
-   "spend": 4.38
-  },
-  {
-   "task": "cre-scoring-latent-4",
-   "state": "verified",
-   "f2p": 9,
-   "p2p": 12,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "cre-scoring-latent-4--sonnet-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "cre-scoring-latent-4--opus-c2",
-    "solved": 0,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "easiness passed 0/5 \u2014 difficulty 0/10 (unverifiable, iterating)",
-   "note": "",
-   "spend": 6.59
-  },
-  {
-   "task": "cre-scoring-latent-bugs",
-   "state": "verified",
-   "f2p": 9,
-   "p2p": 12,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "cre-scoring-latent-bugs--sonnet-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "latent-difficulty",
-    "solved": 5,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "difficulty too high pass rate 5/10",
-   "note": "",
-   "spend": 23.12
-  },
-  {
-   "task": "forge-chat-pipeline",
-   "state": "verified",
-   "f2p": 10,
-   "p2p": 8,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "forge-chat-pipeline--sonnet-c2",
-    "solved": 5,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 5/5",
-   "note": "",
-   "spend": 13.84
-  },
-  {
-   "task": "forge-contacts-invites",
-   "state": "verified",
-   "f2p": 16,
-   "p2p": 0,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "forge-contacts-invites--sonnet-c2",
-    "solved": 4,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 4/5",
-   "note": "",
-   "spend": 9.23
-  },
-  {
-   "task": "forge-credit-pdf",
-   "state": "verified",
-   "f2p": 15,
-   "p2p": 9,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "forge-credit-pdf--sonnet-c2",
-    "solved": 4,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 4/5",
-   "note": "",
-   "spend": 5.7
-  },
-  {
-   "task": "forge-lending-flow",
-   "state": "verified",
-   "f2p": 12,
-   "p2p": 0,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "forge-lending-flow--sonnet-c2",
-    "solved": 5,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 5/5",
-   "note": "",
-   "spend": 8.6
-  },
-  {
-   "task": "inbound-call-routing",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 17,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "calls-easiness-v2",
-    "solved": 5,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "too easy \u2014 sonnet 5/5",
-   "note": "too easy (sonnet 5/5) \u2014 salvage plan: widen to full multi-defect scope, strip function hints",
-   "spend": 5.36
-  },
-  {
-   "task": "ingestion-stale-blocker",
-   "state": "verified",
-   "f2p": 9,
-   "p2p": 8,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "smoke-fastapi-fix",
-    "solved": 0,
-    "total": 1,
-    "finished": false
-   },
-   "diff_gate": {
-    "job": "difficulty-opus-v2",
-    "solved": 0,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "easiness probe running",
-   "note": "primary candidate \u2014 difficulty r1/r2 exposed contract gaps (fixed); round 3 pending",
-   "spend": 56.34
-  },
-  {
-   "task": "ingestion-stale-v2",
-   "state": "verified",
-   "f2p": 17,
-   "p2p": 8,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "ingestion-stale-v2--sonnet-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "ingestion-stale-v2--opus-c2",
-    "solved": 0,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "easiness passed 0/5 \u2014 difficulty 0/10 (unverifiable, iterating)",
-   "note": "",
-   "spend": 29.27
-  },
-  {
-   "task": "latent-credit-normalize",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 14,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "latent-credit-normalize--sonnetR-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "latent-credit-normalize--opusR-c2",
-    "solved": 3,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 3/10",
-   "note": "",
-   "spend": 9.58
-  },
-  {
-   "task": "latent-doc-extractors",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 14,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "latent-doc-extractors--sonnetR4-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "latent-doc-extractors--opusR4b-c2",
-    "solved": 1,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 1/10",
-   "note": "",
-   "spend": 6.93
-  },
-  {
-   "task": "latent-financial-tools",
-   "state": "verified",
-   "f2p": 8,
-   "p2p": 13,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "latent-financial-tools--sonnetB-c2",
-    "solved": 1,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "latent-financial-tools--opusB-c2",
-    "solved": 8,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "difficulty too high pass rate 8/10",
-   "note": "",
-   "spend": 19.69
-  },
-  {
-   "task": "latent-market-structure",
-   "state": "verified",
-   "f2p": 7,
-   "p2p": 20,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "latent-market-structure--sonnetR4-c2",
-    "solved": 1,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "latent-market-structure--opusR4-c2",
-    "solved": 6,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "difficulty too high pass rate 6/10",
-   "note": "",
-   "spend": 10.42
-  },
-  {
-   "task": "latent-phone-invites",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 12,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "latent-phone-invites--sonnet-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "latent-phone-invites--opusB-c2",
-    "solved": 1,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 1/10",
-   "note": "",
-   "spend": 1.77
-  },
-  {
-   "task": "loangen-agent-multibug",
-   "state": "verified",
-   "f2p": 21,
-   "p2p": 0,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "multibug-easiness",
-    "solved": 5,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "multibug-difficulty",
-    "solved": 10,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "too easy \u2014 sonnet 5/5",
-   "note": "",
-   "spend": 27.63
-  },
-  {
-   "task": "plaid-bank-report",
-   "state": "verified",
-   "f2p": 6,
-   "p2p": 3,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "nova-premier-plaid",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "plaid-bank-report--opus-c2",
-    "solved": 10,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "difficulty too high pass rate 10/10",
-   "note": "second candidate \u2014 easiness passed clean; difficulty needs output-shape diagnosis",
-   "spend": 23.73
-  },
-  {
-   "task": "quickbooks-sync",
-   "state": "verified",
-   "f2p": 12,
-   "p2p": 3,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "nova-pro-qb",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "quickbooks-sync--opusH-c2",
-    "solved": 8,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "difficulty too high pass rate 8/10",
-   "note": "",
-   "spend": 18.71
-  },
-  {
-   "task": "xrepo-bre-latent",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 12,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "xrepo-bre-latent--sonnet-c2",
-    "solved": 4,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "xrepo-bre-latent--opus-c2",
-    "solved": 8,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "too easy \u2014 sonnet 4/5",
-   "note": "",
-   "spend": 10.81
-  },
-  {
-   "task": "xrepo-correlation-latent",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 11,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "xrepo-correlation-latent--sonnet-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": null,
-   "verdict": "easiness passed 0/5 \u2014 difficulty pending",
-   "note": "",
-   "spend": 2.0
-  },
-  {
-   "task": "xrepo-finscore-latent",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 11,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "xrepo-finscore-latent--sonnet-c2",
-    "solved": 2,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "xrepo-finscore-latent--opus-c2",
-    "solved": 9,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "too easy \u2014 sonnet 2/5",
-   "note": "",
-   "spend": 10.24
-  },
-  {
-   "task": "xrepo-loangenai-latent",
-   "state": "verified",
-   "f2p": 0,
-   "p2p": 0,
-   "null_reward": 0,
-   "oracle_reward": 1,
+   "task": "rejected",
+   "state": "scaffolding",
+   "f2p": null,
+   "p2p": null,
+   "null_reward": null,
+   "oracle_reward": null,
    "ease_gate": null,
-   "diff_gate": {
-    "job": "xrepo-loangenai-latent--opus-c2",
-    "solved": 6,
-    "total": 10,
-    "finished": true
-   },
+   "diff_gate": null,
    "verdict": "probes pending",
    "note": "",
    "spend": 0
-  },
-  {
-   "task": "xrepo-txenrich-latent",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 12,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "xrepo-txenrich-latent--sonnet-c2",
-    "solved": 0,
-    "total": 5,
-    "finished": true
-   },
-   "diff_gate": {
-    "job": "xrepo-txenrich-latent--opus-c2",
-    "solved": 1,
-    "total": 10,
-    "finished": true
-   },
-   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 1/10",
-   "note": "",
-   "spend": 35.3
   }
  ],
  "summary": {
   "total_spend": 421.3,
   "trials_running": 14,
-  "candidates": 6,
-  "too_easy": 12
+  "candidates": 0,
+  "too_easy": 0
  }
 }
