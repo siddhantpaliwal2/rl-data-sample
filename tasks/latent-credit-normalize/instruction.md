@@ -1,34 +1,46 @@
 <uploaded_files>/app</uploaded_files>
 
-The credit-report PDF parser keeps or discards the wrong records for certain
-borrower and tradeline profiles, even though the whole test suite is green. The
-wrong verdicts cluster around **edge inputs that only superficially resemble
-another category** - for example a value that matches a "throwaway" list only
-when letter case is ignored, a line that looks like another one merely because
-it begins the same way, two records that are really the same but were written
-with slightly different capitalisation, or a token whose accepted spelling
-variants are not all handled. Away from those edges the classification is
-correct, which is why the existing tests (they feed ordinary, well-formed
-values) never surface the problem: a genuine record is silently thrown away, or
-a junk/duplicate record is let through, only at the edge.
+# Data-integrity audit memo: parsed credit reports vs. source PDFs
 
-The affected code is the deterministic line-classification and text
+**Scope:** quarterly sample audit, 40 borrower files. For each file we compared
+the tradelines, inquiries and bureau sections produced by the credit-report PDF
+parser against a human reading of the same source PDF.
+**Result:** 34 of 40 files reconcile exactly. The remaining six show the
+discrepancy classes below. Every discrepancy reproduces on re-parse, so none of
+this is OCR noise or a transient.
+
+## Findings
+
+**A.** A row whose creditor is one of the recognised filler tokens survives
+into the report as if it were a real account - but only when the token's
+letter-case differs from its usual form. The usual form is still filtered
+correctly, so the screen exists; it just doesn't catch every spelling the
+bureaus emit.
+
+**B.** The same account appears twice. Two rows that are genuinely one
+tradeline - same account, creditor spelled with different capitalisation - are
+both kept, inflating the account count. Exact-duplicate rows do collapse
+correctly.
+
+**C.** A genuine creditor line vanishes because it merely *begins* the way a
+different kind of line begins. Lines of the other kind are rightly discarded;
+the discard is grabbing real creditor lines along with them.
+
+**D.** A tradeline tagged for a bureau lands in no bureau section at all. The
+tag is one of the accepted spelling variants of that bureau's abbreviation;
+the other variants we sampled attribute correctly, and untagged rows still
+broadcast to all scored bureaus as designed.
+
+## Note for engineering
+
+The affected stage is the deterministic line-classification and text
 normalization logic under `loangen-agent/agent/documents/credit_pdf/` - the
-creditor-line, bureau-tag and address/contact helpers in `normalize.py`, and the
-artifact-rejection and de-duplication helpers in `junk_filter.py`. This is pure,
-side-effect-free string and comparison logic; the bugs are in how these helpers
-handle the edges (case handling, how much of a line a pattern is allowed to
-match, and which recognized forms of a token are covered).
-
-For each slip the intended, correct behaviour is pinned by the surrounding code
-- the data the helper compares against, the sibling patterns and helpers right
-next to it, and the lookup tables it consults - so which side of the boundary is
-right is not a matter of taste; read those neighbours to decide.
-
-Correct the handling so these helpers are right on the edge inputs, without
-changing behavior anywhere the current tests already pin. The repository's
-existing tests all pass and must stay passing; correctness on the edge inputs is
-the bar.
+creditor-line, bureau-tag and address/contact helpers in `normalize.py`, and
+the artifact-rejection and de-duplication helpers in `junk_filter.py`. Same
+PDF in, same rows out, so each finding above replays from a single line of
+input. The existing test suite is green and none of these cases move it, which
+is presumably how they shipped. Fix the classification so the findings above
+reconcile, without disturbing any file that already parses correctly.
 
 Do not modify anything under `loangen-agent/tests/`.
 

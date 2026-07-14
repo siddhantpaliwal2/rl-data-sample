@@ -90,10 +90,17 @@ anchor, `str.casefold` for a case-fold) also passes the gold tests.
 - All five defected functions are live code, reached from the Xactus tri-merge
   adapter (`adapters/xactus.py`), `validation.py`, and `bureau_router.py` during
   real credit-PDF parsing — not dead paths.
-- The instruction names the two modules and the boundary *shapes* (case
-  handling, pattern match-scope, token-variant coverage) but not the function
-  names, the exact lines, the boundary direction, the trigger values, or the
-  count — it does not enumerate the defects 1:1.
+- The instruction is a data-integrity audit memo naming the two modules and
+  four abstract finding classes (case-variant filler kept; case-variant
+  duplicate kept; prefix over-match discards; missing tag-spelling variant) —
+  no concrete inputs, function names, boundary directions, or defect count.
+  Gate history: a first draft with concrete replayable inputs (`STERLING
+  JEWELERS`, `1ST NATIONAL BANK`, …) was solved 5/5 by the Sonnet screen —
+  repro strings turn each finding into a trace-and-fix. The abstracted memo
+  re-gated at Sonnet 0/5 and Opus 0/10 (clean, zero crashes). The 0/10 passes
+  the fairness bar: misses spread across two defects (digit-anchor 9/10,
+  suffix-anchor 6/10), both pinned by adjacent $-anchored sibling regexes and
+  both covered by finding C; the other three defects are fixed consistently.
 - Gold tests use only raw strings/lines and plain `ParsedTradeline` dataclasses;
   no mocks, no patched module attributes, so no oracle implementation choice is
   encoded. Materially different correct fixes still pass.
