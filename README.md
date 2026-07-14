@@ -9,7 +9,7 @@ injected only at grade time, so they can never be read or weakened.
 
 ## Task format
 
-Each directory under `tasks/` follows the Harbor / SWE-bench-Pro task spec:
+Each directory under `tasks/` follows the [Harbor](https://github.com/harbor-framework/harbor) / SWE-bench-Pro task spec:
 
 ```
 tasks/<name>/
