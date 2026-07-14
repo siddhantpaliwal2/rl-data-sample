@@ -113,7 +113,7 @@
  "CRITICAL_FINDING": "All banks calibrated against mini-swe-agent (weak scaffold). User re-measured with strong Claude-Code+Opus scaffold: results BIMODAL \u2014 extractors 8/10, normalize 7/10, fintools 7/8, loangenai 7/7, market 6/6 (ALL too easy); correlation 0/8, phone 0/7, txenrich 0/1 (too hard). NOTHING in 1-4 band. Single-token latent recipe does not produce a middle band under a strong solver. Must retune to the strong scaffold.",
  "gate_decision": "mini-swe-agent (AfterQuery platform probe standard); re-gating at LOW concurrency to avoid crash-contamination",
  "new_candidates_to_gate": [
-  "xrepo-txenrich3-latent (buffer, being built by subagent - fresh bank pair)"
+  "xrepo-txenrich3-latent (BUFFER: built+ladder-verified 2026-07-13, IDBI+Indusind, image txenrich3-task:v1 \u2014 NOT gated; run opus x10 + sonnet x5 before any use)"
  ],
  "gate_of_record": "mini-swe-agent opus x10, band <=6/10 (Claude Code strong-scaffold run DISREGARDED per user)",
  "status": "COMPLETE: 10/10 banked (2026-07-13)"

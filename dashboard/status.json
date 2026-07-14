@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-07-13 21:02:48",
+ "generated_at": "2026-07-13 21:06:25",
  "jobs": [
   {
    "job": "array-difficulty",
@@ -8056,11 +8056,11 @@
   },
   {
    "task": "xrepo-txenrich3-latent",
-   "state": "scaffolded",
-   "f2p": null,
-   "p2p": null,
-   "null_reward": null,
-   "oracle_reward": null,
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 14,
+   "null_reward": 0,
+   "oracle_reward": 1,
    "ease_gate": null,
    "diff_gate": null,
    "verdict": "probes pending",
