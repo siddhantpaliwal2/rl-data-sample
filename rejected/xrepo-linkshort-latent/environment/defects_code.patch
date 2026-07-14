@@ -1,0 +1,57 @@
+diff --git a/link_shortener/config.py b/link_shortener/config.py
+index 735580a..094213d 100644
+--- a/link_shortener/config.py
++++ b/link_shortener/config.py
+@@ -30,7 +30,7 @@ class Settings(BaseSettings):
+     @classmethod
+     def parse_authorized_parties(cls, value: str | list[str]) -> list[str]:
+         if isinstance(value, str):
+-            return [party.strip() for party in value.split(",") if party.strip()]
++            return [party.strip() for party in value.split(",") if party]
+         return value
+ 
+     @field_validator("cors_allowed_origins", mode="before")
+@@ -44,7 +44,7 @@ class Settings(BaseSettings):
+     @classmethod
+     def prefer_psycopg_driver(cls, value: str) -> str:
+         if value.startswith("postgresql://"):
+-            return value.replace("postgresql://", "postgresql+psycopg://", 1)
++            return value.replace("postgresql://", "postgresql+psycopg://")
+         return value
+ 
+ 
+diff --git a/link_shortener/main.py b/link_shortener/main.py
+index 2e81057..db6bbda 100644
+--- a/link_shortener/main.py
++++ b/link_shortener/main.py
+@@ -49,7 +49,7 @@ async def lifespan(_: FastAPI):
+ def _rate_limit_key(request: Request) -> str:
+     auth = request.headers.get("Authorization", "")
+     if auth.lower().startswith("bearer "):
+-        token = auth[7:]
++        token = auth[6:]
+         if token:
+             return f"user:{token[:32]}"
+     return get_remote_address(request)
+diff --git a/link_shortener/services.py b/link_shortener/services.py
+index 8eb1eeb..e016ebf 100644
+--- a/link_shortener/services.py
++++ b/link_shortener/services.py
+@@ -52,7 +52,7 @@ def _as_utc(value: datetime | None) -> datetime | None:
+         return None
+     if value.tzinfo is None:
+         return value.replace(tzinfo=timezone.utc)
+-    return value.astimezone(timezone.utc)
++    return value.replace(tzinfo=timezone.utc)
+ 
+ 
+ def hash_password(password: str) -> str:
+@@ -158,7 +158,7 @@ def count_links(db: Session, *, owner_id: str) -> int:
+ 
+ 
+ def list_links(db: Session, *, page: int, page_size: int, owner_id: str) -> list[Link]:
+-    offset = (page - 1) * page_size
++    offset = page * page_size
+     return list(
+         db.scalars(
+             select(Link)

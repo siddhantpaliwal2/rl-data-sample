@@ -1,0 +1,7 @@
+{
+  "name": "meetnotes-lib",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Isolated pure library utilities (formatting + keyword search) for offline boundary testing."
+}

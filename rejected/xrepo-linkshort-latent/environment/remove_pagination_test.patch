@@ -1,0 +1,30 @@
+diff --git a/tests/test_links.py b/tests/test_links.py
+index f46bed0..d392b15 100644
+--- a/tests/test_links.py
++++ b/tests/test_links.py
+@@ -122,25 +122,6 @@ def test_openapi_includes_bearer_security(client):
+     assert {"BearerAuth": []} in schema["paths"]["/auth/me"]["get"]["security"]
+ 
+ 
+-def test_paginated_list(client):
+-    _set_optional_user(client, "user_test")
+-    _set_required_user(client, "user_test")
+-    try:
+-        for index in range(3):
+-            client.post("/links", json={"url": f"https://example.com/{index}"})
+-
+-        response = client.get("/links?page=1&page_size=2")
+-
+-        assert response.status_code == 200
+-        body = response.json()
+-        assert body["total"] == 3
+-        assert body["page"] == 1
+-        assert body["page_size"] == 2
+-        assert len(body["items"]) == 2
+-    finally:
+-        _clear_user(client)
+-
+-
+ def test_links_are_scoped_to_owner(client):
+     _set_optional_user(client, "user_test")
+     try:

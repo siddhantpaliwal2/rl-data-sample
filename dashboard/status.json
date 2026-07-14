@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-07-13 19:12:50",
+ "generated_at": "2026-07-13 20:35:15",
  "jobs": [
   {
    "job": "array-difficulty",
@@ -3252,6 +3252,180 @@
    "mtime": 1783987460.1668334
   },
   {
+   "job": "latent-doc-qa--opus-c3",
+   "task": "latent-doc-qa",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "28wKrGZ",
+     "state": "running",
+     "reward": null,
+     "steps": 3,
+     "cost": 0.0
+    },
+    {
+     "name": "6CxHjok",
+     "state": "running",
+     "reward": null,
+     "steps": 4,
+     "cost": 0.0
+    },
+    {
+     "name": "76tmsZa",
+     "state": "done",
+     "reward": 1,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "KXLmGyT",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "KXsvFYD",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "StTYbtu",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "ZQWnRno",
+     "state": "done",
+     "reward": 1,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "buR9RY3",
+     "state": "done",
+     "reward": 1,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "reNFkrU",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "tN9TvCJ",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.0
+    }
+   ],
+   "solved": 8,
+   "done": 8,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": false,
+   "void": false,
+   "mtime": 1783998408.4910004
+  },
+  {
+   "job": "latent-doc-scoring--opus-c3",
+   "task": "latent-doc-scoring",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "RMbBsCb",
+     "state": "done",
+     "reward": 1,
+     "steps": 27,
+     "cost": 0.0
+    },
+    {
+     "name": "W9u7b6j",
+     "state": "done",
+     "reward": 0,
+     "steps": 6,
+     "cost": 0.0
+    },
+    {
+     "name": "ZzYZBye",
+     "state": "done",
+     "reward": 0,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "cCAwG6E",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "fUdqXJy",
+     "state": "done",
+     "reward": 0,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "hZXghrq",
+     "state": "done",
+     "reward": 0,
+     "steps": 10,
+     "cost": 0.0
+    },
+    {
+     "name": "hgJV9NL",
+     "state": "done",
+     "reward": 1,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "kWZUWSM",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.0
+    },
+    {
+     "name": "mRKPU6r",
+     "state": "done",
+     "reward": 1,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "sEodnKy",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 4,
+   "done": 8,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": false,
+   "void": false,
+   "mtime": 1783998810.088071
+  },
+  {
    "job": "latent-easiness",
    "task": "cre-scoring-latent-bugs",
    "agent": "mini-swe-agent",
@@ -3302,6 +3476,86 @@
    "finished": true,
    "void": false,
    "mtime": 1783981285.7911763
+  },
+  {
+   "job": "latent-financial-tools--clean-c2",
+   "task": "latent-financial-tools",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "3nw78PB",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 0.0
+    },
+    {
+     "name": "LqfqXwf",
+     "state": "error",
+     "reward": null,
+     "steps": 26,
+     "cost": 0.0
+    },
+    {
+     "name": "TSnjcQj",
+     "state": "done",
+     "reward": 1,
+     "steps": 35,
+     "cost": 0.0
+    },
+    {
+     "name": "gzUxXEM",
+     "state": "done",
+     "reward": 1,
+     "steps": 37,
+     "cost": 0.0
+    },
+    {
+     "name": "pNAnM6H",
+     "state": "done",
+     "reward": 0,
+     "steps": 42,
+     "cost": 0.0
+    },
+    {
+     "name": "pWbiBrr",
+     "state": "done",
+     "reward": 1,
+     "steps": 34,
+     "cost": 0.0
+    },
+    {
+     "name": "rPMRfub",
+     "state": "error",
+     "reward": null,
+     "steps": 37,
+     "cost": 0.0
+    },
+    {
+     "name": "tdrwZNF",
+     "state": "done",
+     "reward": 0,
+     "steps": 38,
+     "cost": 0.0
+    },
+    {
+     "name": "y4pMB3k",
+     "state": "done",
+     "reward": 1,
+     "steps": 37,
+     "cost": 0.0
+    }
+   ],
+   "solved": 5,
+   "done": 9,
+   "errors": 2,
+   "total": 9,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783997887.9927316
   },
   {
    "job": "latent-financial-tools--nop-c2",
@@ -3767,6 +4021,93 @@
    "finished": true,
    "void": true,
    "mtime": 1783988895.9061859
+  },
+  {
+   "job": "latent-market-structure--clean-c2",
+   "task": "latent-market-structure",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "83zRMrf",
+     "state": "done",
+     "reward": 1,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "9EpSHRj",
+     "state": "done",
+     "reward": 0,
+     "steps": 39,
+     "cost": 0.0
+    },
+    {
+     "name": "D9u38Mq",
+     "state": "error",
+     "reward": null,
+     "steps": 20,
+     "cost": 0.0
+    },
+    {
+     "name": "KEQZYhJ",
+     "state": "done",
+     "reward": 0,
+     "steps": 23,
+     "cost": 0.0
+    },
+    {
+     "name": "PRUwpZR",
+     "state": "done",
+     "reward": 1,
+     "steps": 32,
+     "cost": 0.0
+    },
+    {
+     "name": "UCvU9bW",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.0
+    },
+    {
+     "name": "kyQGkSY",
+     "state": "done",
+     "reward": 1,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "pmcC4LX",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.0
+    },
+    {
+     "name": "x3ax7aF",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 0.0
+    },
+    {
+     "name": "zhUJYk8",
+     "state": "error",
+     "reward": null,
+     "steps": 13,
+     "cost": 0.0
+    }
+   ],
+   "solved": 5,
+   "done": 10,
+   "errors": 2,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783997962.5750754
   },
   {
    "job": "latent-market-structure--nop-c2",
@@ -5680,6 +6021,93 @@
    "mtime": 1783988116.0202918
   },
   {
+   "job": "xrepo-correlation-latent--clean-c2",
+   "task": "xrepo-correlation-latent",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "Cm7SwDi",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "DBEPvLW",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "DD2yYt7",
+     "state": "done",
+     "reward": 1,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "NZnopyA",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "V7Ph2Mr",
+     "state": "done",
+     "reward": 0,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "YC2F5qw",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "apzYEoW",
+     "state": "done",
+     "reward": 0,
+     "steps": 15,
+     "cost": 0.0
+    },
+    {
+     "name": "bYK5ShC",
+     "state": "done",
+     "reward": 0,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "pqt27X2",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "sMWGegN",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    }
+   ],
+   "solved": 1,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783997745.6566358
+  },
+  {
    "job": "xrepo-correlation-latent--opus-c2",
    "task": "xrepo-correlation-latent",
    "agent": "mini-swe-agent",
@@ -5956,6 +6384,336 @@
    "finished": true,
    "void": false,
    "mtime": 1783990226.1754937
+  },
+  {
+   "job": "xrepo-fiu-latent--opus-a1",
+   "task": "xrepo-fiu-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "4LQGZsG",
+     "state": "done",
+     "reward": 0,
+     "steps": 28,
+     "cost": 0.66
+    },
+    {
+     "name": "SkyaQcn",
+     "state": "done",
+     "reward": 1,
+     "steps": 23,
+     "cost": 0.42
+    },
+    {
+     "name": "Ww92qxg",
+     "state": "done",
+     "reward": 1,
+     "steps": 35,
+     "cost": 0.68
+    },
+    {
+     "name": "b6WEgwd",
+     "state": "done",
+     "reward": 0,
+     "steps": 22,
+     "cost": 0.53
+    },
+    {
+     "name": "bCAZbim",
+     "state": "done",
+     "reward": 0,
+     "steps": 27,
+     "cost": 0.6
+    },
+    {
+     "name": "ciGnSKw",
+     "state": "done",
+     "reward": 1,
+     "steps": 29,
+     "cost": 0.72
+    },
+    {
+     "name": "h7X4vsf",
+     "state": "done",
+     "reward": 1,
+     "steps": 19,
+     "cost": 0.43
+    },
+    {
+     "name": "pHQH9kz",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 0.71
+    },
+    {
+     "name": "s7MK27q",
+     "state": "done",
+     "reward": 0,
+     "steps": 27,
+     "cost": 0.64
+    },
+    {
+     "name": "urtYy4L",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 0.65
+    }
+   ],
+   "solved": 4,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 6.04,
+   "finished": true,
+   "void": false,
+   "mtime": 1783999301.975683
+  },
+  {
+   "job": "xrepo-fiu-latent--opus-c2",
+   "task": "xrepo-fiu-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "5YZgLDK",
+     "state": "error",
+     "reward": null,
+     "steps": 7,
+     "cost": 0.1
+    },
+    {
+     "name": "9usX6Ki",
+     "state": "error",
+     "reward": null,
+     "steps": 14,
+     "cost": 0.29
+    },
+    {
+     "name": "P2wGPqz",
+     "state": "done",
+     "reward": 0,
+     "steps": 23,
+     "cost": 0.54
+    },
+    {
+     "name": "cGCDbh2",
+     "state": "done",
+     "reward": 0,
+     "steps": 25,
+     "cost": 0.56
+    },
+    {
+     "name": "uoSoHx9",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "wBPotfs",
+     "state": "error",
+     "reward": null,
+     "steps": 22,
+     "cost": 0.53
+    },
+    {
+     "name": "y48zwiC",
+     "state": "done",
+     "reward": 0,
+     "steps": 28,
+     "cost": 0.67
+    }
+   ],
+   "solved": 0,
+   "done": 7,
+   "errors": 4,
+   "total": 7,
+   "cost": 2.69,
+   "finished": true,
+   "void": true,
+   "mtime": 1783995927.8596017
+  },
+  {
+   "job": "xrepo-fiu-latent--opus-c3",
+   "task": "xrepo-fiu-latent",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "LGBgreC",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "V8BjJ4k",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "fpKhR49",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "gRqDBeP",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "iUgbr6H",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "kUCKX4x",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "rmqfD2b",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "tJdimu4",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 4,
+   "errors": 0,
+   "total": 8,
+   "cost": 0,
+   "finished": false,
+   "void": false,
+   "mtime": 1783998823.6294253
+  },
+  {
+   "job": "xrepo-fiu-latent--sonnet-a1",
+   "task": "xrepo-fiu-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "FYjc2nn",
+     "state": "done",
+     "reward": 0,
+     "steps": 53,
+     "cost": 0.57
+    },
+    {
+     "name": "FcHKwtB",
+     "state": "done",
+     "reward": 0,
+     "steps": 60,
+     "cost": 0.67
+    },
+    {
+     "name": "XJSckCw",
+     "state": "done",
+     "reward": 1,
+     "steps": 77,
+     "cost": 1.31
+    },
+    {
+     "name": "g2aB9Ni",
+     "state": "done",
+     "reward": 0,
+     "steps": 64,
+     "cost": 0.89
+    },
+    {
+     "name": "zFm7yQP",
+     "state": "done",
+     "reward": 0,
+     "steps": 60,
+     "cost": 0.85
+    }
+   ],
+   "solved": 1,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 4.29,
+   "finished": true,
+   "void": false,
+   "mtime": 1783999502.140213
+  },
+  {
+   "job": "xrepo-fiu-latent--sonnet-c2",
+   "task": "xrepo-fiu-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "9SnM2wp",
+     "state": "error",
+     "reward": null,
+     "steps": 39,
+     "cost": 0.5
+    },
+    {
+     "name": "HWvfhLu",
+     "state": "error",
+     "reward": null,
+     "steps": 55,
+     "cost": 0.69
+    },
+    {
+     "name": "UGhiK3u",
+     "state": "error",
+     "reward": null,
+     "steps": 48,
+     "cost": 0.57
+    },
+    {
+     "name": "fjY5tjo",
+     "state": "error",
+     "reward": null,
+     "steps": 44,
+     "cost": 0.55
+    },
+    {
+     "name": "myo5Heo",
+     "state": "error",
+     "reward": null,
+     "steps": 39,
+     "cost": 0.43
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 5,
+   "total": 5,
+   "cost": 2.74,
+   "finished": true,
+   "void": true,
+   "mtime": 1783995647.151029
   },
   {
    "job": "xrepo-linkshort-latent--opus-c2",
@@ -6236,6 +6994,232 @@
    "mtime": 1783988925.4435709
   },
   {
+   "job": "xrepo-loangenai2-latent--opus-a1",
+   "task": "xrepo-loangenai2-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "3QEccoB",
+     "state": "done",
+     "reward": 1,
+     "steps": 15,
+     "cost": 0.33
+    },
+    {
+     "name": "9HjLHPF",
+     "state": "running",
+     "reward": null,
+     "steps": 7,
+     "cost": 0.11
+    },
+    {
+     "name": "AoYqGQM",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.27
+    },
+    {
+     "name": "CnRiSqE",
+     "state": "done",
+     "reward": 1,
+     "steps": 17,
+     "cost": 0.44
+    },
+    {
+     "name": "JXdXRpM",
+     "state": "done",
+     "reward": 1,
+     "steps": 18,
+     "cost": 0.4
+    },
+    {
+     "name": "VWYop4J",
+     "state": "done",
+     "reward": 1,
+     "steps": 15,
+     "cost": 0.36
+    },
+    {
+     "name": "YkAVp6y",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.34
+    },
+    {
+     "name": "eS9K6cu",
+     "state": "running",
+     "reward": null,
+     "steps": 9,
+     "cost": 0.15
+    },
+    {
+     "name": "jTs3rmq",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.33
+    },
+    {
+     "name": "vwBw2Hd",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.37
+    }
+   ],
+   "solved": 8,
+   "done": 8,
+   "errors": 0,
+   "total": 10,
+   "cost": 3.1,
+   "finished": false,
+   "void": false,
+   "mtime": 1783999885.5577939
+  },
+  {
+   "job": "xrepo-loangenai2-latent--opus-c2",
+   "task": "xrepo-loangenai2-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "3xNyzYr",
+     "state": "done",
+     "reward": 1,
+     "steps": 14,
+     "cost": 0.36
+    },
+    {
+     "name": "EKjBcnu",
+     "state": "done",
+     "reward": 1,
+     "steps": 14,
+     "cost": 0.34
+    },
+    {
+     "name": "FtDRc7e",
+     "state": "done",
+     "reward": 1,
+     "steps": 15,
+     "cost": 0.3
+    },
+    {
+     "name": "NPJkicu",
+     "state": "done",
+     "reward": 1,
+     "steps": 15,
+     "cost": 0.35
+    },
+    {
+     "name": "V8AhbHN",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.41
+    },
+    {
+     "name": "gcbJeGb",
+     "state": "done",
+     "reward": 1,
+     "steps": 15,
+     "cost": 0.33
+    },
+    {
+     "name": "hUCdq7R",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.27
+    },
+    {
+     "name": "i2rVkfi",
+     "state": "done",
+     "reward": 1,
+     "steps": 14,
+     "cost": 0.31
+    },
+    {
+     "name": "yUT6iNG",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.28
+    },
+    {
+     "name": "z5WNMv3",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.4
+    }
+   ],
+   "solved": 10,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 3.35,
+   "finished": true,
+   "void": false,
+   "mtime": 1783995359.8736525
+  },
+  {
+   "job": "xrepo-loangenai2-latent--sonnet-c2",
+   "task": "xrepo-loangenai2-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "8M4SZEP",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.42
+    },
+    {
+     "name": "SQuWDSD",
+     "state": "done",
+     "reward": 1,
+     "steps": 24,
+     "cost": 0.57
+    },
+    {
+     "name": "fuhyoYw",
+     "state": "done",
+     "reward": 1,
+     "steps": 24,
+     "cost": 0.48
+    },
+    {
+     "name": "sbg8Zif",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 0.45
+    },
+    {
+     "name": "xdUP6PB",
+     "state": "done",
+     "reward": 1,
+     "steps": 18,
+     "cost": 0.36
+    }
+   ],
+   "solved": 4,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 2.28,
+   "finished": true,
+   "void": false,
+   "mtime": 1783995359.8590405
+  },
+  {
    "job": "xrepo-meetnotes-latent--opus-c2",
    "task": "xrepo-meetnotes-latent",
    "agent": "mini-swe-agent",
@@ -6338,10 +7322,10 @@
     },
     {
      "name": "Qf4Cuv9",
-     "state": "running",
+     "state": "error",
      "reward": null,
-     "steps": 14,
-     "cost": 0.13
+     "steps": 15,
+     "cost": 0.14
     },
     {
      "name": "dfW3ztn",
@@ -6366,11 +7350,11 @@
     }
    ],
    "solved": 3,
-   "done": 4,
-   "errors": 1,
+   "done": 5,
+   "errors": 2,
    "total": 5,
-   "cost": 0.46,
-   "finished": false,
+   "cost": 0.47,
+   "finished": true,
    "void": false,
    "mtime": 1783994962.4810944
   },
@@ -6790,6 +7774,204 @@
    "finished": true,
    "void": false,
    "mtime": 1783989913.799045
+  },
+  {
+   "job": "xrepo-txenrich2-latent--opus-a1",
+   "task": "xrepo-txenrich2-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "2AHkGWm",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 1.76
+    },
+    {
+     "name": "2GyF4f8",
+     "state": "done",
+     "reward": 0,
+     "steps": 42,
+     "cost": 2.18
+    },
+    {
+     "name": "4JPmrF3",
+     "state": "done",
+     "reward": 0,
+     "steps": 47,
+     "cost": 2.45
+    },
+    {
+     "name": "DDCJXAj",
+     "state": "done",
+     "reward": 0,
+     "steps": 39,
+     "cost": 1.91
+    },
+    {
+     "name": "DJfZxz2",
+     "state": "done",
+     "reward": 0,
+     "steps": 45,
+     "cost": 2.3
+    },
+    {
+     "name": "Ub2pgLR",
+     "state": "done",
+     "reward": 0,
+     "steps": 36,
+     "cost": 2.09
+    },
+    {
+     "name": "cHRDGDd",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 1.64
+    },
+    {
+     "name": "gbnYP7H",
+     "state": "done",
+     "reward": 0,
+     "steps": 57,
+     "cost": 3.43
+    },
+    {
+     "name": "jt6EMHX",
+     "state": "done",
+     "reward": 0,
+     "steps": 63,
+     "cost": 3.49
+    },
+    {
+     "name": "rco2p7c",
+     "state": "done",
+     "reward": 0,
+     "steps": 39,
+     "cost": 1.72
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 22.97,
+   "finished": true,
+   "void": false,
+   "mtime": 1783999551.6702292
+  },
+  {
+   "job": "xrepo-txenrich2-latent--opus-c3",
+   "task": "xrepo-txenrich2-latent",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "KMx9nSF",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 0.0
+    },
+    {
+     "name": "Vzpfniv",
+     "state": "done",
+     "reward": 0,
+     "steps": 40,
+     "cost": 0.0
+    },
+    {
+     "name": "YqAnpWK",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 0.0
+    },
+    {
+     "name": "ZQJm6SA",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "dpbVvHX",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "tZbcMn3",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "udHoqmo",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 0.0
+    },
+    {
+     "name": "wHxSjjU",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 4,
+   "errors": 0,
+   "total": 8,
+   "cost": 0,
+   "finished": false,
+   "void": false,
+   "mtime": 1783998811.4673848
+  },
+  {
+   "job": "xrepo-txenrich2-latent--sonnet-a1",
+   "task": "xrepo-txenrich2-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "7e9kxnX",
+     "state": "running",
+     "reward": null,
+     "steps": 31,
+     "cost": 0.85
+    },
+    {
+     "name": "9nACBkP",
+     "state": "running",
+     "reward": null,
+     "steps": 27,
+     "cost": 0.7
+    },
+    {
+     "name": "DX5s6j3",
+     "state": "running",
+     "reward": null,
+     "steps": 38,
+     "cost": 0.93
+    }
+   ],
+   "solved": 0,
+   "done": 0,
+   "errors": 0,
+   "total": 3,
+   "cost": 2.48,
+   "finished": false,
+   "void": false,
+   "mtime": 1783999853.4250045
   }
  ],
  "tasks": [
@@ -6859,58 +8041,32 @@
    "spend": 0
   },
   {
-   "task": "xrepo-fiu-latent",
-   "state": "scaffolded",
-   "f2p": null,
-   "p2p": null,
-   "null_reward": null,
-   "oracle_reward": null,
-   "ease_gate": null,
-   "diff_gate": null,
-   "verdict": "probes pending",
-   "note": "",
-   "spend": 0
-  },
-  {
-   "task": "xrepo-loangenai2-latent",
-   "state": "scaffolded",
-   "f2p": null,
-   "p2p": null,
-   "null_reward": null,
-   "oracle_reward": null,
-   "ease_gate": null,
-   "diff_gate": null,
-   "verdict": "probes pending",
-   "note": "",
-   "spend": 0
-  },
-  {
-   "task": "xrepo-meetnotes-latent",
+   "task": "xrepo-txenrich2-latent",
    "state": "verified",
    "f2p": 5,
-   "p2p": 12,
+   "p2p": 14,
    "null_reward": 0,
    "oracle_reward": 1,
    "ease_gate": {
-    "job": "xrepo-meetnotes-latent--sonnet-c2",
-    "solved": 3,
-    "total": 5,
+    "job": "xrepo-txenrich2-latent--sonnet-a1",
+    "solved": 0,
+    "total": 3,
     "finished": false
    },
    "diff_gate": {
-    "job": "xrepo-meetnotes-latent--opus-c2",
-    "solved": 9,
-    "total": 10,
-    "finished": true
+    "job": "xrepo-txenrich2-latent--opus-c3",
+    "solved": 0,
+    "total": 8,
+    "finished": false
    },
    "verdict": "easiness probe running",
    "note": "",
-   "spend": 0.46
+   "spend": 25.45
   }
  ],
  "summary": {
-  "total_spend": 427.09,
-  "trials_running": 15,
+  "total_spend": 477.04,
+  "trials_running": 31,
   "candidates": 0,
   "too_easy": 0
  }

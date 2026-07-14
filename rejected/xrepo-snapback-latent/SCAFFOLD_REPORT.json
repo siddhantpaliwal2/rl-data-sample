@@ -1,0 +1,121 @@
+{
+  "task": "xrepo-snapback-latent",
+  "pattern": "latent-bug",
+  "instance_id": "snapback-shared-boundaries-latent",
+  "repo": "sahilchabra09/snapback-internal-telegram",
+  "third_party_repo": true,
+  "base_commit": "f6d85cfb63fa01d4f0d3fcc46048409646a063bc",
+  "substrate": "packages/shared (TypeScript / bun:test; deps = zod only; pure, offline-isolable)",
+  "base_image": "snapback-repo:v1 = oven/bun:1 + git + python3 + bun install (zod warmed); clean copy of packages/shared",
+  "task_image": "snapback-task:v1 = FROM snapback-repo:v1 + defect patch + fresh 1-commit git history + /logs/verifier",
+  "defect_count": 5,
+  "difficulty_mix": "2 EASY (schema min-length, schema int-refinement) + 3 MEDIUM (24h time-key format flip, date-arithmetic direction, enum member drop)",
+  "distinct_shapes": [
+    "Intl format-option flip (hour12 false->true)",
+    "date arithmetic direction (+DAY -> -DAY)",
+    "enum membership dropped (missing action)",
+    "min-length constraint weakened (min(1)->min(0))",
+    "integer refinement dropped (.int() removed)"
+  ],
+  "defects": [
+    {
+      "id": 1,
+      "file": "packages/shared/src/time.ts",
+      "function": "toTimeKey",
+      "shape": "Intl format-option flip",
+      "boundary_changed": "hour12: false  ->  hour12: true",
+      "difficulty": "MEDIUM",
+      "edge_input": "an afternoon or midnight instant, e.g. toTimeKey(2026-01-01T13:30:00Z, 'UTC') or ...T00:15:00Z",
+      "wrong_output": "'01:30' / '12:15' (12-hour, day-period dropped) instead of the 24-hour '13:30' / '00:15'",
+      "why_no_visible_test_catches": "time.test.ts imports only parseStandupTime and formatStandupTime; toTimeKey is never called by any visible test. Morning/noon hours (01-12) render identically in both forms.",
+      "derivability": "The sibling toDateKey in dates.ts builds the same canonical Intl key (unambiguous YYYY-MM-DD); a schedule time key is likewise 24-hour, and 12-hour output silently loses PM information."
+    },
+    {
+      "id": 2,
+      "file": "packages/shared/src/dates.ts",
+      "function": "tomorrowDateKey",
+      "shape": "date arithmetic direction",
+      "boundary_changed": "new Date(Date.now() + 24*60*60*1000)  ->  Date.now() - 24*60*60*1000",
+      "difficulty": "MEDIUM",
+      "edge_input": "any call; e.g. with the clock at 2026-03-15 -> expected 2026-03-16; at 2026-12-31 -> expected 2027-01-01 (month/year rollover)",
+      "wrong_output": "yesterday's key (2026-03-14 / 2026-12-30) instead of tomorrow's",
+      "why_no_visible_test_catches": "dates.test.ts exercises only toDateKey; tomorrowDateKey is untested.",
+      "derivability": "The function name states 'tomorrow' (= today + 1 day); toDateKey applied to now gives today, so the intended offset direction is forward. Gold test pins the clock with bun:test setSystemTime."
+    },
+    {
+      "id": 3,
+      "file": "packages/shared/src/callbacks.ts",
+      "function": "callbackActionSchema (parseCallback action gate)",
+      "shape": "enum membership dropped",
+      "boundary_changed": "z.enum(['wake','instagram','habit','task'])  ->  z.enum(['wake','habit','task'])",
+      "difficulty": "MEDIUM",
+      "edge_input": "parseCallback('standup:instagram:done')",
+      "wrong_output": "null (action rejected as unknown) instead of {namespace:'standup', action:'instagram', value:'done'}",
+      "why_no_visible_test_catches": "callbacks.test.ts round-trips only 'task' and rejects 'wake'/unknown; no visible test routes the 'instagram' action.",
+      "derivability": "The four callback actions parallel the four interactive standup steps (wake_check, instagram_check, habit_review, task_review) declared in domain.ts and standupStateSchema; 'instagram_check' exists, so 'instagram' must be a valid action. The gold control test still asserts an unknown action ('nope') returns null, so a fix that widens the gate to accept anything fails."
+    },
+    {
+      "id": 4,
+      "file": "packages/shared/src/schemas.ts",
+      "function": "integrationItemSchema.title",
+      "shape": "min-length constraint weakened",
+      "boundary_changed": "title: z.string().min(1)  ->  z.string().min(0)",
+      "difficulty": "EASY",
+      "edge_input": "integrationItemSchema.safeParse({ id: 'task-1', title: '' })",
+      "wrong_output": "success: true (blank title accepted) instead of success: false",
+      "why_no_visible_test_catches": "The visible reject case for a habit item uses a blank id (title incidental and non-empty); no visible test feeds a blank title.",
+      "derivability": "The sibling field id in the same z.object uses z.string().min(1); a titled integration item must likewise carry a non-empty title."
+    },
+    {
+      "id": 5,
+      "file": "packages/shared/src/schemas.ts",
+      "function": "standupStateSchema.habitIndex",
+      "shape": "integer refinement dropped",
+      "boundary_changed": "habitIndex: z.number().int().min(0)  ->  z.number().min(0)",
+      "difficulty": "EASY",
+      "edge_input": "standupStateSchema.safeParse({ ...validState, habitIndex: 2.5 })",
+      "wrong_output": "success: true (fractional index accepted) instead of success: false",
+      "why_no_visible_test_catches": "The visible reject case for habitIndex feeds -1 (still caught by .min(0)); the .int() case the suite pins is on the sibling taskIndex (1.5), which is left intact.",
+      "derivability": "The sibling field taskIndex in the same schema uses z.number().int().min(0); a workflow position index must be a whole number. Gold controls also assert habitIndex 0 is accepted and -1 rejected, so a fix that drops min or rejects all non-zero values fails."
+    }
+  ],
+  "f2p_count": 5,
+  "p2p_count": 14,
+  "f2p": [
+    "tests/shared_boundaries.test.ts::time key formatting::renders afternoon and midnight instants in 24-hour form",
+    "tests/shared_boundaries.test.ts::tomorrow date key::advances to the next calendar day",
+    "tests/shared_boundaries.test.ts::callback action gate::accepts the instagram check-in action",
+    "tests/shared_boundaries.test.ts::integration item title::rejects a blank title",
+    "tests/shared_boundaries.test.ts::standup state indices::rejects a fractional habit index"
+  ],
+  "p2p": [
+    "tests/shared_boundaries.test.ts::time key formatting::leaves morning and noon instants unchanged",
+    "tests/shared_boundaries.test.ts::tomorrow date key::keeps the same-day key in agreement with the wall clock",
+    "tests/shared_boundaries.test.ts::callback action gate::still rejects an unknown action",
+    "tests/shared_boundaries.test.ts::integration item title::accepts a normal titled item",
+    "tests/shared_boundaries.test.ts::standup state indices::still rejects a negative habit index",
+    "tests/shared_boundaries.test.ts::standup state indices::accepts a zero habit index",
+    "packages/shared/src/schemas.test.ts::shared schemas::accepts a minimal valid standup state",
+    "packages/shared/src/schemas.test.ts::shared schemas::requires a valid profile identity and timezone",
+    "packages/shared/src/callbacks.test.ts::callback encoding::round-trips standup callback data",
+    "packages/shared/src/callbacks.test.ts::callback encoding::preserves colons inside callback values",
+    "packages/shared/src/time.test.ts::standup time parsing::parses 24-hour time",
+    "packages/shared/src/time.test.ts::standup time parsing::parses 12-hour time",
+    "packages/shared/src/dates.test.ts::date keys::formats 2026-01-01T00:30:00.000Z in America/Los_Angeles as 2025-12-31",
+    "packages/shared/src/dates.test.ts::date keys::formats 2026-12-31T23:30:00.000Z in Pacific/Auckland as 2027-01-01"
+  ],
+  "base_defects_visible_suite": "GREEN (37 passed / 0 failed across the four existing shared unit-test files at base+5-defects, verified in the built task image with --network none)",
+  "ladder": {
+    "leak_check": "PASS — git history length 1, git status --porcelain empty, existing suite 37 pass / 0 fail",
+    "null_run": "reward 0 — all 5 fail_to_pass report per-test FAILED (14/19 required passed); no collection errors",
+    "oracle_run": "reward 1 — solve.sh reverse-applies the defect patch; 19/19 required passed",
+    "partial_run": "reward 0 — fixing only the two schemas.ts defects yields 16/19 (the 3 remaining f2p still fail)"
+  },
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "git_history_len": 1,
+  "litmus_result": "FAIR — the instruction names no file, function, value, count, or defect shape; it reports user-visible wrong behavior and points only at 'the shared helper package'. A strong dev can localize to the package and map the four symptom areas to source files, but with no failing local test there is no red-test gradient: the exact boundary line, the correct side, and the requirement to find ALL FIVE (two hidden in one file) still demand reading and reasoning. Matches the round-1 calibration where naming modules but not lines/values/counts gated well.",
+  "fairness_audit": "Every f2p asserts input/output behavior on exported functions/schemas, never an implementation detail. Each defect's correct side is derivable from a sibling in the same file (toDateKey<->toTimeKey, id<->title, taskIndex<->habitIndex) or the package's own type declarations (instagram_check step). Six gold-file control tests (in pass_to_pass) block lazy over-fixes: they pin that morning/noon time keys are unchanged, an unknown callback action is still rejected, a normal title is accepted, and habitIndex 0/-1 behave correctly. The only non-input mechanism is bun:test setSystemTime, used solely to fix the wall clock for tomorrowDateKey; it controls the clock, not a collaborator, and encodes no implementation choice, so any correct 'day after today' passes. No bare mocks, no module-attribute patching. Alternative-implementation audit: for each defect, a materially different correct fix (e.g. manual 24h conversion, Date.setDate(+1), .nonempty(), .refine(Number.isInteger), an enum listing the four real actions) passes both its f2p and the controls.",
+  "harness_notes": "TS/bun adaptation of the canonical SWE-Bench-Pro contract. run_script.sh runs `bun test <gold> <4 existing files> --reporter=junit`; parser.py is a regex-based JUnit-XML parser (no pyexpat dependency) emitting names as '<file>::<classname>::<testname>'; test.sh is the canonical entrypoint (applies test_patch from config, runs, parses, requires all f2p+p2p passed). Image carries python3 (stdlib json+re only) and git for the harness."
+}

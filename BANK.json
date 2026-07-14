@@ -48,6 +48,13 @@
    "repo": "loan-genai-backend",
    "opus": "6/10",
    "gate": "mini-swe (4 crashes in run)"
+  },
+  {
+   "task": "xrepo-fiu-latent",
+   "repo": "fiu_adapter (Java)",
+   "opus": "4/10",
+   "sonnet": "1/5",
+   "gate": "mini-swe clean 0 crashes (anthropic/claude-opus-4-8 + claude-sonnet-4-6 direct; OpenRouter credits exhausted mid-batch, key-equivalent model)"
   }
  ],
  "regate_pending": [],
@@ -79,16 +86,27 @@
    "task": "xrepo-meetnotes-latent",
    "verdict": "TOO_EASY sonnet 2/3 opus 9/10",
    "lesson": "205 LOC across 2 named files \u2014 4th small-repo confirmation"
+  },
+  {
+   "task": "latent-doc-qa",
+   "verdict": "TOO_EASY opus 7/10 (clean, partial run cut by OpenRouter 402)",
+   "lesson": "single-file defect cluster in retrieval.py; localization too easy despite 66k repo when instruction names the document-QA surface"
+  },
+  {
+   "task": "latent-doc-scoring",
+   "verdict": "TOO_EASY ~80% solve rate (4/5 informative trials incl. 1 crash-solve) - not completed, p(in-band)~2%",
+   "lesson": "same direction as doc-qa; loangenus documents cluster reads too discoverable"
+  },
+  {
+   "task": "xrepo-loangenai2-latent",
+   "verdict": "TOO_EASY opus 8/8 (killed early, cap 6 already exceeded)",
+   "lesson": "sibling of 6/10 loangenai; single-file loan_offer_generator_v1.py cluster - \u0430\u0433ents grep the named workflow file; single-file clusters too easy even in big repos"
   }
  ],
  "CRITICAL_FINDING": "All banks calibrated against mini-swe-agent (weak scaffold). User re-measured with strong Claude-Code+Opus scaffold: results BIMODAL \u2014 extractors 8/10, normalize 7/10, fintools 7/8, loangenai 7/7, market 6/6 (ALL too easy); correlation 0/8, phone 0/7, txenrich 0/1 (too hard). NOTHING in 1-4 band. Single-token latent recipe does not produce a middle band under a strong solver. Must retune to the strong scaffold.",
  "gate_decision": "mini-swe-agent (AfterQuery platform probe standard); re-gating at LOW concurrency to avoid crash-contamination",
  "new_candidates_to_gate": [
-  "xrepo-txenrich2-latent",
-  "xrepo-fiu-latent",
-  "xrepo-loangenai2-latent",
-  "latent-doc-qa",
-  "latent-doc-scoring"
+  "xrepo-txenrich2-latent (sonnet formality running; opus 0/10 clean ACCEPTED by user as too-hard-ok after fairness audit)"
  ],
  "gate_of_record": "mini-swe-agent opus x10, band <=6/10 (Claude Code strong-scaffold run DISREGARDED per user)"
 }

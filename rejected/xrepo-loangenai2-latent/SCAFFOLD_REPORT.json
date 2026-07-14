@@ -1,0 +1,88 @@
+{
+  "task": "xrepo-loangenai2-latent",
+  "pattern": "latent-bug",
+  "instance_id": "loangenai-xrepo-loangenai2-latent",
+  "repo": "boostmoney/loan-genai-backend",
+  "base_commit": "2d8ddbe89e479956f42d08374ef403d8b7feb777",
+  "task_image": "loangenai2-task:v1 (FROM loangenai-repo:v1)",
+  "disjoint_from_sibling": true,
+  "sibling_task": "xrepo-loangenai-latent",
+  "sibling_files_functions_avoided": [
+    "Workflow/state/validation_rules.py::validate_loan_amount",
+    "Workflow/parameter_schema.py::get_form_for_missing_fields",
+    "Workflow/state/parameter_schema.py::calculate_completion_percentage",
+    "Service/otp_service.py::verify_otp"
+  ],
+  "modules_used": ["Workflow/v1/agents/loan_offer_generator_v1.py"],
+  "defect_count": 5,
+  "f2p_count": 5,
+  "p2p_count": 13,
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "git_history_len": 1,
+  "litmus_result": "git log --oneline == 1; git diff empty; git status clean; reflog len 1; planted lines present in image; gold suite green at base (18/18).",
+  "difficulty_calibration": "2 easy + 3 medium",
+  "distinct_shapes": "4 comparison families across 5 defects: >=->> (x2, disjoint contexts/literals: credit-tier vs income-band), ==->< , <-><=, <=-><. Mirrors the approved sibling's profile (which used >=->> twice). No two defects share a grep-able literal: finding one gives zero help finding another.",
+  "ladder": {
+    "git_history_len_1_and_diff_empty": true,
+    "base_green": "18/18 gold tests pass on correct (base) code.",
+    "null_run": "reward 0; all 5 fail_to_pass report FAILED with per-test lines (no collection ERRORs); 13/18 required passed.",
+    "oracle_run": "solution/solve.sh -> reward 1; 18/18 required passed.",
+    "partial_run": "reverse-apply the two easy hunks only (fixes 2 of 5 defects) -> reward 0; 15/18 required passed."
+  },
+  "substrate_note": "The sibling deliberately avoided the rich financial-offer math in Workflow/v1/agents/loan_offer_generator_v1.py because its module top imports langchain_core, a LangGraph state type, and an LLM factory. This task targets exactly that math. The gold tests load the module from its file after registering typed sys.modules stubs for those imports (AIMessage, SimplifiedStateV1, LangChainLLMFactory) and for the Workflow/Workflow.v1/Workflow.v1.state package chain (so the LangGraph-wiring Workflow/__init__.py never runs). Utils.logger and Utils.redis_client import cleanly from the image (structlog/flask/colorama/redis are present) and are used as-is; the pure math functions under test never call the stubbed infrastructure, so the stubs cannot change a correct implementation's result.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "Workflow/v1/agents/loan_offer_generator_v1.py:671",
+      "function": "get_personal_loan_base_rates (top rate tier)",
+      "difficulty": "medium",
+      "edge": "a credit score exactly equal to the top tier's floor (750)",
+      "change": "if credit_score >= 750  ->  if credit_score > 750",
+      "derivability": "medium. The same function's remaining tiers (>= 700, >= 650, >= 600) and the two parallel functions get_auto_loan_base_rates / get_home_loan_base_rates each use >= 750 -- 11 untouched twins all inclusive at the tier floor, plus the ordinary FICO-tier convention that a score of 750 qualifies for the 750+ tier. The exclusive form is uniquely inconsistent: it demotes a borrower who reaches the tier exactly to the tier below.",
+      "why_no_routine_path_catches": "Scores strictly above 750 (>= and > agree) or on a lower tier are unaffected; only the exact-750 personal-loan lookup flips."
+    },
+    {
+      "id": 2,
+      "file": "Workflow/v1/agents/loan_offer_generator_v1.py:740",
+      "function": "calculate_monthly_payment (zero-interest guard)",
+      "difficulty": "medium",
+      "edge": "a loan quoted at exactly 0% annual interest",
+      "change": "if annual_rate == 0  ->  if annual_rate < 0",
+      "derivability": "medium. The guarded branch returns principal / months -- the definitional monthly payment of a zero-interest loan -- and exists precisely because the amortization formula below divides by ((1 + monthly_rate)**months - 1), which is exactly 0 when the rate is 0. == 0 is uniquely correct; < 0 (never true for a real rate) leaves the branch dead and makes a 0% loan raise ZeroDivisionError.",
+      "why_no_routine_path_catches": "Every offer the generator builds is floored well above 0% (5.99 / 2.99 / 3.25), so the zero-rate branch is only reachable by a direct call with rate 0; positive rates run the identical formula under both guards."
+    },
+    {
+      "id": 3,
+      "file": "Workflow/v1/agents/loan_offer_generator_v1.py:247",
+      "function": "is_likely_failed_parsing (thousand-multiplier check)",
+      "difficulty": "medium",
+      "edge": "a 'k'/'thousand' shorthand whose parsed value is exactly 1000",
+      "change": "and parsed_value < 1000  ->  and parsed_value <= 1000",
+      "derivability": "medium. The sibling parser clean_number applies a 'k' suffix as float(x) * 1000, so 'k' means exactly *1000 and the smallest correct result of a '1k' parse is 1000. This guard flags parses that IGNORED the multiplier (came out too small); a value of exactly 1000 is a SUCCESSFUL '1k' parse and must not be flagged. < 1000 is uniquely correct; <= 1000 throws away a good conversion.",
+      "why_no_routine_path_catches": "Only a parsed value sitting exactly on 1000 with shorthand text differs; smaller values are flagged under both forms and larger values under neither."
+    },
+    {
+      "id": 4,
+      "file": "Workflow/v1/agents/loan_offer_generator_v1.py:287",
+      "function": "fallback_parameter_parsing (invalid-amount default guard)",
+      "difficulty": "easy",
+      "edge": "a parsed loan amount that resolves to exactly 0 (e.g. raw '0')",
+      "change": "if loan_amount <= 0  ->  if loan_amount < 0",
+      "derivability": "easy. The immediately-following twin `if annual_income <= 0:` (same block, same purpose) and the caller parse_financial_parameters (`if loan_amount <= 0 or ...`) both treat non-positive as unusable and substitute the default. A parsed amount of 0 is not a real loan; <= 0 is uniquely correct, and < 0 wrongly keeps 0 as a valid $0 amount (the regex never yields a negative, so < 0 is effectively never triggered).",
+      "why_no_routine_path_catches": "Only an amount that resolves to exactly 0 differs; any positive amount skips the guard under both forms."
+    },
+    {
+      "id": 5,
+      "file": "Workflow/v1/agents/loan_offer_generator_v1.py:718",
+      "function": "estimate_credit_score (top income band)",
+      "difficulty": "easy",
+      "edge": "an annual income exactly equal to the top band's floor (100000)",
+      "change": "if annual_income >= 100000  ->  if annual_income > 100000",
+      "derivability": "easy. The very next line `elif annual_income >= 75000:` is the twin band, inclusive at its floor; by that local consistency the 100000 band must also be inclusive. An income of exactly 100000 belongs to the top band; > 100000 silently drops it to the 75k band and shaves the bonus.",
+      "why_no_routine_path_catches": "Incomes strictly above 100000 (>= and > agree) or below it (fall to a lower band either way) are unaffected; only the exact-100000 income flips."
+    }
+  ],
+  "fairness_audit": "No hidden coupling. The single target module is loaded by file path with typed sys.modules stubs (AIMessage=object, SimplifiedStateV1=dict, LangChainLLMFactory=object, and bare package stubs for the Workflow/llm/langchain_core chains) that stand in for module-top imports the pure math never calls; Utils.logger / Utils.redis_client load for real from the image. No MagicMock is ever passed into business logic. Alternative-implementation audit: each fail_to_pass asserts observable behavior -- a returned {min,max} rate dict, an amortized payment number, a boolean parse verdict, a returned amount, an integer score -- never an implementation detail, so any correct boundary fix (>= 750 or >= 750.0, == 0 or an explicit rate-0 special-case, < 1000 or an explicit != multiplier check, <= 0 or an explicit non-positive check, >= 100000 or >= 100_000) passes equally. Every routine p2p feeds values comfortably inside the ranges where the two comparison forms agree, plus dedicated twin-pinning p2p tests (untouched auto/home top tiers, the million-abbreviation threshold, the zero-income guard, the 75k income band) prove the suite distinguishes the exact defected boundary from its untouched siblings. The instruction names no file, function, threshold value, or defect count; it reports edge-clustered symptoms at four abstract behaviors, leaving the agent to locate the five exact lines and directions within an 851-line module dense with similar comparisons (twelve credit-tier boundaries, several non-positive guards)."
+}

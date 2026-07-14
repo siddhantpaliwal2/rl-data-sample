@@ -1,0 +1,113 @@
+{
+  "task": "trading-formatters-boundary-latent-bugs",
+  "pattern": "latent-bug",
+  "instance_id": "trading-formatters-boundary-latent-bugs",
+  "repo": "sahilchabra09/TradingApp",
+  "source_module": "apps/native/lib/formatters.ts (flattened to /app/lib/formatters.ts in the isolated bun workspace)",
+  "base_commit": "5c7ef853",
+  "task_image": "trading-formatters-latent:v1",
+  "runtime": "bun 1.3.14 (Debian trixie base, git + python3 installed at build time)",
+  "defect_count": 5,
+  "difficulty_mix": "2 EASY + 3 MEDIUM",
+  "gate_revision_note": "First gate: Sonnet 0/5 (good), but Opus 0/10 with a diagnostic profile — all 10 trials failed exactly the SAME 2 tests (formatPercentage value>0->=0 zero-sign, formatRelativeTime days>7->=7 week-edge) while solving the other 3 defects 10/10. Those 2 were convention-picks: whether 0% carries a '+' and whether exactly-7-days reads 'Nd ago' vs a date are pure DISPLAY CONVENTIONS with no code-derivable correct side, so they were unsolvable (and since all defects must be found, they sank the whole task). Both were swapped for sibling-pinned mediums (isValidPhone >=10, formatCryptoAmount <0.01), and their gold tests were DELETED (not reclassified to p2p). The 3 that solved 10/10 (formatCompactNumber, formatAddress, isValidEmail) were kept.",
+  "f2p": [
+    "formatters boundary behavior > compact number promotes exactly one thousand to K",
+    "formatters boundary behavior > address exactly at the abbreviation floor is left intact",
+    "formatters boundary behavior > email with trailing content after the domain is rejected",
+    "formatters boundary behavior > phone at exactly the canonical ten-digit length is accepted",
+    "formatters boundary behavior > crypto amount exactly on the small-value boundary keeps four decimals"
+  ],
+  "p2p": [
+    "formatters boundary behavior > compact number formats a mid-range thousands value",
+    "formatters boundary behavior > compact number formats a millions value",
+    "formatters boundary behavior > compact number formats a billions value",
+    "formatters boundary behavior > compact number leaves sub-thousand values unscaled",
+    "formatters boundary behavior > address well above the floor is abbreviated at both ends",
+    "formatters boundary behavior > address well below the floor is returned unchanged",
+    "formatters boundary behavior > a well-formed email is accepted",
+    "formatters boundary behavior > a string missing the at-sign is rejected",
+    "formatters boundary behavior > a spaced international phone well over ten digits is accepted",
+    "formatters boundary behavior > a short numeric string well under ten digits is rejected",
+    "formatters boundary behavior > a three-digit string is rejected as a phone",
+    "formatters boundary behavior > crypto amount well below the small cutoff uses maximum precision",
+    "formatters boundary behavior > crypto amount in the sub-unit band uses four decimals",
+    "formatters boundary behavior > crypto amount at or above one unit uses minimum decimals"
+  ],
+  "f2p_count": 5,
+  "p2p_count": 14,
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "partial_detail": "Fixing 2 of 5 defects (formatCompactNumber + isValidPhone) yields 16/19 required passed; the 3 unfixed f2p still fail -> reward 0.",
+  "alt_impl_reward": 1,
+  "alt_impl_detail": "Materially different but correct fixes (Math.abs(value) >= 1e3; address.length <= chars*2 + 3; a reordered but fully-anchored /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/; digit-count > 9; value < 0.01) all yield reward 1 -> the gold tests assert behavior, not the oracle tokens.",
+  "git_history_len": 1,
+  "git_diff_empty": true,
+  "gold_file_in_image": false,
+  "base_defects_visible_suite": "GREEN (9 passed / 0 failed in test/formatters.test.ts at the planted state, run offline in-image)",
+  "litmus_result": "PASS — the instruction names only the module (lib/formatters.ts) and the boundary/edge CLASS of problem with two non-exhaustive illustrative examples; it does not name the functions, the boundary directions, the trigger values, or the defect count. A dev finds the file immediately (allowed) but must audit each helper's boundary logic to find all five slips, with no failing-test gradient to guide them.",
+  "derivability_note": "Every defect's correct side is pinned by a CONCRETE visible-code artifact, not a display convention: #1 two sibling cutoffs use >=; #2 the parallel sibling band boundary `value < 1` is exclusive; #3 abbreviating at length 2*chars yields a no-shorter string; #4 the leading ^ remains while $ is dropped; #5 the sibling formatPhoneNumber formats exactly cleaned.length === 10 numbers, establishing ten as the canonical valid phone length in the same file. This is the same KIND of sibling/structural pin that the first-gate Opus solved 10/10 on the three kept defects.",
+  "harness_notes": [
+    "bun's default console reporter prints ONLY failing tests, so per-test PASSED verdicts are taken from the JUnit XML (--reporter=junit --reporter-outfile).",
+    "parser.py is regex-only (no xml.etree/expat dependency) so it runs on the minimal Debian python3 in the bun image; a <testcase> with a <failure>/<error> child is 'failed', <skipped> is 'skipped', else 'passed'; identity is '<classname/describe> > <name>'.",
+    "The image installs git + python3 at build time (oven/bun:1 ships neither); test execution is fully offline (verified with --network none for every ladder run)."
+  ],
+  "defects": [
+    {
+      "id": 1,
+      "function": "formatCompactNumber",
+      "difficulty": "EASY",
+      "shape": "magnitude threshold inclusion",
+      "boundary_changed": "value >= 1e3  ->  value > 1e3",
+      "edge_input": "exactly 1000",
+      "wrong_output": "renders '1000.00' instead of '1.00K'",
+      "derivability": "The sibling M and B cutoffs both use '>='; the lone K cutoff using '>' is internally inconsistent, and 1000 is definitionally one thousand.",
+      "why_no_visible_test_catches": "Visible tests use 999 / 1500 / 2.5M / 3B; none lands on exactly 1000, where '>' and '>=' diverge."
+    },
+    {
+      "id": 2,
+      "function": "formatCryptoAmount",
+      "difficulty": "EASY",
+      "shape": "precision-band threshold",
+      "boundary_changed": "value < 0.01  ->  value <= 0.01",
+      "edge_input": "exactly 0.01",
+      "wrong_output": "renders '0.01000000' (8 decimals) instead of '0.0100' (4 decimals)",
+      "derivability": "The parallel sibling band boundary 'else if (value < 1)' is exclusive; the descending precision ladder must use exclusive '<' at both edges, so 0.01 belongs to the next band down (4 decimals).",
+      "why_no_visible_test_catches": "Visible tests use 0.00001234 / 0.125 / 12.5; none lands on exactly 0.01, where '<' and '<=' diverge."
+    },
+    {
+      "id": 3,
+      "function": "formatAddress",
+      "difficulty": "MEDIUM",
+      "shape": "abbreviation-floor length guard",
+      "boundary_changed": "address.length <= chars * 2  ->  address.length < chars * 2",
+      "edge_input": "an address exactly 2*chars long (e.g. '0x123456' with chars=4)",
+      "wrong_output": "abbreviates into a middle-dotted string no shorter than the original instead of returning it whole",
+      "derivability": "At length 2*chars the abbreviated form (first-chars + '...' + last-chars) is as long as or longer than the input, so abbreviating is pointless; the guard exists precisely to return such inputs whole.",
+      "why_no_visible_test_catches": "Visible tests use lengths 5 and 18 with chars=4; neither is exactly 8, the chars*2 boundary."
+    },
+    {
+      "id": 4,
+      "function": "isValidEmail",
+      "difficulty": "MEDIUM",
+      "shape": "regex anchor scope",
+      "boundary_changed": "/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/  ->  /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+/  (drop the trailing $ anchor)",
+      "edge_input": "a well-formed address followed by trailing text, e.g. 'user@example.com not-real'",
+      "wrong_output": "returns true (accepts the prefix) instead of false",
+      "derivability": "The leading '^' anchor remains while the trailing '$' is gone; anchoring only one end is internally inconsistent for a validator meant to match the whole string.",
+      "why_no_visible_test_catches": "Visible tests use a clean address (true) and an at-sign-less string (false); neither has trailing junk after a valid prefix, where the missing '$' bites."
+    },
+    {
+      "id": 5,
+      "function": "isValidPhone",
+      "difficulty": "MEDIUM",
+      "shape": "digit-count minimum-length gate",
+      "boundary_changed": "phone.replace(/\\D/g, '').length >= 10  ->  length > 10",
+      "edge_input": "a bare ten-digit number, e.g. '5551234567'",
+      "wrong_output": "returns false (rejects a canonical ten-digit phone) instead of true",
+      "derivability": "The sibling formatPhoneNumber formats exactly 'cleaned.length === 10' numbers as US phones ((XXX) XXX-XXXX), establishing ten as THE canonical valid phone length in the same file; a validator that rejects ten-digit numbers directly contradicts the formatter that canonically formats them.",
+      "why_no_visible_test_catches": "Visible tests use an 11-digit international number (true) and a 5-digit string (false); neither is exactly 10, where '>=' and '>' diverge."
+    }
+  ],
+  "fairness_audit": "No mocks or hidden coupling: all five targets are pure, exported functions the agent can read, and every gold assertion checks output values, not implementation. The alternative-implementation audit confirms materially different correct fixes (Math.abs()+'>=', an ellipsis-aware length guard, a reordered fully-anchored regex, a digit-count '> 9', and 'value < 0.01') all score reward 1, so no test encodes the oracle's token choice. Every defect's correct side is derivable from a concrete visible-code pin (sibling comparison or sibling function), not a display convention — the two convention-picks that a first gate proved unsolvable were removed. The gold file enters only via config.json test_patch (absent from the image; git history length 1, working tree clean), and the visible suite is green at the planted state, so there is no git or failing-test leak."
+}

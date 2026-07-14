@@ -1,0 +1,28 @@
+version = "1.0"
+
+[metadata]
+author_name = "Siddhant Paliwal"
+author_email = "paliwal.siddhant@gmail.com"
+title = "Fix boundary errors in the native trading display formatters"
+repository = "TradingApp"
+base_commit = "5c7ef853"
+difficulty = "medium"
+category = "debugging"
+tags = ["debugging", "swe-bench-pro", "latent-bug", "typescript", "bun"]
+human_solve_time = "45m"
+requires_internet = false
+repo_type = "web-app"
+task_type = "bug-fix"
+verifier_runtime_sec = 20
+
+[verifier]
+timeout_sec = 600
+
+[agent]
+timeout_sec = 3600
+
+[environment]
+build_timeout_sec = 1800.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240

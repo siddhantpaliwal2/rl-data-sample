@@ -1,0 +1,120 @@
+{
+  "task": "xrepo-meetnotes-latent",
+  "pattern": "latent-bug",
+  "instance_id": "meetnotes-lib-boundaries-latent",
+  "repo": "meeting-notes-app",
+  "third_party_repo": true,
+  "base_commit": "0000000000000000000000000000000000000000",
+  "substrate": "frontend/src/lib/format.ts (pure display formatters, zero runtime imports) + backend/src/services/search.services.ts (keyword search; pure helpers driven through the exported searchRecordings in keyword mode). TypeScript / bun:test; no third-party runtime deps; pure, offline-isolable.",
+  "base_image": "meetnotes-repo:v1 = oven/bun:1 + git + python3; flattened clean workspace copied to /app; NO bun install (no runtime deps).",
+  "task_image": "meetnotes-task:v1 = FROM meetnotes-repo:v1 + 5 single-token byte-substring defects + fresh 1-commit git history + /logs/verifier.",
+  "defect_count": 5,
+  "difficulty_mix": "2 EASY (megabyte precision constant, index<0 vs <=0 guard) + 3 MEDIUM (hour-cutoff comparison flip, dropped case-normalization, off-by-one result cap)",
+  "distinct_shapes": [
+    "unit-cutoff comparison flip (>= -> >)",
+    "numeric precision constant (toFixed(1) -> toFixed(0)) on one branch, sibling-pinned",
+    "dropped case-normalization (value.toLowerCase() removed)",
+    "off-by-one on a result-count bound (slice(0,limit) -> slice(0,limit+1)), sibling-pinned",
+    "found-index guard comparison flip (index<0 -> index<=0)"
+  ],
+  "grep_twin_note": "Two of the five are comparison flips, but on unrelated invariants in different files/functions (formatDuration hour arithmetic vs getTextPreview indexOf contract), on different operators (>= vs <), each pinned by a different sibling. No single grep surfaces both, and fixing one does not reveal the other. The other three shapes are distinct mechanisms.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "frontend/src/lib/format.ts",
+      "function": "formatDuration",
+      "shape": "unit-cutoff comparison flip",
+      "boundary_changed": "if (minutes >= 60)  ->  if (minutes > 60)",
+      "difficulty": "MEDIUM",
+      "edge_input": "a duration of exactly 60 minutes, e.g. formatDuration(3600) or formatDuration(3659)",
+      "wrong_output": "'60:00' / '60:59' (minutes-and-seconds form with an oversized minute count) instead of '1h 0m'",
+      "why_no_visible_test_catches": "sub-hour durations and 61-minutes-and-up render identically under >= and >; only the exact 60-minute band (3600-3659 s) diverges, which no mid-range value hits.",
+      "derivability": "The hour branch immediately below computes hours = floor(minutes/60) and remMin = minutes % 60; at exactly 60 minutes that branch yields the consistent '1h 0m'. The cutoff must include 60 for the hours form to own the 60-minute point, exactly as the sibling arithmetic implies."
+    },
+    {
+      "id": 2,
+      "file": "frontend/src/lib/format.ts",
+      "function": "formatBytes",
+      "shape": "numeric precision constant (MB branch only)",
+      "boundary_changed": "(bytes / (1024 * 1024)).toFixed(1)  ->  .toFixed(0)",
+      "difficulty": "EASY",
+      "edge_input": "a megabyte-scale size, e.g. formatBytes(5*1024*1024) or formatBytes(1_572_864)",
+      "wrong_output": "'5 MB' / '2 MB' (no decimal; 1.5 rounded to a whole number) instead of '5.0 MB' / '1.5 MB'",
+      "why_no_visible_test_catches": "byte (< 1 KB) and kilobyte (< 1 MB) sizes never reach the MB branch; the KB branch's own toFixed(1) is untouched.",
+      "derivability": "The sibling KB branch one line up formats with .toFixed(1); the size column is meant to carry one decimal across units, so the MB branch must match its sibling's precision."
+    },
+    {
+      "id": 3,
+      "file": "backend/src/services/search.services.ts",
+      "function": "includesQuery (keyword matching)",
+      "shape": "dropped case-normalization",
+      "boundary_changed": "value.toLowerCase().includes(query)  ->  value.includes(query)",
+      "difficulty": "MEDIUM",
+      "edge_input": "a lowercase query against stored text of different case, e.g. searchRecordings keyword mode q='launch' over a title 'Quarterly Launch Plan' / transcript 'Meeting about the LAUNCH schedule'",
+      "wrong_output": "no match (recording dropped from keywordResults) instead of a hit with matchedFields ['title','transcript']",
+      "why_no_visible_test_catches": "same-case matches still succeed; only a case-mismatched query/stored-text pair diverges, which no comfortable-case value feeds. The visible repo suite only exercises semantic mode, so the keyword path is untested there.",
+      "derivability": "The query is lowercased before it arrives (normalizedQuery = query.toLowerCase() in searchRecordingsByKeyword); matching only one side case-folds a comparison that is meant to be case-insensitive on both. The mirror getTextPreview also lowercases the text before indexOf."
+    },
+    {
+      "id": 4,
+      "file": "backend/src/services/search.services.ts",
+      "function": "searchRecordingsByKeyword",
+      "shape": "off-by-one on a result-count bound",
+      "boundary_changed": "return results.slice(0, limit)  ->  return results.slice(0, limit + 1)",
+      "difficulty": "MEDIUM",
+      "edge_input": "more matches than the limit, e.g. 3 matching recordings with limit = 2",
+      "wrong_output": "3 results returned instead of 2 (one past the requested cap)",
+      "why_no_visible_test_catches": "result sets at or under the limit are unaffected by the +1; only an over-limit match set diverges.",
+      "derivability": "The sibling semantic branch caps its results with the identical .slice(0, limit); the keyword branch must honour the same limit contract its caller passes."
+    },
+    {
+      "id": 5,
+      "file": "backend/src/services/search.services.ts",
+      "function": "getTextPreview",
+      "shape": "found-index guard comparison flip",
+      "boundary_changed": "if (index < 0)  ->  if (index <= 0)",
+      "difficulty": "EASY",
+      "edge_input": "a query at position 0 of a long transcript, e.g. a transcript beginning with the query and longer than 180 chars",
+      "wrong_output": "the no-match fallback head slice (first 180 chars) instead of the leading match window (first 120 chars)",
+      "why_no_visible_test_catches": "a mid-transcript match (index > 0) is identical under < 0 and <= 0; only a match at the exact start (index 0), on a transcript long enough for 120 vs 180 to differ, diverges.",
+      "derivability": "String.indexOf returns -1 only when absent and a valid found position is >= 0, so 0 is a real match; the guard must exclude only -1, exactly as indexOf's contract implies."
+    }
+  ],
+  "f2p_count": 5,
+  "p2p_count": 12,
+  "f2p": [
+    "tests/lib_boundaries.test.ts::audio duration formatting::rolls a full hour of seconds into hours-and-minutes form",
+    "tests/lib_boundaries.test.ts::size formatting::keeps one decimal place for megabyte sizes",
+    "tests/lib_boundaries.test.ts::keyword search matching::matches a query against stored text regardless of letter case",
+    "tests/lib_boundaries.test.ts::keyword search result count::returns no more results than the requested limit",
+    "tests/lib_boundaries.test.ts::keyword search preview::windows the preview around a match at the start of the transcript"
+  ],
+  "p2p": [
+    "tests/lib_boundaries.test.ts::audio duration formatting::formats sub-hour durations as minutes and seconds",
+    "tests/lib_boundaries.test.ts::audio duration formatting::keeps minutes-and-seconds form just below the hour",
+    "tests/lib_boundaries.test.ts::audio duration formatting::keeps hours-and-minutes form above the hour boundary",
+    "tests/lib_boundaries.test.ts::size formatting::formats byte and kilobyte sizes",
+    "tests/lib_boundaries.test.ts::size formatting::uses plain bytes below one kilobyte",
+    "tests/lib_boundaries.test.ts::size formatting::stays in kilobytes just below one megabyte",
+    "tests/lib_boundaries.test.ts::keyword search matching::matches a lowercase query within a same-case title",
+    "tests/lib_boundaries.test.ts::keyword search matching::returns nothing when the query is absent",
+    "tests/lib_boundaries.test.ts::keyword search result count::returns every match when the match count is under the limit",
+    "tests/lib_boundaries.test.ts::keyword search preview::returns the surrounding text for a mid-transcript match",
+    "tests/lib_boundaries.test.ts::keyword search preview::previews the title when the transcript has no text",
+    "tests/lib_boundaries.test.ts::search modes::returns empty result sets for semantic mode with no vector hits"
+  ],
+  "base_defects_visible_suite": "N/A — the minimal offline image ships no agent-visible bun test files (the repo's own search test is vitest-based and needs the full backend + Firebase/Qdrant deps, which are out of the offline slice). The agent-visible tree is source only; there is no red test at the planted state. All f2p+p2p live in the hidden gold file injected at grade time.",
+  "ladder": {
+    "leak_check": "PASS — in meetnotes-task:v1 (--network none): git log length 1, git status --porcelain empty, git diff empty, planted tokens present, no tests/ dir (gold file absent from the agent image).",
+    "null_run": "reward 0 — full test.sh on the unmodified task image: all 5 fail_to_pass report per-test FAILED (12/17 required passed); 17 tests parsed, no collection errors.",
+    "oracle_run": "reward 1 — solution/solve.sh reverse-applies the 5 replacements; 17/17 required passed (all passed).",
+    "partial_run": "reward 0 — fixing only the 2 format.ts defects leaves the 3 search.services.ts f2p failing (14/17 required passed)."
+  },
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "git_history_len": 1,
+  "litmus_result": "FAIR — the instruction names the two source files but no function, value, count, boundary direction, or defect shape; it reports user-visible wrong behaviour at the edges. With no failing local test there is no red-test gradient, so a strong dev must read the boundary logic in both files, locate five slips among many boundaries (two of them in one file), and derive each correct side from a sibling. Naming the files (but not lines/functions/values/counts) matches the round-1 calibration where module-level naming without contract-level detail gated well.",
+  "fairness_audit": "Every f2p asserts input/output behaviour on exported surfaces (formatDuration, formatBytes, and the exported searchRecordings entrypoint in keyword mode), never an implementation detail. Each defect's correct side is derivable from a sibling in the same file: the hour arithmetic below the cutoff, the KB branch's toFixed(1), the pre-lowercased query, the semantic branch's identical slice(0,limit), and indexOf's found-position contract. The 12 controls block lazy over-fixes (sub-hour and above-hour durations, byte/KB sizes, same-case and absent matches, under-limit counts, mid-transcript and title-fallback previews, empty semantic results). The only collaborator on the search path is the recordings data source, supplied as a typed offline double via __setRecordings with explicit values (no bare mock, no module-attribute patching); it is never the object under assertion, and a near-correct implementation reading its legitimate fields cannot crash on a mock. Alternative-implementation audit: each defect has a materially different correct fix (manual case-fold, Math.min-based cap, explicit found-index check, per-branch toFixed) that passes both its f2p and the controls; no control pins the internal split of the 180-char preview window (only the leading-window length the guard alone determines). Deterministic, fully offline, verifier runs --network none.",
+  "harness_notes": "TS/bun adaptation of the canonical SWE-Bench-Pro contract, copied from the proven snapback harness. run_script.sh runs `bun test tests/lib_boundaries.test.ts --reporter=junit`; parser.py is the regex-based JUnit-XML parser (no pyexpat) emitting names as '<file>::<describe>::<it>'; test.sh is the canonical entrypoint (applies test_patch from config, runs, parses, requires all f2p+p2p passed). Defects are planted and reversed by exact single-token byte-substring replacement (CRLF-safe: the two source files ship with CRLF line endings, which a context-diff patch would fight; each target string occurs exactly once, verified, or the plant/solve aborts). The search service's four collaborator imports are satisfied by tiny offline test doubles in the image so searchRecordings resolves and runs with no network."
+}

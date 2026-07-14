@@ -1,5 +1,12 @@
 {
- "latent-phone-invites": "0c54f8c26fc79ad397184f50601e49327c76ea5fd40b378e76ea39170bbb9332",
- "latent-market-structure": "0fa488bdba0053e3842e04bc9b89d22d9fad2505af85573b2adba2cdaa230bb3",
- "latent-credit-normalize": "d4f123ac7acfeba592ca7e43f0adb1446ab84d55b0eed94b685ea377836e40b3"
+ "_method": "find <dir> -type f | LC_ALL=C sort | xargs shasum -a 256 | shasum -a 256",
+ "latent-credit-normalize": "005914ad8ab31edb4418d6f2fe64e59f1723792866b401d20947b60f8c71e444",
+ "latent-doc-extractors": "1fb11ef753215fe4f2cd1c23877c5e742ec10cb5b27dfb4ef6195c87c92c574b",
+ "latent-financial-tools": "803e55fa060c359f61e2af93ec3888b17b6a6f214d88a905a2507739b81cdc5c",
+ "latent-market-structure": "e1a7c7c604da909e30174f873b92f630dde1814a160aeb57e9ef40dc0d4b8a71",
+ "latent-phone-invites": "a57c0c5a8d923aa515cb69e0e6ab75e064709d994025705e02ae13790372ac78",
+ "xrepo-correlation-latent": "348c5c844e26e661e78f1d297571e5640ddd0f9085f301af0ae918126f80bef2",
+ "xrepo-fiu-latent": "99c762e32ca2b53d6975648867cd9cfca57327ad1872b04166f72b51763c554d",
+ "xrepo-loangenai-latent": "07c2439627e6597e1a13f291920f1e492831e6d933f59191e29e77d013b54289",
+ "xrepo-txenrich-latent": "a84c3c7c4f2ed9b1ef79b5da5a555665daef26e2f1df72b1f0ebe2e2e4568763"
 }

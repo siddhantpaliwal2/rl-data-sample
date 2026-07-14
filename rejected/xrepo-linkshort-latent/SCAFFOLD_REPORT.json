@@ -1,0 +1,105 @@
+{
+  "task": "linkshort-boundary-latent-bugs",
+  "pattern": "latent-bug",
+  "instance_id": "linkshort-boundary-latent-bugs",
+  "repo": "LinkShortner",
+  "repo_source": "audit-repos/24f3005028-LinkShortner-90edf9d5/LinkShortner/backend",
+  "base_commit": "2010be86",
+  "repo_image": "linkshort-repo:v1",
+  "task_image": "linkshort-task:v1",
+  "defect_count": 5,
+  "f2p": [
+    "tests/test_linkshort_boundaries.py::TestAuthorizedPartiesParsing::test_whitespace_only_element_is_filtered",
+    "tests/test_linkshort_boundaries.py::TestRateLimitKey::test_bearer_token_key_has_no_leading_space",
+    "tests/test_linkshort_boundaries.py::TestAsUtc::test_aware_offset_is_converted_to_utc",
+    "tests/test_linkshort_boundaries.py::TestListLinksPagination::test_first_page_returns_newest_rows",
+    "tests/test_linkshort_boundaries.py::TestPreferPsycopgDriver::test_only_the_scheme_prefix_is_rewritten"
+  ],
+  "p2p": [
+    "tests/test_linkshort_boundaries.py::TestAuthorizedPartiesParsing::test_plain_csv_is_split_and_trimmed",
+    "tests/test_linkshort_boundaries.py::TestAuthorizedPartiesParsing::test_list_value_passes_through",
+    "tests/test_linkshort_boundaries.py::TestAuthorizedPartiesParsing::test_sibling_cors_parser_filters_whitespace_only",
+    "tests/test_linkshort_boundaries.py::TestRateLimitKey::test_anonymous_request_uses_remote_address",
+    "tests/test_linkshort_boundaries.py::TestAsUtc::test_naive_input_is_stamped_utc",
+    "tests/test_linkshort_boundaries.py::TestAsUtc::test_none_returns_none",
+    "tests/test_linkshort_boundaries.py::TestAsUtc::test_utc_input_is_unchanged",
+    "tests/test_linkshort_boundaries.py::TestListLinksPagination::test_count_links_reports_total",
+    "tests/test_linkshort_boundaries.py::TestListLinksPagination::test_owner_with_no_links_returns_empty",
+    "tests/test_linkshort_boundaries.py::TestPreferPsycopgDriver::test_plain_postgres_scheme_is_rewritten",
+    "tests/test_linkshort_boundaries.py::TestPreferPsycopgDriver::test_non_postgres_url_is_untouched",
+    "tests/test_linkshort_boundaries.py::TestPreferPsycopgDriver::test_already_psycopg_url_is_untouched"
+  ],
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "partial_detail": "Reverse-applying the correct fix for exactly 2 of 5 defects (parse_authorized_parties + list_links) flips those 2 f2p to passed (14/17) but leaves 3 f2p failed -> reward 0. Every f2p must pass for reward 1.",
+  "git_history_len": 1,
+  "git_diff_empty": true,
+  "reflog": "single entry: 'import codebase' (planted state not recoverable via diff/log/reflog)",
+  "base_defects_visible_suite": "GREEN (16 passed / 0 failed for tests/test_links.py at the planted state; verified in-image with --network none). The one visible test that the list_links defect would turn red (test_paginated_list) is removed in the environment before history collapse; list_links keeps visible green coverage via test_links_are_scoped_to_owner, so no path looks conspicuously untested.",
+  "visible_suite_handling": "The brief's premise that 'the visible tests don't exercise these edges' was correct for 4 of 5 defects but WRONG for the list_links offset defect: tests/test_links.py::test_paginated_list (page=1, page_size=2 over 3 links) exercises the page-1 offset and turns red under the defect (empirically: 1 failed / 16 passed). Any change to the page-1 offset breaks it, so the defect and a green test_paginated_list are mutually exclusive. Per CONSTRUCTION_V2 rule 2 (visible suite must be green at planted state) the offending test is removed from the visible tree in environment/remove_pagination_test.patch (invisible once git history is collapsed). Grading is unchanged from the brief's design: run_script runs only the boundary gold file; the visible suite is not graded.",
+  "env": { "LINK_SHORTENER_DATABASE_URL": "sqlite://" },
+  "env_note": "Single required env var, baked into the task image as sqlite://. Needed because importing link_shortener.main and constructing pydantic Settings requires database_url. The suite is deterministic and offline; no secrets.",
+  "dependency_note": "The repo's requirements.txt is UTF-16-LE + CRLF and lists several implausible / typosquat-shaped packages (httpcore2, httpx2, fastar, annotated-doc, detect-installer, rignore) plus inflated version pins. It is NOT installed verbatim. The repo image installs a curated, security-reviewed subset (clerk-backend-api==6.0.1, fastapi, slowapi, SQLAlchemy>=2, pydantic>=2, pydantic-settings, bcrypt, httpx, pytest) covering exactly what the code under test imports. clerk-backend-api==6.0.1 provides the exact symbols auth.py imports (AuthenticateRequestOptions, authenticate_request, security.types.AuthErrorReason), so link_shortener.main imports cleanly.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "backend/link_shortener/config.py",
+      "function": "parse_authorized_parties (clerk_authorized_parties before-validator)",
+      "boundary_changed": "[... if party.strip()]  ->  [... if party]",
+      "edge_input": "a comma-separated string with a whitespace-only element, e.g. \"a, ,b\"",
+      "wrong_output": "keeps the whitespace-only element as \"\" -> [\"a\", \"\", \"b\"] instead of [\"a\", \"b\"]",
+      "derivability": "The immediately-adjacent sibling validator parse_cors_allowed_origins performs the identical comprehension WITH `if origin.strip()`; the two parsers reading the same CSV shape should agree. p2p test_sibling_cors_parser_filters_whitespace_only pins the sibling's correct behavior in the same file.",
+      "why_no_visible_test_catches": "No visible test supplies clerk_authorized_parties or cors_allowed_origins as a comma string; clerk is unconfigured and CORS uses its list default."
+    },
+    {
+      "id": 2,
+      "file": "backend/link_shortener/main.py",
+      "function": "_rate_limit_key",
+      "boundary_changed": "token = auth[7:]  ->  token = auth[6:]",
+      "edge_input": "Authorization: \"Bearer TOK\"",
+      "wrong_output": "bucket key \"user: TOK\" (stray leading space) instead of \"user:TOK\"",
+      "derivability": "The guard on the same line is `auth.lower().startswith(\"bearer \")`; \"bearer \" is exactly 7 characters, so the length-based slice must start at 7. The off-by-one leaves the space that the scheme match just proved is present.",
+      "why_no_visible_test_catches": "The limiter key func is only invoked for the create/redirect/unlock endpoints, and the visible tests hit those anonymously (no Authorization header) -> the bearer branch is never taken; the auth_me test sends a Bearer header but auth_me is unlimited."
+    },
+    {
+      "id": 3,
+      "file": "backend/link_shortener/services.py",
+      "function": "_as_utc (tz-aware branch)",
+      "boundary_changed": "return value.astimezone(timezone.utc)  ->  return value.replace(tzinfo=timezone.utc)",
+      "edge_input": "a tz-aware datetime at a non-UTC offset, e.g. 2024-01-01 14:00 +05:30",
+      "wrong_output": "relabels as 14:00 UTC (offset dropped) instead of converting to 08:30 UTC",
+      "derivability": "The function has a deliberate two-branch structure: naive input -> attach UTC with `.replace`; aware input -> convert with `.astimezone`. Collapsing the aware branch to `.replace` makes both branches identical and erases the naive/aware distinction the code was written to make. p2p test_naive_input_is_stamped_utc pins the legitimate `.replace` branch.",
+      "why_no_visible_test_catches": "No visible test persists a tz-aware non-UTC expiry and reads it back; the only expiry test uses a past time rejected at the route layer before _as_utc runs."
+    },
+    {
+      "id": 4,
+      "file": "backend/link_shortener/services.py",
+      "function": "list_links",
+      "boundary_changed": "offset = (page - 1) * page_size  ->  offset = page * page_size",
+      "edge_input": "page=1 over an owner with multiple links",
+      "wrong_output": "page 1 skips the first page_size (newest) rows and returns a later slice",
+      "derivability": "Pagination is 1-indexed (main.py: Query(default=1, ge=1)) and the PaginatedLinks schema echoes `page`; page 1 must map to offset 0. count_links (right beside it) is unaffected, so a correct total with a short/empty page-1 list is the tell. p2p test_count_links_reports_total pins the sibling count.",
+      "why_no_visible_test_catches": "The visible pagination test (test_paginated_list) DID catch it -> it is removed from the visible tree (see visible_suite_handling); the remaining visible list_links coverage (owner-scoping) uses a 0-link foreign owner where offset 0 and page*page_size are both empty."
+    },
+    {
+      "id": 5,
+      "file": "backend/link_shortener/config.py",
+      "function": "prefer_psycopg_driver (database_url validator)",
+      "boundary_changed": "value.replace(\"postgresql://\", \"postgresql+psycopg://\", 1)  ->  drop the count arg (replace ALL)",
+      "edge_input": "a database URL that embeds a second \"postgresql://\" literal, e.g. postgresql://u@h/d?cb=postgresql://x",
+      "wrong_output": "rewrites the embedded occurrence too -> ...?cb=postgresql+psycopg://x instead of leaving it intact",
+      "derivability": "The guard is `if value.startswith(\"postgresql://\")` -> the intent is to normalize only the leading connection SCHEME, not arbitrary substrings inside the URL. The `, 1` count is what scopes the rewrite to the prefix. p2p test_plain_postgres_scheme_is_rewritten pins the ordinary single-occurrence rewrite.",
+      "why_no_visible_test_catches": "No visible test constructs Settings with a postgres database_url at all (tests use sqlite://); the driver rewrite is never exercised."
+    }
+  ],
+  "verification_ladder": {
+    "static_leak_check": "git log --oneline | wc -l == 1; git diff empty; git reflog single 'import codebase'; boundary gold file absent from /app/tests (only conftest.py + test_links.py present).",
+    "visible_suite_green_at_planted": "tests/test_links.py -> 16 passed / 0 failed (--network none).",
+    "null_run": "verifier on unmodified planted image -> reward 0; all 5 f2p report FAILED with per-test lines (no collection ERRORs); 12 p2p passed.",
+    "oracle_run": "solution/solve.sh reverse-applies the code defects -> verifier reward 1; 17/17 (5 f2p + 12 p2p) passed.",
+    "partial_run": "fixing exactly 2 of 5 defects -> 14/17 (2 f2p flip to passed, 3 remain failed) -> reward 0."
+  },
+  "fairness_audit": "No mocks anywhere in the gold suite: four defects are tested as pure function calls (Settings construction, _rate_limit_key on a typed SimpleNamespace with explicit headers/client, _as_utc on plain datetimes) and the fifth (list_links) uses a real in-memory SQLite session with real Link rows mirroring tests/conftest.py, so no bare Mock can leak into pydantic or SQLAlchemy. Alternative-implementation audit passed for all five: each f2p asserts observable behavior (a filtered list, a key string, a UTC instant + zero offset, an ordered code list, a rewritten URL) that every correct fix produces regardless of technique — the defect-2 f2p deliberately tests only the canonical 'Bearer TOK' case and omits a lowercase-scheme assertion that could have penalized a case-sensitive removeprefix-style fix. Every hidden name (Settings, _rate_limit_key, _as_utc, list_links, count_links, Base, Link) exists at base and is imported inside the test bodies. The instruction names the three affected modules and the five symptoms at the behavior level but no function names, line numbers, boundary directions, trigger values, or defect count, so a strong dev cannot localize any single defect line from the instruction alone.",
+  "resistance_assessment": "Targeting Opus 1-4/10. A solve requires finding and correcting ALL FIVE single-token boundary slips with no failing-test gradient (the visible suite is green, including live coverage of list_links via owner-scoping). The five slips read as plausible code: a dropped `.strip()` in a filter, an off-by-one slice behind a matching-length guard, a naive-vs-aware branch collapsed onto the .replace the sibling branch legitimately uses, a 0-vs-1 indexed pagination offset, and a lost `, 1` count on str.replace. They span three files and require five independent realizations; fixing only the literally-reported example of any one (e.g. filtering the exact 'a, ,b') still generalizes, but an agent that stops after finding 2-3 defects fails. Two defects sit in the same file (config.py) but in different validators, and two in services.py but in unrelated functions, so locating one gives no lead on the other."
+}
