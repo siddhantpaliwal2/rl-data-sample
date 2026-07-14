@@ -60,11 +60,10 @@ All numbers below are clean runs (zero crashed trials counted) via
 | latent-financial-tools | loangenus | Python | 0/10 | 0/5 |
 | latent-phone-invites | loangenus | Python | 1/10 | 0/5 |
 | xrepo-fiu-latent | fiu_adapter (264 files) | Java | 1/10 | 1/5 |
-| xrepo-txenrich-latent | transaction-enrichment | Python | 1/10 | 0/4¹ |
+| xrepo-txenrich-latent | transaction-enrichment | Python | 1/10 | 0/5 |
 | xrepo-txenrich3-latent | transaction-enrichment | Python | 4/10 | 0/5 |
 | xrepo-txenrich4-latent | transaction-enrichment | Python | 0/10 | 0/5 |
 
-¹ one Sonnet trial crashed and was excluded; 0 of the 4 clean trials solved.
 
 
 The common failure mode on the hard tasks is instructive: agents fix 3–4 of
