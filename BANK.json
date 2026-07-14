@@ -67,5 +67,27 @@
    "opus": "9/10",
    "fix": "harden the 2 easy defects (max->min extremum, *100->*10 scale) \u2014 Sonnet finds them; convert to medium cross-trace"
   }
+ ],
+ "rejected_notes": [
+  {
+   "task": "xrepo-linkshort-latent",
+   "verdict": "TOO_EASY sonnet 5/5 opus 10/10",
+   "lesson": "872 LOC repo \u2014 agent reads whole codebase, no localization challenge; latent recipe needs LARGE substrate (loangenus 66k, fiu 264 files). Small single-purpose repos unfixable."
+  },
+  {
+   "task": "xrepo-snapback-latent",
+   "verdict": "TOO_EASY sonnet 4/5 opus 10/10",
+   "lesson": "small TS package, files named \u2014 no localization"
+  },
+  {
+   "task": "xrepo-trading-latent",
+   "verdict": "TOO_EASY sonnet 3/5 opus 9/10 (after convention-pick rework)",
+   "lesson": "single 200-line file \u2014 unfixable-too-easy regardless of defect quality"
+  },
+  {
+   "task": "xrepo-meetnotes-latent",
+   "verdict": "TOO_EASY sonnet 2/3 opus 9/10",
+   "lesson": "205 LOC across 2 named files \u2014 4th small-repo confirmation"
+  }
  ]
 }
