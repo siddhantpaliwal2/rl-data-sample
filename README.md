@@ -57,20 +57,15 @@ All numbers below are clean runs (zero crashed trials counted) via
 |---|---|---|---|---|
 | latent-credit-normalize | loangenus (66k LOC) | Python | 4/10 | 1/5 |
 | latent-doc-extractors | loangenus | Python | 4/10 | 0/5 |
-| latent-financial-tools | loangenus | Python | 0/10 | -² |
+| latent-financial-tools | loangenus | Python | 0/10 | 0/5 |
 | latent-phone-invites | loangenus | Python | 1/10 | 0/5 |
 | xrepo-fiu-latent | fiu_adapter (264 files) | Java | 1/10 | 1/5 |
 | xrepo-txenrich-latent | transaction-enrichment | Python | 1/10 | 0/4¹ |
-| xrepo-txenrich3-latent | transaction-enrichment | Python | 4/10 | 0/5³ |
-| xrepo-txenrich4-latent | transaction-enrichment | Python | 0/10 | -² |
+| xrepo-txenrich3-latent | transaction-enrichment | Python | 4/10 | 0/5 |
+| xrepo-txenrich4-latent | transaction-enrichment | Python | 0/10 | 0/5 |
 
 ¹ one Sonnet trial crashed and was excluded; 0 of the 4 clean trials solved.
-² easiness probe skipped by design: Opus at 0/10 already upper-bounds the
-  weaker model (Sonnet has never matched Opus on any measured pair in this
-  bank).
-³ measured against an earlier, strictly easier variant of the instruction
-  (more concrete symptom examples); on the shipped, vaguer variant the bound
-  holds a fortiori.
+
 
 The common failure mode on the hard tasks is instructive: agents fix 3–4 of
 the 5 planted defects and consistently miss the same one or two - the reward
@@ -123,6 +118,46 @@ docker run --rm -v "$PWD/tasks/latent-credit-normalize/tests":/vt:ro \
 uv tool install mini-swe-agent
 uv pip install --python "$(uv tool dir)/mini-swe-agent/bin/python" fastapi orjson
 ```
+
+## How the harness works
+
+The probe harness is two pieces: **mini-swe-agent** (the solver) and
+`harness/run_attempt.py` (the runner that wraps one full attempt end to end).
+
+**The solver.** mini-swe-agent is the ~100-line open-source recreation of the
+SWE-bench reference agent: a single LLM loop whose only tool is a bash shell
+inside the task container. No file viewers, no search index, no sub-agents -
+the model reads code with `grep`/`cat`/`sed` and edits with shell commands.
+The harness loads its canonical `swebench.yaml` benchmark config verbatim:
+250-step limit, $3 cost cap per attempt, 30-minute wall clock. That weak,
+standardized scaffold is the point - it is the same probe the task platform
+uses, and difficulty numbers only mean something if everyone measures with the
+same agent.
+
+**The runner.** One invocation of `run_attempt.py <task> <attempt-no> <out-dir>`
+does the whole lifecycle:
+
+1. Starts a fresh container from the task image (`docker run` of `<task>`),
+   working directory `/app` - the planted repo with sealed git history.
+2. Instantiates mini-swe-agent against that container with the model from
+   `PROBE_MODEL` (default `anthropic/claude-opus-4-8`).
+3. Hands it `tasks/<task>/instruction.md` as the task prompt. The agent
+   explores and edits `/app` until it submits or hits a limit.
+4. Grades in place: copies `tasks/<task>/tests/` into the still-running
+   container and executes `test.sh` - this is the first moment the gold tests
+   exist anywhere the agent could have touched, so they cannot have been read
+   or weakened. `test.sh` applies `config.json`'s `test_patch`, runs the suite,
+   and requires every `fail_to_pass` and `pass_to_pass` test to pass.
+5. Tears the container down and writes three artifacts to `<out-dir>`:
+   `<task>-a<N>.json` (reward 0/1, tests passed, cost, model calls, exit
+   status), `<task>-a<N>.traj.json` (the full agent trajectory - every command
+   and model message), and `<task>-a<N>.grade.log` (verbatim verifier output,
+   including exactly which gold tests failed).
+
+Attempts are independent, so parallelism is just running several invocations
+at once (see the concurrency caution below). The solve counts in the table are
+literally `grep -c '"reward": 1'` over those result files; the `.grade.log`
+files are what we used to see which planted defect stopped each failed run.
 
 **5. Run probe attempts** (one agent attempt in a fresh container, graded by
 the hidden verifier, result JSON + full trajectory written to `results/`):
