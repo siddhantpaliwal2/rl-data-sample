@@ -9,7 +9,7 @@
 # (Dockerfile.repo: maven:3.9-eclipse-temurin-8 + git + python3, sibling modules
 # installed, LF-normalized working tree of the fiu_adapter repo). On the
 # platform, replace with the approved registry reference, e.g.
-# FROM us-docker.pkg.dev/afterqueryai/silver-repo-images/fiu-xxxxx:v1@sha256:...
+# FROM <your-registry>/repo-images/fiu-xxxxx:v1@sha256:...
 FROM fiu-repo:v1
 
 USER root

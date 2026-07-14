@@ -79,8 +79,7 @@ Everything below assumes Docker is running and you are at the repo root.
 `FROM <repo>-repo:v1` (e.g. `loangenus-repo:v1`) - a pre-built image of the
 underlying **private** codebase with dependencies installed. These images are
 not on a public registry and cannot be rebuilt from this repo alone; they are
-distributed out-of-band with this sample (on the AfterQuery platform they are
-the approved repo images, referenced by digest). If `docker images | grep
+distributed out-of-band with this sample. If `docker images | grep
 -- -repo:v1` comes back empty, request the image bundle from the maintainer
 before proceeding - `docker build` will otherwise fail at the `FROM` line with
 `pull access denied`.
@@ -98,20 +97,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 docker build -t latent-credit-normalize tasks/latent-credit-normalize/environment
 ```
 
-**3. Sanity-check the task (null and oracle):**
-
-```sh
-# null: no fix applied - expect "reward: 0" and every fail_to_pass FAILED
-docker run --rm -v "$PWD/tasks/latent-credit-normalize/tests":/vt:ro \
-  latent-credit-normalize sh /vt/test.sh
-
-# oracle: gold fix applied - expect "reward: 1"
-docker run --rm -v "$PWD/tasks/latent-credit-normalize/tests":/vt:ro \
-  -v "$PWD/tasks/latent-credit-normalize/solution":/vs:ro \
-  latent-credit-normalize sh -c 'sh /vs/solve.sh && sh /vt/test.sh'
-```
-
-**4. Install the agent harness:**
+**3. Install the agent harness:**
 
 ```sh
 uv tool install mini-swe-agent
@@ -158,7 +144,7 @@ at once (see the concurrency caution below). The solve counts in the table are
 literally `grep -c '"reward": 1'` over those result files; the `.grade.log`
 files are what we used to see which planted defect stopped each failed run.
 
-**5. Run probe attempts** (one agent attempt in a fresh container, graded by
+**4. Run probe attempts** (one agent attempt in a fresh container, graded by
 the hidden verifier, result JSON + full trajectory written to `results/`):
 
 ```sh
@@ -174,3 +160,20 @@ Count solves: `grep -l '"reward": 1' results/latent-credit-normalize-a*.json | w
 ≤ 15 machine-wide. A trial that crashes under load records `"reward": null` or
 a non-`Submitted` exit_status - rerun that attempt number; never count a crash
 as a fail.
+
+## Optional: verifier sanity check (no agent)
+
+To confirm a task's mechanics without spending any model calls - the planted
+state really fails the gold tests, and the gold fix really passes them - run
+the hidden verifier directly:
+
+```sh
+# null: no fix applied - expect "reward: 0" and every fail_to_pass FAILED
+docker run --rm -v "$PWD/tasks/latent-credit-normalize/tests":/vt:ro \
+  latent-credit-normalize sh /vt/test.sh
+
+# oracle: gold fix applied - expect "reward: 1"
+docker run --rm -v "$PWD/tasks/latent-credit-normalize/tests":/vt:ro \
+  -v "$PWD/tasks/latent-credit-normalize/solution":/vs:ro \
+  latent-credit-normalize sh -c 'sh /vs/solve.sh && sh /vt/test.sh'
+```

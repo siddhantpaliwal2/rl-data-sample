@@ -5,7 +5,7 @@
 # secrets beyond the JWT_SECRET_KEY already baked into loangenus-repo:v1.
 # Locally this is the repo image built from the loangenus root Dockerfile.
 # On the platform, replace with the approved registry reference, e.g.
-# FROM us-docker.pkg.dev/afterqueryai/silver-repo-images/loangenus-xxxxx:v1@sha256:...
+# FROM <your-registry>/repo-images/loangenus-xxxxx:v1@sha256:...
 FROM loangenus-repo:v1
 
 USER root

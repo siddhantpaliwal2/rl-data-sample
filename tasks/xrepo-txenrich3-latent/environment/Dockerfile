@@ -6,7 +6,7 @@
 # the transaction-enrichment-python tree (python 3.11-slim + pinned numpy/pandas
 # so the 2022-era np.select logic runs unchanged). On the platform, replace with
 # the approved registry reference, e.g.
-# FROM us-docker.pkg.dev/afterqueryai/silver-repo-images/txenrich-xxxxx:v1@sha256:...
+# FROM <your-registry>/repo-images/txenrich-xxxxx:v1@sha256:...
 FROM txenrich-repo:v1
 
 USER root
