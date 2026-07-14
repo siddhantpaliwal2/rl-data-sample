@@ -1,4 +1,4 @@
-# RL Coding-Agent Environments - Sample Bank
+# Coding RL from Enterprise Codebases
 
 Eight fail-to-pass coding tasks mined from real production codebases (fintech
 lending, transaction enrichment, credit-bureau tooling - Python and Java).
