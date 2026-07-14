@@ -157,7 +157,10 @@ uv pip install --python "$(uv tool dir)/mini-swe-agent/bin/python" fastapi orjso
 **4. Run the harness.** One invocation of
 `harness/run_attempt.py <task> <attempt-no> <out-dir>` is one complete probe
 attempt (container, agent, hidden-verifier grading, artifacts - see "How the
-harness works" above). One task's row in the table:
+harness works" above).
+
+**4a. Run an individual task** (reproduces one row of the table; image built
+per step 2):
 
 ```sh
 PY="$(uv tool dir)/mini-swe-agent/bin/python"
@@ -167,24 +170,29 @@ for i in $(seq 1 10); do "$PY" harness/run_attempt.py latent-credit-normalize "$
 for i in $(seq 1 5); do PROBE_MODEL=anthropic/claude-sonnet-4-6 "$PY" harness/run_attempt.py latent-credit-normalize "$i" results-sonnet/; done
 ```
 
-To reproduce the whole table, run both probes for every task directory (build
-each image first per step 2). Attempts are independent, so parallelize with
-`xargs -P`:
+Count solves: `grep -l '"reward": 1' results/latent-credit-normalize-a*.json | wc -l`
+- that number over 10 is the task's cell in the table.
+
+**4b. Run all tasks** (reproduces the whole table). Attempts are independent,
+so parallelize with `xargs -P`; builds every task image, then fans out
+attempts:
 
 ```sh
 PY="$(uv tool dir)/mini-swe-agent/bin/python"
+# Opus pass (10 attempts per task):
 for t in $(ls tasks); do
   docker build -q -t "$t" "tasks/$t/environment"
   for i in $(seq 1 10); do echo "$t $i"; done
 done | xargs -P 10 -L 1 sh -c "\"$PY\" harness/run_attempt.py \$0 \$1 results/"
-# then the Sonnet pass: same loop with seq 1 5 and PROBE_MODEL=anthropic/claude-sonnet-4-6
+# Sonnet pass (5 attempts per task):
+for t in $(ls tasks); do
+  for i in $(seq 1 5); do echo "$t $i"; done
+done | PROBE_MODEL=anthropic/claude-sonnet-4-6 xargs -P 10 -L 1 sh -c "\"$PY\" harness/run_attempt.py \$0 \$1 results-sonnet/"
 ```
 
-Count solves per task: `grep -l '"reward": 1' results/latent-credit-normalize-a*.json | wc -l`
-- that number over 10 is the row in the table above. Keep concurrent attempts
-≤ 15 machine-wide. A trial that crashes under load records `"reward": null` or
-a non-`Submitted` exit_status - rerun that attempt number; never count a crash
-as a fail.
+Keep concurrent attempts ≤ 15 machine-wide. A trial that crashes under load
+records `"reward": null` or a non-`Submitted` exit_status - rerun that attempt
+number; never count a crash as a fail.
 
 ## Optional: verifier sanity check (no agent)
 
