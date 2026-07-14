@@ -37,20 +37,30 @@ passes - partial fixes score 0.
 
 ## Gates and measured results
 
-Every task passes four mechanical gates plus two model probes, measured with
+Every task clears four gates **in order** - two mechanical checks, then two
+model probes. Each gate must pass before the next runs:
+
+| # | Gate | Threshold | What it proves |
+|---|---|---|---|
+| 1 | Null (nop) | reward 0; every `fail_to_pass` FAILS | the defects are real and the gold tests catch them |
+| 2 | Oracle | reward 1 with `solution/solve.sh` | the task is solvable and the verifier is satisfiable |
+| 3 | Easiness probe | Sonnet 4.6 × 5 attempts, ≤ 1/5 solved | a mid-tier model can't crack it at baseline |
+| 4 | Difficulty probe | Opus 4.8 × 10 attempts, ≤ 4/10 solved | a frontier model fails most of the time |
+
+The order is cost-driven: null/oracle are free (no model calls) and kill
+mechanically broken tasks instantly; the Sonnet probe is the cheap screen - if
+a mid-tier model solves the task 2+ times out of 5, the defects are greppable
+rather than latent and there is no point spending the ~10x more expensive Opus
+runs; only tasks that survive Sonnet get the full 10-attempt Opus difficulty
+measurement that decides the table below.
+
+Both probes are measured with
 **[mini-swe-agent](https://github.com/SWE-agent/mini-swe-agent)** - the minimal
 (~100-line agent class) agent from the Princeton/Stanford team behind SWE-bench
 and SWE-agent; bash-only, linear history, yet >74% on SWE-bench Verified. We
 gate on a deliberately *simple* harness: strong scaffolds
 (Claude Code-style agent loops with rich tooling) solve these tasks bimodally
 and mask the difficulty signal RL training needs.
-
-| Gate | Threshold |
-|---|---|
-| Null (nop) | reward 0; every `fail_to_pass` FAILS |
-| Oracle | reward 1 with `solution/solve.sh` |
-| Easiness probe | Sonnet 4.6 × 5 attempts, ≤ 1/5 solved |
-| Difficulty probe | Opus 4.8 × 10 attempts, ≤ 4/10 solved |
 
 A hard task (down to 0/10) is acceptable **only** after a fairness audit:
 per-test failures must spread across defects (not one universally-missed
