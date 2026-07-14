@@ -1,26 +1,45 @@
 <uploaded_files>/app</uploaded_files>
 
-The document field extractors that read structured numbers off uploaded deal
-documents return wrong values for certain documents, even though the whole test
-suite is green. The wrong results cluster around **exact threshold values and
-boundary cases** - for example an amount sitting precisely on a plausibility
-floor, a figure right at the top of a valid range, or a table with only the
-fewest rows that still count as data. Away from those edges the extracted
-numbers are correct, which is why the existing tests (they feed values
-comfortably inside the ranges, with roomy tables) never surface the problem.
+# DEALDOC-2214: some deal documents lose one field at extraction
 
-The affected code is the deterministic parsing and labeled-amount math under
-`loangen-agent/agent/documents/extractors/`, specifically the type-specific
-field extractors in `cre_fields.py` that pull values off appraisals, rent rolls,
-settlement statements and credit reports. This is pure, side-effect-free string
-parsing, thresholding and comparison logic; the bugs are in how the boundaries
-themselves are handled - which side of a threshold is included, and how many
-rows are enough to trust.
+**Type:** Bug · **Priority:** High · **Component:** document field extraction
+**Reporter:** underwriting operations
 
-Correct the boundary handling so the extractors are right on these
-exact-threshold and edge inputs, without changing behavior anywhere the current
-tests already pin. The repository's existing tests all pass and must stay
-passing; correctness on the edge/boundary inputs is the bar.
+## Description
+
+Since the last review cycle we have four confirmed cases where a deal document
+was parsed, most fields came out right, but one structured number the document
+plainly contains never made it into the extracted fields. Re-uploading
+reproduces it every time, and in each case a *nearly identical* document - same
+layout, slightly different figures - extracts perfectly. So this is not a
+formatting or OCR problem; something about the particular values themselves is
+tripping the extraction.
+
+## Cases
+
+1. **An appraisal** whose appraised value comes back empty. The document is
+   well-formed and the figure is plainly there; a sister appraisal for a
+   somewhat larger property extracts its value fine.
+
+2. **A rent roll** that yields no total rent. It is a small roll - the leanest
+   one we've seen come through - but it is a legitimate rent roll, and rolls
+   with more rows total correctly.
+
+3. **A settlement statement** whose loan amount comes back empty. It is a
+   modest loan, on the small end of what we write, but well within what the
+   product allows; larger statements extract normally.
+
+4. **A credit summary** for an exceptionally strong borrower that yields no
+   score at all. Weaker borrowers' summaries extract their scores fine. The
+   strong score is a real, valid score - the extractor just won't hand it over.
+
+## Acceptance
+
+The extractors are deterministic - same document text in, same fields out.
+Whatever is rejecting these particular values must be found and corrected so
+each case above yields the number its document states, and nothing that
+currently extracts correctly changes. The repository's existing tests all pass
+today and must still pass.
 
 Do not modify anything under `loangen-agent/tests/`.
 

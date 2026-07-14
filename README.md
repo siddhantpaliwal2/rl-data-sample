@@ -35,6 +35,12 @@ tasks/<name>/
 A task rewards 1 only when **every** `fail_to_pass` and `pass_to_pass` test
 passes - partial fixes score 0.
 
+One calibration note: `latent-doc-extractors` reward-gates four of its five
+planted defects. The fifth (a personal-financial-statement scan floor) is
+planted and reversed by the oracle, but no graded test distinguishes it - an
+agent that fixes the four gated boundaries scores 1 whether or not it also
+finds that one. Every other task gates all five of its defects.
+
 ## Gates and measured results
 
 Every task clears four gates **in order** - two mechanical checks, then two
@@ -68,17 +74,22 @@ unpinnable assertion), every defect's correct fix must be uniquely derivable
 from visible code, and a materially different correct fix must also pass the
 verifier. The 0–1/10 tasks below carry that audit in their `reference_plan.md`.
 
-All numbers below are clean runs (zero crashed trials counted) via
-`harness/run_attempt.py` (mini-swe-agent, canonical swebench.yaml config,
-250-step limit, $3 cost cap per attempt):
+All numbers below are clean runs (zero crashed trials counted). Five tasks
+were measured with `harness/run_attempt.py` (mini-swe-agent, canonical
+swebench.yaml config, 250-step limit, $3 cost cap per attempt). The three
+marked * were re-gated after their instructions were rewritten into
+bug-report/ticket form: same solver and invocation
+(`mini-swe-agent --yolo --model=…`), run at scale on Daytona cloud sandboxes
+(amd64 images of the same task environments; every sandbox null/oracle-verified
+first).
 
 | Task | Substrate | Lang | Opus solves/10 | Sonnet solves/5 |
 |---|---|---|---|---|
-| latent-credit-normalize | loangenus (66k LOC) | Python | 4/10 | 1/5 |
-| latent-doc-extractors | loangenus | Python | 4/10 | 0/5 |
+| latent-credit-normalize * | loangenus (66k LOC) | Python | 0/10 | 0/5 |
+| latent-doc-extractors * | loangenus | Python | 4/10 | 0/5 |
 | latent-financial-tools | loangenus | Python | 0/10 | 0/5 |
 | latent-phone-invites | loangenus | Python | 1/10 | 0/5 |
-| xrepo-fiu-latent | fiu_adapter (264 files) | Java | 1/10 | 1/5 |
+| xrepo-fiu-latent * | fiu_adapter (264 files) | Java | pending | 0/5 |
 | xrepo-txenrich-latent | transaction-enrichment | Python | 1/10 | 0/5 |
 | xrepo-txenrich3-latent | transaction-enrichment | Python | 4/10 | 0/5 |
 | xrepo-txenrich4-latent | transaction-enrichment | Python | 0/10 | 0/5 |

@@ -65,9 +65,14 @@ tests.
   from verifier-controlled config, runs `run_script.sh`, parses per-test
   verdicts, and awards reward 1 only if every `fail_to_pass` and `pass_to_pass`
   test passed.
-- `fail_to_pass` = the 5 gold boundary tests (one per defect; fail at
-  base+defects, pass once the boundaries are corrected).
-- `pass_to_pass` = 10 adjacent-behavior pins in the same gold file (just above /
+- `fail_to_pass` = 4 gold boundary tests (defects 1–3 and 5; fail at
+  base+defects, pass once the boundaries are corrected). Defect 4 (the
+  `_scan_after_label` sub-floor guard) is planted and reversed by the oracle
+  but is NOT reward-gated: the gold PFS on-floor test takes the labeled-line
+  path rather than the scan path, so it passes with or without the defect and
+  sits in `pass_to_pass`. Verified by null run: exactly the 4 f2p fail at the
+  planted state (15/19 required passing).
+- `pass_to_pass` = 11 adjacent-behavior pins in the same gold file (just above /
   below each edge, correct with or without the defect) + 4 existing
   `test_cre_field_extraction.py` tests — the "green locally" lull.
 - `run_script.sh` runs the gold file plus `test_cre_field_extraction.py`.
@@ -88,10 +93,15 @@ tests.
   (no upper-vs-lower median, no clamp-or-not, no unstated band edge). Target mix
   achieved: 2 easy-derivable (A, E) + 3 medium-derivable requiring the agent to
   trace the parsing/fallback logic (B, C, F).
-- The instruction names the directory and the one file, and describes the edge
-  *shapes* (on-a-threshold, top-of-range, minimum-rows) but not the function
-  names, the boundary direction, the trigger values, or the count — the agent
-  must read and reason about the boundary math to locate and correct each slip.
+- The instruction is a bug-tracker ticket with four cases, one per reward-gated
+  defect. It names no directory, file, or function — localization in the
+  72k-LOC repo is the agent's work — and describes each case only by document
+  type and symptom ("appraised value comes back empty; a sister appraisal for a
+  somewhat larger property extracts fine"). Exact trigger values are deliberately
+  NOT quoted: a first draft that quoted them ($100,000; 850; …) was solved 5/5
+  by the Sonnet screen because the values are grep-able source literals; the
+  abstracted rewrite re-gated at Sonnet 0/5, Opus 4/10 (clean, zero crashes).
+  Defect 4 (the ungated PFS scan floor) is intentionally not mentioned.
 - Gold tests are pure-input unittest: raw text strings fed to the `extract_*`
   functions, zero mocks, so no test encodes an implementation choice.
 - Deterministic, offline, no secrets beyond the baked `JWT_SECRET_KEY`.
