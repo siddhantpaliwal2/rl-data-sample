@@ -70,8 +70,8 @@ overstate difficulty).
 | latent-phone-invites | loangenus | Python | 0/10 |
 | xrepo-correlation-latent | correlation-core | Python | 0/10 |
 | xrepo-loangenai-latent | loan-genai-backend | Python | 10/10 |
-| xrepo-txenrich-latent | transaction-enrichment | Python | 0/4 so far (6 attempts in flight) |
-| xrepo-fiu-latent | fiu_adapter (264 files) | Java | 3/8 so far (2 attempts in flight) |
+| xrepo-txenrich-latent | transaction-enrichment | Python | 0/10 |
+| xrepo-fiu-latent | fiu_adapter (264 files) | Java | 3/10 |
 
 Every task passes null/oracle mechanically. The common failure mode on the
 0/10 tasks is instructive: agents consistently fix 4 of 5 planted defects and
