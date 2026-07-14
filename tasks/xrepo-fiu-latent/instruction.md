@@ -1,40 +1,44 @@
 <uploaded_files>/app</uploaded_files>
 
-The FIU adapter (the service that talks to Account Aggregators on behalf of a
-financial-information user) is returning wrong results for a scattering of
-**edge inputs**, even though the project builds clean and its checks pass. The
-common thread is the small, deterministic, side-effect-free helpers the adapter
-leans on everywhere - the ones that parse identifiers, normalise strings, do a
-little date arithmetic and render timestamps. On the ordinary, well-formed
-values the system produces for itself the numbers look right; it is only at the
-boundaries that they drift.
+# Partner escalation digest - FIU adapter interop issues
 
-Two concrete reports from the field:
+Rolled-up tickets from our Account Aggregator partners against the FIU adapter
+(the service that talks to Account Aggregators on behalf of a
+financial-information user). The build is clean and the shipped checks pass, so
+none of this is caught before deploy. Both reporters emphasise the same
+pattern: ordinary traffic is fine, and the failures key off the *content* of
+specific values rather than load, timing, or sequence.
 
-- **Valid identifiers are being rejected as malformed.** Some perfectly valid
-  transaction / consent UUIDs coming back from the Account Aggregator fail the
-  adapter's own "is this a valid id" check and the request is turned away as a
-  bad request. Slightly different-looking (but still invalid) ids are correctly
-  rejected, so the check is *almost* right.
+---
 
-- **Outgoing timestamps show the wrong hour.** Timestamps generated in the
-  afternoon sometimes go out reading as the morning of the same day (e.g. a
-  13:xx event is stamped 01:xx); the date, minute and second are fine - only
-  the hour is off, and only past noon.
+**AA partner (ticket #4471):**
+> Your adapter is rejecting a subset of our callbacks as `invalid` on the
+> transaction / consent identifier, and the rejected ids are well-formed UUIDs -
+> canonical form, straight from our generator. Most UUIDs go through. We diffed
+> accepted vs rejected ids and cannot see what distinguishes them; whatever
+> validity check you run is *almost* right, and genuinely malformed ids are
+> still (correctly) refused.
 
-These two are not isolated. Several other small helpers in the same family -
-the ones that parse an identifier into its parts, decide whether a field is
-"empty", and decode an encoded payload - are subtly wrong in the same
-way: correct on the ordinary values the system feeds them, off by a hair on an
-exact-edge input (a boundary element, a value that must be normalised first, an
-encoding only some inputs exercise). Away from those edges everything behaves,
-which is why the shipped checks never surface any of it.
+**AA partner (ticket #4488):**
+> Separately: your outgoing notification timestamps are wrong in the afternoon.
+> An event we both logged at 13:47 UTC arrives stamped 01:47 on the same date.
+> Date, minutes, seconds all agree; mornings are fine. Our parser now rejects
+> some of your afternoon messages outright.
 
-This is all pure, deterministic string / date / pattern logic - no persistence,
-no external calls. Correct the boundary behaviour so these edge inputs are
-handled right, without changing behaviour anywhere the current checks already
-pin. The project's checks pass now and must stay passing; correctness on the
-edge/boundary inputs is the bar.
+---
+
+**Triage note (ops):** these two are the ones partners have pinned down, but
+our own sweep says they are not isolated. A few more of the adapter's small,
+deterministic helpers in the same family - identifier and payload handling,
+field validation - drift in exactly the same way: correct on the ordinary
+values the system produces for itself, wrong by a hair on one specific edge
+form that routine traffic never feeds them. Away from those edges everything
+behaves, which is why the shipped checks never surface any of it.
+
+This is all pure string / date / pattern logic - no persistence, no external
+calls. Restore correct behaviour on these content-dependent edge inputs without
+changing anything on the paths that already behave; the project's checks pass
+now and must stay passing.
 
 Do not add or modify anything under `src/test/`.
 

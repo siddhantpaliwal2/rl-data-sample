@@ -74,13 +74,14 @@ unpinnable assertion), every defect's correct fix must be uniquely derivable
 from visible code, and a materially different correct fix must also pass the
 verifier. The 0–1/10 tasks below carry that audit in their `reference_plan.md`.
 
-All numbers below are clean runs (zero crashed trials counted). Five tasks
-were measured with `harness/run_attempt.py` (mini-swe-agent, canonical
+All numbers below are clean runs (zero crashed trials counted; a trial only
+counts when the verifier emitted real per-test verdicts). Five tasks were
+measured with `harness/run_attempt.py` (mini-swe-agent, canonical
 swebench.yaml config, 250-step limit, $3 cost cap per attempt). The three
 marked * were re-gated after their instructions were rewritten into
 bug-report/ticket form: same solver and invocation
 (`mini-swe-agent --yolo --model=…`), run at scale on Daytona cloud sandboxes
-(amd64 images of the same task environments; every sandbox null/oracle-verified
+(amd64 images of the same task environments; every image null/oracle-verified
 first).
 
 | Task | Substrate | Lang | Opus solves/10 | Sonnet solves/5 |
@@ -89,10 +90,16 @@ first).
 | latent-doc-extractors * | loangenus | Python | 4/10 | 0/5 |
 | latent-financial-tools | loangenus | Python | 0/10 | 0/5 |
 | latent-phone-invites | loangenus | Python | 1/10 | 0/5 |
-| xrepo-fiu-latent * | fiu_adapter (264 files) | Java | pending | 0/5 |
+| xrepo-fiu-latent * | fiu_adapter (264 files) | Java | see note | 0/4 |
 | xrepo-txenrich-latent | transaction-enrichment | Python | 1/10 | 0/5 |
 | xrepo-txenrich3-latent | transaction-enrichment | Python | 4/10 | 0/5 |
 | xrepo-txenrich4-latent | transaction-enrichment | Python | 0/10 | 0/5 |
+
+`xrepo-fiu-latent` note: the current instruction passed the Sonnet screen 0/4
+(all trials fully graded); its 10-attempt Opus measurement has not yet been
+re-run against the rewritten instruction. The task's mechanics (defects, gold
+tests, null/oracle) are unchanged from the version that measured Opus 1/10;
+re-run the Opus row before quoting a difficulty number for it.
 
 
 

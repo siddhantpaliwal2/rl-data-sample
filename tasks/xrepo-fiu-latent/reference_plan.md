@@ -135,7 +135,18 @@ day-add), which also pin that the day-field path is undisturbed.
   (NULL run: exactly 5 failures, 0 errors). The base64 f2p only fires on a
   payload whose base64url contains `-`/`_`; a plain-alphabet p2p pins that
   ordinary payloads are unaffected.
-- The instruction is a report-level symptom writeup with two highlighted
-  examples (valid ids rejected; afternoon timestamps read as morning) and names
-  no file, method, line, edit direction, trigger value, or defect count. An
-  agent that fixes only the two highlighted symptoms still fails ≥2 hidden f2p.
+- The instruction is a partner-escalation digest: two quoted partner tickets
+  (valid ids rejected; 13:47 → 01:47 timestamps) plus a triage note that
+  gestures at the remaining defect families only at noun level ("identifier and
+  payload handling, field validation") with no behavior descriptions. Gate
+  history: a first digest that described all five wrong behaviors explicitly
+  was solved 2/3 by the Sonnet screen; the pared-back version passed 0/4
+  (every trial fully graded, 19 verdicts each). The old misdirection (implying
+  the date-shift helper was also wrong, when `getAddedDate` is correct and
+  p2p-only) has been removed. The Opus ×10 difficulty row still needs a re-run
+  against this instruction.
+- Daytona gating note: sandboxes must be created from a snapshot pushed with
+  `--cpu 2 --memory 4 --disk 10`. The default 1-GB snapshot OOM-kills the
+  grade-time `mvn test` (reward 0 with zero verdicts — vacuous); an entire
+  first wave was discarded for this reason. Grading validity is checked by
+  requiring non-empty per-test verdicts in `verifier/output.json`.

@@ -5,8 +5,8 @@
 # Maven cache, installs the sibling modules, and warms the Surefire
 # JUnit-platform provider at build time.
 #
-# Locally this is the repo image built from silver-tasks scratch
-# (Dockerfile.repo: maven:3.9-eclipse-temurin-8 + git + python3, sibling modules
+# Locally this is the repo image built from the adjacent Dockerfile.repo
+# (maven:3.9-eclipse-temurin-8 + git + python3, sibling modules
 # installed, LF-normalized working tree of the fiu_adapter repo). On the
 # platform, replace with the approved registry reference, e.g.
 # FROM <your-registry>/repo-images/fiu-xxxxx:v1@sha256:...
