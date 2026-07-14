@@ -1,0 +1,6 @@
+# driver2 queue — all new tasks land here
+quickbooks-sync
+forge-lending-flow
+forge-credit-pdf
+array-v2
+forge-chat-pipeline

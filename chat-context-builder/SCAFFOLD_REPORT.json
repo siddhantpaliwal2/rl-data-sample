@@ -1,0 +1,55 @@
+{
+  "task": "chat-context-builder",
+  "style": "real-commit bug-fix (mined, multi-defect)",
+  "base_commit": "2dac686ab097d5fd3d8094e98159a9475efc802b",
+  "fix_commit": "869aa675bacf72c7d5308146c7b94fed7bc5c4d9",
+  "files_touched": [
+    "loangen-agent/agent/context_builder.py",
+    "loangen-agent/agent/pipeline.py",
+    "loangen-agent/agent/tools/qualification_engine.py"
+  ],
+  "f2p": [
+    "tests/test_chat_context_pipeline.py::QualificationEngineCoercionTests::test_qualify_treats_missing_monthly_payment_as_zero",
+    "tests/test_chat_context_pipeline.py::QualificationEngineCoercionTests::test_qualify_parses_string_year_established",
+    "tests/test_chat_context_pipeline.py::QualificationEngineCoercionTests::test_qualify_tolerates_none_year_established",
+    "tests/test_chat_context_pipeline.py::QualificationEngineCoercionTests::test_match_lenders_tolerates_missing_monthly_payment",
+    "tests/test_chat_context_pipeline.py::QBFinancialsMappingTests::test_revenue_read_from_total_income",
+    "tests/test_chat_context_pipeline.py::QBFinancialsMappingTests::test_cash_on_hand_read_from_cash_and_bank",
+    "tests/test_chat_context_pipeline.py::QBFinancialsMappingTests::test_dscr_read_from_top_level",
+    "tests/test_chat_context_pipeline.py::MissingDataForQBFinancialsTests::test_qb_financials_question_requires_quickbooks",
+    "tests/test_chat_context_pipeline.py::IntentDetectionTests::test_detects_qb_financials_intent",
+    "tests/test_chat_context_pipeline.py::IntentDetectionTests::test_detects_personal_credit_intent",
+    "tests/test_chat_context_pipeline.py::IntentDetectionTests::test_detects_bank_cashflow_intent",
+    "tests/test_chat_context_pipeline.py::IntentDetectionTests::test_detects_applications_overview_intent"
+  ],
+  "f2p_count": 12,
+  "p2p": [
+    "tests/test_chat_context_pipeline.py::StablePipelineBehaviourTests::test_qualify_clean_inputs_still_qualify",
+    "tests/test_chat_context_pipeline.py::StablePipelineBehaviourTests::test_existing_qualification_intent_still_detected",
+    "tests/test_chat_context_pipeline.py::StablePipelineBehaviourTests::test_map_qb_financials_returns_empty_for_unmappable_input",
+    "tests/test_chat_context_pipeline.py::StablePipelineBehaviourTests::test_map_qb_financials_passes_through_period"
+  ],
+  "p2p_count": 4,
+  "selected_test_files_to_run": [
+    "tests/test_chat_context_pipeline.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "4/16",
+  "oracle_reward": 1,
+  "oracle_required_passed": "16/16",
+  "visible_suite_green": "n/a — loangen-agent/tests/ does not exist at this base; all tests enter via test_patch, so there is no agent-visible test file to keep green",
+  "git_history_len": 1,
+  "git_diff_empty": true,
+  "env": {},
+  "leak_checks": {
+    "git_log_count_in_image": 1,
+    "git_diff_empty_in_image": true,
+    "git_log_all_shows_only_import_commit": true,
+    "tests_dir_absent_at_base": true,
+    "instruction_leaks_fix_shape": false,
+    "defect_visible_via_git": false
+  },
+  "fairness_audit": "Fully hermetic, no mocks: every f2p exercises a public entrypoint (QualificationEngine.qualify / match_lenders, LoanGenPipeline.detect_intent, ContextBuilder.get_missing_data_response) with plain dict/str inputs — no MagicMock, no patched collaborators, no settings touched. _map_qb_financials is referenced by a name that exists at base and is fed a result in the real QBAnalyticsResult shape (total_income / cash_and_bank / top-level dscr), so the tests assert the data contract every correct fix must satisfy, not the oracle's fallback ordering. Coercion tests assert only the sensible observable outcome (missing payment -> 0 debt service -> dscr 20.0; string '2019' -> founded 2019; None year tolerated). Intent tests assert the published cross-module intent identifiers.",
+  "litmus_result": "Instruction is symptom-framed and publishes only the four intent identifiers (cross-module contract asserted by gold tests) plus the 'numeric-string year is that year' behaviour. It does not name the QuickBooks result fields, the mapping fallback chains, _safe_num, INTENT_DATA_REQUIREMENTS, or the regexes. Difficulty is breadth: a fix for one defect (say, the year coercion) still fails the mapping, missing-data, and 4 intent tests; a literal fix that only handles the one reported crash example fails the string/None permutations.",
+  "notes": "Multi-defect task mined from the March-2026 commit 869aa67, using the full backend surface (3 source files / 3 subsystems: deterministic qualification, context assembly + QuickBooks mapping, intent routing). The repo image carries full future history, so environment/Dockerfile rebuilds a single-commit git history (rm -rf .git && git init) after resetting to base, hiding the fix commit. 12 f2p across 3 files with permutations (None vs string vs missing year; None vs numeric monthly payment; 4 distinct intents; three mis-mapped QB fields). Distance defect: the QuickBooks mapping reads the wrong keys upstream and surfaces as zeroed financials in the advisor. difficulty=hard."
+}

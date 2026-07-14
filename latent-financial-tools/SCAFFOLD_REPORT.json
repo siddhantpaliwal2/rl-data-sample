@@ -1,0 +1,123 @@
+{
+  "task": "latent-financial-tools",
+  "pattern": "latent-bug",
+  "instance_id": "loangenus-latent-financial-tools",
+  "repo": "boostmoney/loangenus",
+  "base_commit": "04b8abc5515c22bdb7a2da32bf2719c8ac702174",
+  "task_image": "silver-task-latent-financial-tools",
+  "defect_count": 5,
+  "calibration_history": "Round 1: six defects -> Opus 0/10, diagnosed as one UNDERDETERMINED defect (seasonality band edge, p~0) sinking the joint; dropped it. Round 2: five cleanly-derivable defects -> Opus 8/10, too easy (each cleanly-pinned boundary ~95% solvable, joint stayed high). Round 3 (this build): swap exactly one EASY defect for a MEDIUM one to lower the joint into the 1-6 band. Removed the credit-score tier floor (_classify_risk_tier >= 740, a p~1.0 anchor solved in essentially every trial; band left correct, its three tests moved to pass_to_pass) and ADDED a medium defect whose correct side is pinned only by cross-function tracing: the monthly-gap observation window in build_bank_analytics_checklist_v1.",
+  "f2p": [
+    "tests/test_financial_tools_boundaries.py::TestCashFlowVolatilityWindow::test_two_month_series_reports_volatility",
+    "tests/test_financial_tools_boundaries.py::TestCashFlowVolatilityWindow::test_two_month_series_wider_spread_reports_volatility",
+    "tests/test_financial_tools_boundaries.py::TestBankNearLimitUtilization::test_account_exactly_on_near_limit_cutoff_counts",
+    "tests/test_financial_tools_boundaries.py::TestBankNearLimitUtilization::test_two_accounts_one_exactly_on_cutoff_both_count",
+    "tests/test_financial_tools_boundaries.py::TestBankMonthlyGapWindow::test_two_observed_months_with_interior_gap_are_flagged",
+    "tests/test_financial_tools_boundaries.py::TestQbMonthlySummaryWidth::test_minimal_width_summary_yields_monthly_values",
+    "tests/test_financial_tools_boundaries.py::TestQbMonthlySummaryWidth::test_minimal_width_three_month_summary_yields_values",
+    "tests/test_financial_tools_boundaries.py::TestCreditSevereDelinquency::test_single_severe_late_counts_as_severe"
+  ],
+  "p2p": [
+    "tests/test_financial_tools_boundaries.py::TestCreditRiskTierBoundary::test_score_exactly_on_good_floor_is_good",
+    "tests/test_financial_tools_boundaries.py::TestCreditRiskTierBoundary::test_score_just_above_good_floor_is_good",
+    "tests/test_financial_tools_boundaries.py::TestCreditRiskTierBoundary::test_score_just_below_good_floor_is_fair",
+    "tests/test_financial_tools_boundaries.py::TestCashFlowVolatilityWindow::test_single_month_series_has_zero_volatility",
+    "tests/test_financial_tools_boundaries.py::TestCashFlowVolatilityWindow::test_three_month_series_reports_volatility",
+    "tests/test_financial_tools_boundaries.py::TestBankNearLimitUtilization::test_account_just_above_cutoff_counts",
+    "tests/test_financial_tools_boundaries.py::TestBankNearLimitUtilization::test_account_just_below_cutoff_is_excluded",
+    "tests/test_financial_tools_boundaries.py::TestBankMonthlyGapWindow::test_three_observed_months_with_gap_are_flagged",
+    "tests/test_financial_tools_boundaries.py::TestBankMonthlyGapWindow::test_two_contiguous_months_have_no_gap",
+    "tests/test_financial_tools_boundaries.py::TestQbMonthlySummaryWidth::test_wider_summary_yields_monthly_values",
+    "tests/test_financial_tools_boundaries.py::TestQbMonthlySummaryWidth::test_too_narrow_summary_yields_empty",
+    "tests/test_financial_tools_boundaries.py::TestCreditSevereDelinquency::test_two_severe_lates_still_counts",
+    "tests/test_financial_tools_boundaries.py::TestCreditSevereDelinquency::test_no_severe_lates_not_counted"
+  ],
+  "f2p_count": 8,
+  "p2p_count": 13,
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "new_visible_failures": 0,
+  "git_history_len": 1,
+  "base_defects_visible_suite": "GREEN — identical failure set to clean HEAD. Clean loangenus-repo:v1 and the five-defect planted image BOTH report 7 failed / 166 passed / 24 skipped, and the 7 failures are the same pre-existing rot (test_inbound_calls x3, test_document_ingestion_readiness x2, test_document_report x1, test_ingestion_stale_recovery x1). Zero new failures introduced by the five defects.",
+  "env": {},
+  "env_note": "No task-specific env required. The bank / credit-bureau / accounting analytics math is deterministic and offline; the JWT_SECRET_KEY baked into loangenus-repo:v1 is sufficient. The three analytics service modules import cleanly in-image with PYTHONPATH=/app/loangen-agent. No pydantic Settings ValidationError appears.",
+  "difficulty_calibration": {
+    "problem": "Round-2 five-defect build graded Opus 8/10: all five were cleanly-pinned (single-line/sibling/doc/stdlib) boundaries, each ~95% solvable, so the joint stayed high.",
+    "lever": "Swap one EASY defect for a MEDIUM one whose correct side is pinned ONLY by cross-function tracing (not a single-screen read), keeping the count at 5.",
+    "removed": {"function": "_classify_risk_tier", "boundary": "score >= 740 vs > 740", "why": "p~1.0 anchor: its own sibling floors >= 800/>= 670/>= 580 make the odd > 740 a one-line inconsistency, solved in essentially every trial. Band left CORRECT in the image; its three gold tests reclassified from fail_to_pass to pass_to_pass (verified passing at both the new plant and oracle)."},
+    "added": {"function": "build_bank_analytics_checklist_v1 (monthly-gap window)", "boundary": "if len(months_observed) >= 2 vs >= 3", "band": "medium", "why": "The correct threshold 2 is NOT visible at the guard line; it is pinned by a NON-ADJACENT consumer/sibling ~160 lines later and by gap-detection semantics. An engineer must trace the field's use to fix it, so >= 3 reads as a plausible 'need enough months'."}
+  },
+  "defects": [
+    {
+      "id": 1,
+      "file": "loangen-agent/agent/analytics/services/credit_bureau_analytics.py:440",
+      "function": "build_credit_analytics_checklist_v1",
+      "boundary_changed": "int(late_90) > 0  ->  int(late_90) > 1  (severe-delinquency guard)",
+      "edge_input": "a tradeline with exactly one 90-day-late mark and no charge-off, e.g. {\"is_open\": true, \"late_90\": 1}",
+      "wrong_output": "severe_delinquency_tradelines counts 0 instead of 1; a single severe late no longer registers",
+      "why_no_visible_test_catches": "No running test drives build_credit_analytics_checklist_v1; the sibling delinquent_open_count still uses > 0, so this reads plausibly.",
+      "derivability": "DERIVABLE, easy — the sibling delinquent_open_count in the same function tests late_90 > 0 for the identical field, and one 90-DPD is unambiguously severe by credit-domain convention."
+    },
+    {
+      "id": 2,
+      "file": "loangen-agent/agent/analytics/services/plaid_analytics.py:57",
+      "function": "_compute_volatility",
+      "boundary_changed": "if len(values) < 2  ->  if len(values) <= 2",
+      "edge_input": "a two-observation series, e.g. _compute_volatility([100.0, 200.0])",
+      "wrong_output": "returns 0.0 (as if a single point) instead of the measured coefficient of variation (47.1)",
+      "why_no_visible_test_catches": "No running test calls _compute_volatility; only the exactly-2 case flips.",
+      "derivability": "DERIVABLE, easy — the next line calls statistics.stdev(values), which requires n >= 2 (raises below that); a two-point series is valid input and must be measured."
+    },
+    {
+      "id": 3,
+      "file": "loangen-agent/agent/analytics/services/plaid_analytics.py:406",
+      "function": "build_bank_analytics_checklist_v1",
+      "boundary_changed": "utilization_pct >= 75.0  ->  utilization_pct > 75.0  (near-limit count)",
+      "edge_input": "a credit account at exactly 75% utilization, e.g. {\"type\": \"credit\", \"utilization_pct\": 75.0}",
+      "wrong_output": "near_limit_accounts_count omits the account (0 instead of 1)",
+      "why_no_visible_test_catches": "No running test drives build_bank_analytics_checklist_v1; the high_utilization risk flag uses > 75 on a different field.",
+      "derivability": "DERIVABLE, easy — docs/BANK_ANALYTICS_CHECKLIST.md line 66, referenced by the function's own docstring, defines the field as 'Count of credit accounts with utilization_pct >= 75'."
+    },
+    {
+      "id": 4,
+      "file": "loangen-agent/agent/analytics/services/plaid_analytics.py:413",
+      "function": "build_bank_analytics_checklist_v1 (monthly-gap observation window)",
+      "boundary_changed": "if len(months_observed) >= 2  ->  if len(months_observed) >= 3",
+      "edge_input": "exactly two observed months bracketing a missing one, e.g. monthly_cash_flows for 2024-01 and 2024-03 (Feb absent)",
+      "wrong_output": "missing_months_in_range comes back [] instead of ['2024-02']; the interior calendar gap is silently dropped and no_unexplained_data_gaps_in_monthly_series flips to a false 'ok'",
+      "why_no_visible_test_catches": "No running test drives build_bank_analytics_checklist_v1; with >= 3 observed months the two guards agree, so only the exactly-two-months case flips.",
+      "derivability": "DERIVABLE, MEDIUM (cross-function tracing) — the correct threshold 2 is not visible at the guard line. It is pinned by the NON-ADJACENT sibling checklist field net_cash_trend_reviewed_for_window (~158 lines later, line 571) which uses len(months_observed) >= 2 for the same 'reviewable window' concept, and by gap-detection semantics: two bracketing months define a range whose interior gap _enumerate_months_inclusive can enumerate. An engineer who reads only the guard sees a plausible >= 3 and must trace the field's consumer/sibling to fix it. This is the round-3 replacement for the easy tier anchor."
+    },
+    {
+      "id": 5,
+      "file": "loangen-agent/agent/analytics/services/quickbooks_analytics.py:83",
+      "function": "_extract_monthly_from_summary",
+      "boundary_changed": "if len(col_data) < num_months + 2  ->  if len(col_data) <= num_months + 2",
+      "edge_input": "a P&L summary at its minimum valid width [label, month..., TOTAL] = num_months + 2 columns, e.g. cols=['Total Income','100','200','300'] with num_months=2",
+      "wrong_output": "returns [] instead of [100.0, 200.0]; a minimally-wide but well-formed statement loses its whole monthly breakdown (surfaces two hops up as an empty monthly_income on compute_qb_analytics)",
+      "why_no_visible_test_catches": "No running test feeds a summary at exactly the minimum width; wider summaries are unaffected.",
+      "derivability": "DERIVABLE, medium — the function's own slice (line 85) reads col_data[1..num_months], so num_months + 2 columns are fully valid; the sibling _row_to_line_item does the identical extraction under the inclusive len(values) >= num_months + 2 (lines 103-104), pinning < num_months + 2."
+    }
+  ],
+  "not_planted": [
+    {"function": "_classify_risk_tier", "boundary": "score >= 740", "status": "left correct in image; REMOVED round 3 as an easy p~1.0 anchor; three tier tests are now pass_to_pass"},
+    {"function": "_compute_seasonality", "boundary": "ratio > 2.0", "status": "left correct in image; DROPPED round 1 as UNDERDETERMINED; its test class was removed entirely"}
+  ],
+  "leak_checks": {
+    "git_history_len": 1,
+    "git_diff_empty": true,
+    "git_status_clean": true,
+    "defects_recoverable_via_git": false,
+    "tier_floor_left_correct_in_image": true,
+    "seasonality_left_correct_in_image": true,
+    "gap_window_sibling_left_correct_in_image": true,
+    "visible_suite_green_at_planted_state": true,
+    "gold_tests_absent_from_agent_tree": true,
+    "gold_tests_enter_only_via_test_patch": true,
+    "instruction_names_the_three_service_files_only": true
+  },
+  "fairness_audit": "All eight f2p and thirteen p2p tests are pure-input (dict/list/scalar in, scalar/list/dict out) and use zero mocks, so no collaborator patching can encode the oracle's implementation. Each f2p asserts the behavior at the exact edge, and each edge has a uniquely-derivable correct side (sibling `late_90 > 0` + domain; stdlib stdev n>=2; BANK_ANALYTICS_CHECKLIST.md `>= 75`; non-adjacent sibling `net_cash_trend_reviewed_for_window >= 2` for the gap window; sibling `_row_to_line_item >= num_months + 2`). Each p2p pins a just-off-edge value that no correct fix changes (one/three-point series; 74.9/75.5; three-months-with-gap and two-contiguous-months for the gap window; wider/narrower summary; zero/two severe lates) plus the three now-correct tier tests (739/740/741). No test asserts a convention-choice boundary: the underdetermined seasonality edge was removed entirely, and the removed tier floor is left correct (its tests only pin behavior that holds at both states). Alternative-implementation audit: rewriting any target with different control flow returns the same asserted outputs.",
+  "resistance_assessment": "Targeting the Opus 1-6/10 band (round-2 five cleanly-derivable defects graded 8/10). The lever is derivation difficulty, not count: four of the five remain easy-to-derive but must ALL be found with no failing-test gradient (the full suite is byte-for-byte green at base+5-defects, same 7 pre-existing rot failures as clean HEAD), and the fifth (monthly-gap window) is medium — its correct side is pinned only by tracing a non-adjacent consumer ~160 lines away, so >= 3 reads as plausible and an agent that fixes only the literal-looking boundaries mis-fixes or skips it. Removing the tier anchor (the p~1.0 defect) drops the joint below the round-2 0.8. The PARTIAL run (three of five reversed) scores reward 0 with two f2p still failing. All five are single-token boundary slips (>0/>1, </<=, >=/>, >=2/>=3) on existing lines with no new imports/helpers/comments; f2p span credit, bank, and accounting files.",
+  "litmus_result": "PASS. Given only the instruction (the three named analytics files under loangen-agent/agent/analytics/services/, symptom = wrong numbers on exact thresholds / minimal windows / small sets; no function names, boundary directions, values, or count), a strong dev cannot locate the five defect lines in <2 minutes: the surface spans three ~25-33KB analytics services, every comparison is a plausible boundary, no test bisects, and the changes are single tokens. Four planted boundaries are then cleanly derivable once found; the fifth (monthly-gap window) is medium — fixable only by tracing the non-adjacent consumer that pins the window to 2. Breadth (8 f2p across 3 source files) and distance (defect 5 surfaces two call-hops up as an empty monthly series on compute_qb_analytics; defect 4's correct side lives ~160 lines from the guard) both hold."
+}

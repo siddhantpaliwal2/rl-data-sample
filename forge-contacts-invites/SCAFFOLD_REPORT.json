@@ -1,0 +1,73 @@
+{
+  "task": "forge-contacts-invites",
+  "style": "planted-defect (forge, hidden construction)",
+  "base_commit": "04b8abc5515c22bdb7a2da32bf2719c8ac702174",
+  "fix_commit": null,
+  "defect_count": 6,
+  "files_touched": [
+    "loangen-agent/agent/integrations/cartesia/phone.py",
+    "loangen-agent/agent/services/smbcontacts/loan_types.py",
+    "loangen-agent/agent/services/smbcontacts/service.py",
+    "loangen-agent/agent/services/smbinvites/schemas.py",
+    "loangen-agent/agent/services/smbinvites/service.py"
+  ],
+  "interacting_pair": "D2 (resolve_loan_type returns label not id) + D3 (invite validate_loan_type_id inverted guard) on the invite-create data path: display-label invites fail differently under any single-defect fix; only fixing both passes test_accepts_display_label_loan_type_id/_alias.",
+  "distance_defect": "D1 (_CRM_FALLBACK_REGIONS drops 'IN' in phone.py) surfaces >=2 hops away in create_smb_contact/update_smb_contact -> _mobile_from_input_or_error -> try_normalize_mobile -> try_normalize_phone_to_e164; 8050306043 -> +49... instead of +918050306043.",
+  "f2p": [
+    "tests/test_smb_contacts_csv_and_update.py::LoanTypeResolverTests::test_resolves_label",
+    "tests/test_smb_contacts_csv_and_update.py::LoanTypeResolverTests::test_resolves_secondary_label",
+    "tests/test_smb_contacts_csv_and_update.py::LoanTypeSchemaNormalizationTests::test_create_request_normalizes_display_label",
+    "tests/test_smb_contacts_csv_and_update.py::LoanTypeSchemaNormalizationTests::test_update_request_normalizes_display_label",
+    "tests/test_smb_contacts_csv_and_update.py::PhoneNormalizationTests::test_try_normalize_indian_number_without_country_code",
+    "tests/test_smb_contacts_csv_and_update.py::ImportContactsCsvTests::test_imports_display_label_loan_type_as_canonical_id",
+    "tests/test_smb_contacts_csv_and_update.py::ImportContactsCsvTests::test_updates_existing_contact_mobile_on_duplicate_email",
+    "tests/test_smb_contacts_csv_and_update.py::UpdateContactIdentityLockTests::test_updates_mobile_with_international_number",
+    "tests/test_smb_contacts_csv_and_update.py::CreateContactTests::test_creates_contact_with_indian_mobile",
+    "tests/test_smb_invite_schemas.py::CreateInviteRequestTests::test_accepts_valid_loan_type_id",
+    "tests/test_smb_invite_schemas.py::CreateInviteRequestTests::test_rejects_unknown_loan_type_id",
+    "tests/test_smb_invite_schemas.py::CreateInviteRequestTests::test_accepts_display_label_loan_type_id",
+    "tests/test_smb_invite_schemas.py::CreateInviteRequestTests::test_accepts_display_label_alias_loan_type_id",
+    "tests/test_smb_invite_conversation.py::SMBInviteConversationTests::test_seed_crm_hints_applies_revenue_and_tenure_silently",
+    "tests/test_smb_invite_conversation.py::SMBInviteTrackingTests::test_connected_source_is_not_reported_as_pending",
+    "tests/test_smb_invite_conversation.py::SMBInviteTrackingTests::test_skipped_source_is_not_reported_as_pending"
+  ],
+  "f2p_count": 16,
+  "p2p_count": 20,
+  "selected_test_files_to_run": [
+    "tests/test_smb_contacts_csv_and_update.py",
+    "tests/test_smb_invite_schemas.py",
+    "tests/test_smb_invite_conversation.py",
+    "tests/test_smb_invite_production.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "20/36",
+  "oracle_reward": 1,
+  "oracle_required_passed": "36/36",
+  "partial_reward": 0,
+  "partial_required_passed": "26/36",
+  "partial_fix_scope": "D1 (phone) + D3 (invite guard) + D6 (crm hint) reversed; D2/D4/D5 left planted",
+  "visible_suite_green": true,
+  "git_history_len": 1,
+  "env": {},
+  "leak_checks": {
+    "git_log_oneline_count": 1,
+    "git_diff_empty": true,
+    "planted_test_files_deleted": [
+      "loangen-agent/tests/test_smb_contacts_csv_and_update.py",
+      "loangen-agent/tests/test_smb_invite_schemas.py",
+      "loangen-agent/tests/test_smb_invite_conversation.py"
+    ],
+    "visible_suite_new_failures_from_plants": 0,
+    "preexisting_base_failures": 7,
+    "preexisting_base_failure_files": [
+      "tests/test_document_ingestion_readiness.py",
+      "tests/test_document_report.py",
+      "tests/test_inbound_calls.py",
+      "tests/test_ingestion_stale_recovery.py"
+    ],
+    "note": "The 7 visible red tests exist identically at the clean base commit (ingestion/inbound/report subsystems); they are unrelated to the contacts/invites/phone cluster and do not point at any planted defect. Planting adds zero new visible failures (base 166 passed -> planted 145 passed = exactly the 21 tests in the 3 deleted files)."
+  },
+  "litmus_result": "PASS. Given only the instruction, a strong dev can grep the user-facing error string to reach the invite validator quickly, but the difficulty is construction-not-obscurity: fixing that inverted guard alone still fails the hidden display-label interaction tests because the label->id resolver bug lives in a different, unnamed module; the phone region-list, CSV mobile-backfill, tracking, and crm-hint defects require locating four more functions the instruction never names. Cannot locate the full defect set in <2 minutes without running the suite.",
+  "fairness_audit": "The gold fix changes only logic inside functions that already exist at base and introduces no new names, so the instruction leaks no module paths/signatures. Every f2p asserts observable behavior (returned string, stored attribute value, response field), and the alternative-implementation audit passes: any correct normalization/validation/merge yields the asserted values (e.g. +918050306043, 'sba504', connected-source-excluded-from-pending). Collaborator mocks are the repo's own hermetic patterns (SMBContact via MagicMock(**kwargs) factory or explicit-attribute MagicMock; _get_lender_contact / _locked_contact_ids patched with explicit return values) and are orthogonal to the defective resolver/validator/phone functions the agent fixes, so a near-correct implementation cannot crash on a bare Mock.",
+  "notes": "Six single-line, type-preserving defects across 5 source files / 3 subsystems (SMB contacts, SMB invites, Cartesia phone). Reusable inventory from loangen-agent-multibug (phone IN-drop, resolve_loan_type label-return, invite inverted guard) extended with a CSV mobile-backfill comparison flip, a tracking pending-sources and->or, and a CRM-hint seeding guard inversion. Hidden construction per CONSTRUCTION_V2 rules 1-2: defects committed as base (git history len 1, git diff empty), failing test files deleted and restored via test_patch. No sonnet/opus probes run (scaffold-time verification only)."
+}

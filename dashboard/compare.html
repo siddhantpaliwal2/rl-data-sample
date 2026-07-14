@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instruction comparison · ours vs AfterQuery</title>
+<style>
+:root {
+  --surface-1: #fcfcfb; --surface-2: #f4f3f0; --page: #f9f9f7;
+  --ink-1: #0b0b0b; --ink-2: #52514e; --ink-3: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --good: #0ca30c; --good-text: #006300; --warning: #fab219; --critical: #d03b3b;
+  --ours: #2a78d6; --theirs: #1baf7a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-1: #1a1a19; --surface-2: #232320; --page: #0d0d0d;
+    --ink-1: #ffffff; --ink-2: #c3c2b7; --ink-3: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --good-text: #0ca30c; --ours: #3987e5; --theirs: #199e70;
+  }
+}
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--page); color: var(--ink-1);
+  font: 14px/1.55 -apple-system, "SF Pro Text", "Segoe UI", sans-serif; padding: 32px 22px 72px; }
+main { max-width: 1180px; margin: 0 auto; display: grid; gap: 22px; }
+h1 { font-size: 21px; font-weight: 650; letter-spacing: -0.01em; }
+h1 small { color: var(--ink-3); font-weight: 450; font-size: 13px; display: block; margin-top: 3px; }
+h2 { font-size: 13px; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
+.finding { background: var(--surface-1); border: 1px solid var(--border); border-left: 3px solid var(--warning);
+  border-radius: 10px; padding: 16px 18px; }
+.finding p { color: var(--ink-2); margin-top: 6px; font-size: 13.5px; }
+.finding b { color: var(--ink-1); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 820px) { .pair { grid-template-columns: 1fr; } }
+.card { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.card.ours { border-top: 3px solid var(--ours); }
+.card.theirs { border-top: 3px solid var(--theirs); }
+.card .hd { padding: 12px 16px 10px; border-bottom: 1px solid var(--grid); }
+.tag { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.tag.ours { color: var(--ours); } .tag.theirs { color: var(--theirs); }
+.card h3 { font-size: 14.5px; font-weight: 640; margin: 3px 0 2px; font-family: ui-monospace, Menlo, monospace; }
+.sub { color: var(--ink-3); font-size: 12px; }
+.prompt { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11.7px; line-height: 1.5;
+  color: var(--ink-2); padding: 12px 16px; white-space: pre-wrap; word-break: break-word;
+  max-height: 340px; overflow-y: auto; background: var(--surface-2); }
+.prompt .h { color: var(--ink-1); font-weight: 650; }
+.prompt .dim { color: var(--ink-3); }
+.foot { padding: 10px 16px; border-top: 1px solid var(--grid); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+  padding: 2px 10px 2px 8px; border-radius: 999px; border: 1px solid var(--border); }
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+.chip.pass { color: var(--good-text); } .chip.pass .dot { background: var(--good); }
+.chip.fail { color: var(--critical); } .chip.fail .dot { background: var(--critical); }
+.chip.run  { color: var(--ink-2); } .chip.run .dot { background: var(--ours); }
+.chip.byte { color: var(--ink-3); font-weight: 500; }
+.verdict { font-size: 12.5px; font-weight: 600; margin-left: auto; }
+.verdict.bad { color: var(--critical); } .verdict.good { color: var(--good-text); } .verdict.run { color: var(--ink-2); }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th { text-align: left; color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+  font-weight: 600; padding: 7px 10px; border-bottom: 1px solid var(--baseline); }
+td { padding: 7px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.mono { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+.sec { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.tblwrap { overflow-x: auto; }
+.note { color: var(--ink-3); font-size: 12px; margin-top: 10px; }
+.legend { display: flex; gap: 18px; font-size: 12.5px; color: var(--ink-2); }
+.legend b.ours { color: var(--ours); } .legend b.theirs { color: var(--theirs); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Task instructions — ours vs AfterQuery, side by side
+    <small>the natural-language prompt each model actually receives · <a href="monitor.html" style="color:var(--ours)">live monitor →</a></small>
+  </h1>
+
+  <div class="finding">
+    <h2>The finding</h2>
+    <p><b>It isn't length — it's whether the instruction can be <i>followed</i> or must be <i>understood</i>.</b>
+    AfterQuery's approved tasks describe a symptom or a real-world failure and make the agent reason out the fix
+    (persona bug reports, terse tickets, or planted defects with no map). Our first drafts read like a solved
+    Jira ticket — they hand over the API contract and a step list, so a mid-tier model just types it in.
+    Note AfterQuery's <span class="mono">ask-10</span> is also 4&nbsp;KB yet approved: it's long but describes
+    <i>constraints and symptoms</i> (corrupt file kills the batch, retries double-bill), not a checklist.</p>
+    <div class="legend" style="margin-top:10px">
+      <span><b class="ours">■ ours</b> — BoostMoney / loangenus tasks</span>
+      <span><b class="theirs">■ AfterQuery</b> — approved Project Silver tasks (from OCR)</span>
+      <span>easiness gate: Sonnet must solve <b>≤1 of 5</b> · difficulty: Opus <b>1–4 of 10</b></span>
+    </div>
+  </div>
+
+  <!-- PAIR 1: too-easy ours vs approved theirs, same "spec vs symptom" axis -->
+  <h2>Same job, opposite outcome</h2>
+  <div class="pair">
+    <div class="card ours">
+      <div class="hd"><span class="tag ours">ours · too easy</span>
+        <h3>cre-qualification-fixes</h3><span class="sub">3.9 KB · publishes the answer key</span></div>
+      <div class="prompt"><span class="h"># Loan qualification shows wrong recommendation labels</span>
+
+Scores 80+ are <span class="dim">"Strong Proceed"</span> shown in green
+<span class="dim">#047857</span>, 60–79 are "Proceed", 40–59 are
+"Manual UW" in yellow <span class="dim">#eab308</span>, below 40 is
+"Review"…
+
+<span class="dim">resolve_recommendation(score) -> RecommendationDisplay
+with fields band, label, color, threshold …</span></div>
+      <div class="foot">
+        <span class="chip fail"><span class="dot"></span>Sonnet 5/5 solved</span>
+        <span class="chip byte">the band table IS the solution</span>
+        <span class="verdict bad">REJECTED — too easy</span>
+      </div>
+    </div>
+    <div class="card theirs">
+      <div class="hd"><span class="tag theirs">AfterQuery · approved</span>
+        <h3>prospectly-tags-label-normalization</h3><span class="sub">persona bug report · in the corridor</span></div>
+      <div class="prompt"><span class="dim">(OCR-captured)</span>
+<span class="h">Priya from customer success writes:</span>
+
+"When teams add tags, duplicates keep slipping in — 'Sales',
+'sales', and ' sales ' all become separate tags, and deleting
+one doesn't free the name up again…"
+
+<span class="dim">→ agent must infer: trim + case-insensitive per org_id,
+409 on dupes, archived tags reclaimable</span></div>
+      <div class="foot">
+        <span class="chip pass"><span class="dot"></span>Sonnet 0/5</span>
+        <span class="chip pass"><span class="dot"></span>Opus 3/10</span>
+        <span class="verdict good">APPROVED — in corridor</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAIR 2: our restyle vs their terse ticket -->
+  <h2>Our fix in progress: rewrite the spec as a ticket</h2>
+  <div class="pair">
+    <div class="card ours">
+      <div class="hd"><span class="tag ours">ours · restyled, probing now</span>
+        <h3>array-credit-report</h3><span class="sub">5.3 KB spec → 2.4 KB ops ticket</span></div>
+      <div class="prompt"><span class="h"># BM-2214: Array credit verification dead-ends</span>
+
+Ops ticket, loangen-agent backend. Field reports:
+
+– Verification dies whenever the first bureau returns HTTP 204,
+  even though other bureaus could verify the same person. Order
+  should be OTP → KBA → SMFA; give up only when all exhausted.
+– SSNs with dashes reach Array verbatim and get rejected…
+<span class="dim">(kept only the 2 import signatures the tests require;
+cut the numbered how-to for all 6 sub-bugs)</span></div>
+      <div class="foot">
+        <span class="chip fail"><span class="dot"></span>verbose 4/5</span>
+        <span class="chip fail"><span class="dot"></span>restyled 3/5</span>
+        <span class="verdict bad">voice alone barely moved it</span>
+      </div>
+    </div>
+    <div class="card theirs">
+      <div class="hd"><span class="tag theirs">AfterQuery · approved</span>
+        <h3>guzo-fleet-task2</h3><span class="sub">512-byte ticket · Strong Accept</span></div>
+      <div class="prompt"><span class="dim">(OCR-captured — ~512 bytes total)</span>
+<span class="h">H-118: fleet assignment returns stale vehicle
+after a mid-shift swap.</span>
+
+Repro on the linked history; expected vs actual in the ticket.
+No file list, no function names, no fix steps.
+
+<span class="dim">difficulty_explanation (author's note): "ticket-style
+instruction avoids a fix checklist that Sonnet can copy."</span></div>
+      <div class="foot">
+        <span class="chip pass"><span class="dot"></span>Strong Accept</span>
+        <span class="chip byte">nop 2/8 baseline</span>
+        <span class="verdict good">APPROVED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAIR 3: our multibug vs their forge -->
+  <h2>New construction: planted defects (forge pattern)</h2>
+  <div class="pair">
+    <div class="card ours">
+      <div class="hd"><span class="tag ours">ours · scaffolding</span>
+        <h3>loangen-agent-multibug</h3><span class="sub">&lt;1.2 KB · 14–20 planted defects</span></div>
+      <div class="prompt"><span class="h"># Restore correct behavior across loangen-agent</span>
+
+A number of single-line defects were introduced across the
+qualification, product-matching, document-requirements,
+extraction and reporting modules. Outputs are wrong but types
+and signatures are unchanged; defects only surface on specific
+inputs. Restore correct behavior.
+
+You may edit ONLY: &lt;allowlist&gt;. Do not touch tests/.</div>
+      <div class="foot">
+        <span class="chip run"><span class="dot"></span>building…</span>
+        <span class="verdict run">expect Opus ~1/10</span>
+      </div>
+    </div>
+    <div class="card theirs">
+      <div class="hd"><span class="tag theirs">AfterQuery · approved</span>
+        <h3>deployment-reconcile-bugs_s5 (forge)</h3><span class="sub">19 defects · 7 files</span></div>
+      <div class="prompt"><span class="dim">(OCR-captured)</span>
+<span class="h">Single-line defects injected across
+forge.deployments / promote / reconciler / maintenance.</span>
+
+Output wrong but types right; bugs only reveal on specific
+histories / sets / calendars. Explicit allowlist of 7 editable
+files. Do not edit acceptance_tests.
+
+<span class="dim">nop 14/42 green baseline · oracle 42/42</span></div>
+      <div class="foot">
+        <span class="chip pass"><span class="dot"></span>Opus 1/10</span>
+        <span class="verdict good">APPROVED — model to copy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reference table -->
+  <div class="sec">
+    <h2>AfterQuery approved tasks — the instruction styles that work</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Task</th><th>Style</th><th>What the agent gets</th><th>Sonnet</th><th>Opus</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">prospectly-tags</td><td>persona bug report</td><td>"Priya from CS" complaint; infer the rules</td><td>0/5</td><td>3/10</td></tr>
+        <tr><td class="mono">guzo-fleet-task2</td><td>512-byte ticket</td><td>ID + repro + expected/actual; no map</td><td>—</td><td>Strong Accept</td></tr>
+        <tr><td class="mono">deployment-reconcile (forge)</td><td>planted defects</td><td>"defects across these files, restore behavior"</td><td>—</td><td>1/10</td></tr>
+        <tr><td class="mono">38-orrery-angles</td><td>arithmetic defects</td><td>faults only bite on inputs the visible tests never feed</td><td>—</td><td>approved</td></tr>
+        <tr><td class="mono">ask-10-vision (socialMediaAPI)</td><td>4 KB real-world spec</td><td>corrupt file kills batch, retries double-bill</td><td>—</td><td>Strong Accept</td></tr>
+        <tr><td class="mono">cairn-counter-quantile</td><td>feature build</td><td>naive solution is tempting-but-wrong (boundary math)</td><td>—</td><td>approved</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Sonnet/Opus figures are from AfterQuery's own validation UI where the OCR captured them. Instruction text is
+    OCR-captured — paraphrased where the full screen wasn't visible; the <i>style</i> and scores are as recorded.
+    <span class="mono">ask-10</span> shows length ≠ easiness: it's 4 KB and approved because it specifies constraints, not a checklist.</p>
+  </div>
+
+  <div class="sec">
+    <h2>Our tasks — current instruction style & gate result</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Task</th><th>Instruction</th><th>Size</th><th>Sonnet easiness</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">ingestion-stale-blocker</td><td>symptom + API contract</td><td>4.0 KB</td><td>0/5 ✓ (×3)</td><td>candidate — genuinely hard bug</td></tr>
+        <tr><td class="mono">array-credit-report</td><td>ops ticket (restyled)</td><td>2.4 KB</td><td>was 4/5 → re-probing</td><td>restyle experiment live</td></tr>
+        <tr><td class="mono">plaid-bank-report</td><td>symptom, ticket-ish</td><td>3.6 KB</td><td>0/5 ✓</td><td>candidate — difficulty pending</td></tr>
+        <tr><td class="mono">inbound-call-routing</td><td>spec sheet</td><td>4.1 KB</td><td>5/5 ✗</td><td>too easy — needs restyle + widen</td></tr>
+        <tr><td class="mono">cre-qualification-fixes</td><td>spec + band table</td><td>3.9 KB</td><td>5/5 ✗</td><td>too easy — table can't be hidden</td></tr>
+        <tr><td class="mono">loangen-agent-multibug</td><td>planted-defect ticket</td><td>&lt;1.2 KB</td><td>scaffolding</td><td>forge-pattern bet</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</main>
+</body>
+</html>

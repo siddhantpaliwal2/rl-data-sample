@@ -1,0 +1,106 @@
+{
+  "task": "xrepo-correlation-latent",
+  "pattern": "latent-bug",
+  "instance_id": "correlation-core-xrepo-correlation-latent",
+  "repo": "boostmoney/correlation-core",
+  "base_commit": "b43fb07160bc04a7e0bc5d4957b44922c7dbc2f1",
+  "task_image": "correlation-task:v1 (FROM correlation-repo:v1)",
+  "repo_image_build": "docker build -f scratchpad/xrepo-corr/Dockerfile.repo -t correlation-repo:v1 <correlation-core> ; python:3.11-slim + git + COPY . /app + pip install pytest (target modules are stdlib-only, no third-party runtime deps)",
+  "defect_count": 5,
+  "f2p": [
+    "tests/test_correlation_boundaries.py::TestDayOrdinalSuffix::test_twenty_third_uses_rd_suffix",
+    "tests/test_correlation_boundaries.py::TestNameFullMatch::test_contained_name_is_full_match",
+    "tests/test_correlation_boundaries.py::TestNamePartialMatch::test_single_shared_token_is_partial_match",
+    "tests/test_correlation_boundaries.py::TestSemanticScaling::test_perfect_semantic_similarity_scales_to_full",
+    "tests/test_correlation_boundaries.py::TestCorrelationThreshold::test_score_exactly_on_threshold_is_valid"
+  ],
+  "p2p": [
+    "tests/test_correlation_boundaries.py::TestDayOrdinalSuffix::test_first_uses_st_suffix",
+    "tests/test_correlation_boundaries.py::TestDayOrdinalSuffix::test_twenty_first_uses_st_suffix",
+    "tests/test_correlation_boundaries.py::TestDayOrdinalSuffix::test_twenty_fourth_uses_th_suffix",
+    "tests/test_correlation_boundaries.py::TestDayOrdinalSuffix::test_thirtieth_uses_th_suffix",
+    "tests/test_correlation_boundaries.py::TestDayOrdinalSuffix::test_month_and_year_only",
+    "tests/test_correlation_boundaries.py::TestNameFullMatch::test_identical_names_is_full_match",
+    "tests/test_correlation_boundaries.py::TestNamePartialMatch::test_two_shared_tokens_is_partial_match",
+    "tests/test_correlation_boundaries.py::TestNamePartialMatch::test_disjoint_names_no_match",
+    "tests/test_correlation_boundaries.py::TestSemanticScaling::test_midrange_similarities_scale_linearly",
+    "tests/test_correlation_boundaries.py::TestCorrelationThreshold::test_score_above_threshold_is_valid",
+    "tests/test_correlation_boundaries.py::TestCorrelationThreshold::test_score_below_threshold_is_invalid"
+  ],
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "partial_run_note": "Fixed 2 of 5 (defect 1 ordinal + defect 5 threshold); the other three f2p (defects 2,3,4) still FAILED -> reward 0.",
+  "git_history_len": 1,
+  "git_diff_empty": true,
+  "base_defects_visible_suite": "GREEN (vacuous: the repo ships no tests; leak check confirms git log len 1, git diff empty, reflog len 1 in the built image)",
+  "ladder": {
+    "static": "n/a (new-repo image pattern; Dockerfile follows the canonical forge contract)",
+    "in_image_leak_check": "git log len 1, git diff empty, 0 modified, all 5 planted lines present",
+    "null_run": "reward 0; all 5 f2p FAILED with per-test lines (no collection ERRORs); all 11 p2p PASSED",
+    "oracle_run": "reward 1; required passed 16/16",
+    "partial_run": "reward 0 (2 of 5 fixed)"
+  },
+  "env": {},
+  "env_note": "No task-specific env. Both target modules import only the standard library (datetime/json/uuid); the graded suite is deterministic and fully offline.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "Service/Get_Transactions_Custom_Logic.py:103",
+      "function": "GetTransactionsCustom.format_date",
+      "edge": "day-of-month exactly 23 (the last '-rd' ordinal before the 24..30 'th' run)",
+      "change": "if 4 <= day <= 20 or 24 <= day <= 30:  ->  if 4 <= day <= 20 or 23 <= day <= 30:",
+      "wrong_output": "renders '23th July 2024' instead of '23rd July 2024'",
+      "difficulty": "easy",
+      "derivability": "STRONG. The correct suffix for 23 is uniquely pinned by (a) English ordinal grammar (twenty-third -> 'rd') and (b) the module's OWN else branch, which for any day not in the 'th' clause computes [\"st\",\"nd\",\"rd\"][day % 10 - 1]; 23 % 10 - 1 = 2 -> 'rd'. The defect wrongly routes 23 into the 'th' clause, contradicting the code's own ordinal table. Zero convention: the answer 'rd' is forced, not chosen.",
+      "why_no_visible_test_catches": "The repo ships no tests; ordinary formatting never asserts the day-23 case. p2p pins 1st/21st/24th/30th, which are unchanged by the widened clause."
+    },
+    {
+      "id": 2,
+      "file": "Service/Correlation_Decisioning.py:115",
+      "function": "CorrelationDecision.calculate_score (name tier)",
+      "edge": "a name pair sharing exactly one token, neither a subset of the other",
+      "change": "elif len(common_words) > 0:  ->  elif len(common_words) > 1:",
+      "wrong_output": "classifies a single shared token as 'No significant match' (30) instead of 'Partial match' (70)",
+      "difficulty": "easy",
+      "derivability": "STRONG. The adjacent comment 'Partial match (some words match)' pins the partial tier as a non-empty-but-not-full intersection; 'some words match' means at least one shared token, i.e. len(common_words) > 0. > 1 makes a single shared token fall through to 'No significant match', contradicting the comment. Zero convention.",
+      "why_no_visible_test_catches": "No repo tests. p2p pins the two-shared-token partial case (2 > 1, unchanged) and the disjoint no-match case (unchanged); only the exactly-one-shared-token case differs between > 0 and > 1."
+    },
+    {
+      "id": 3,
+      "file": "Service/Correlation_Decisioning.py:113",
+      "function": "CorrelationDecision.calculate_score (name tier)",
+      "edge": "a name whose tokens are a strict subset of the other's (unequal cardinality, full containment)",
+      "change": "if len(common_words) == len(source_name_words) or len(common_words) == len(target_name_words):  ->  ... and ...",
+      "wrong_output": "classifies a fully-contained name (all of one side's tokens present) as 'Partial match' (70) instead of 'Full match' (100)",
+      "difficulty": "medium",
+      "derivability": "MEDIUM. The comment 'Full match (all words match)' plus the two SEPARATE length checks pin the intent to 'either name's tokens are all matched' -> logical OR. Under AND the two checks can only both hold for equal-cardinality identical sets, making one check redundant and collapsing full-match to identical-only, so a name fully contained in the other (a common real case, e.g. 'radadiya ankur' vs 'ankur jaysukhbhai radadiya') is misclassified. The correct operator is uniquely derivable from the comment + the redundancy that AND introduces; no third option is plausible.",
+      "why_no_visible_test_catches": "No repo tests. p2p pins the identical-name full-match case (both == hold -> 100 under either operator) and the disjoint/two-shared partial cases (neither == holds); only the strict-subset case flips 100 -> 70."
+    },
+    {
+      "id": 4,
+      "file": "Service/Correlation_Decisioning.py:127",
+      "function": "CorrelationDecision.calculate_score (semantic scaling)",
+      "edge": "semantic_similarity exactly 1.0 (the maximum of the [0,1] similarity range)",
+      "change": "if 0 <= semantic_similarity <= 1:  ->  if 0 <= semantic_similarity < 1:",
+      "wrong_output": "at similarity 1.0 the guard is false, semantic_score is left unassigned, and the score sum raises UnboundLocalError (a perfect match should scale to 100)",
+      "difficulty": "medium",
+      "derivability": "STRONG-to-MEDIUM. Semantic/syntactic similarities here are cosine-based values on the closed interval [0,1]; the body's own `* 100` scaling maps [0,1] -> [0,100], so the maximum 1.0 must be admitted and scale to 100. Excluding 1.0 drops a perfect match (and, with the commented-out else fallback removed, crashes). The inclusive upper bound is uniquely derivable from the similarity range definition + the scaling. Zero convention.",
+      "why_no_visible_test_catches": "No repo tests; real correlation_details similarities sit around 0.6-0.85, never exactly 1.0. p2p pins mid-range scaling (0.8, 0.6), which is unaffected by the < vs <= edge."
+    },
+    {
+      "id": 5,
+      "file": "Service/Correlation_Decisioning.py:153",
+      "function": "CorrelationDecision.is_valid_correlation",
+      "edge": "a correlation score landing exactly on the accept threshold (default 70)",
+      "change": "return score >= threshold, score  ->  return score > threshold, score",
+      "wrong_output": "a score exactly equal to the threshold is reported invalid (False) instead of valid (True)",
+      "difficulty": "medium",
+      "derivability": "MEDIUM. `threshold` (default 70) is the minimum score required to accept a correlation; by the standard meaning of a threshold, a value meeting it qualifies, so the comparison must be inclusive (>=). The > variant rejects the exact-threshold case, contradicting 'minimum-to-qualify'. The inclusive side is uniquely derivable from threshold semantics; analogous to the canonical appraisal-floor defect.",
+      "why_no_visible_test_catches": "No repo tests. p2p pins scores clearly above (90) and below (50) the threshold, where >= and > agree; only score == 70 differs."
+    }
+  ],
+  "difficulty_mix": "2 easy (defects 1,2) + 3 medium (defects 3,4,5), all single-token, edge-only, uniquely derivable from visible comments / math definitions / the code's own ordinal table.",
+  "breadth_distance_interaction": "Breadth: 5 f2p across 2 source files and 3 functions (format_date, calculate_score, is_valid_correlation) covering 4 conceptual areas (ordinal-suffix string logic, name set-overlap classification, similarity-range validity, decision threshold). Interaction: defects 2 and 3 sit on the same name-classification path (fixing one without the other changes the failure mode rather than fixing both f2p, since full-match short-circuits before the partial tier). Distance: defect 5's symptom (a rejected valid correlation) surfaces one call-hop downstream of calculate_score via is_valid_correlation.",
+  "fairness_audit": "Every gold test uses pure literal inputs and ZERO mocks; there are no collaborators to patch, so no MagicMock/oracle-implementation leak is possible. Each assertion pins a value that pre-exists in the source and is untouched by the fix (the 100/70/30 name-score constants, the ['st','nd','rd'] ordinal table, the *100 similarity scaling, the default threshold 70), so any correct boundary fix satisfies them and no test encodes an oracle-specific implementation choice. Alternative-implementation audit: restoring the inclusive/OR/>=-boundary by any means (revert, rewrite, explicit clamp) yields identical outputs on all 16 tests. Names referenced by hidden tests (the two module paths, the public static methods CorrelationDecision.calculate_score / is_valid_correlation and GetTransactionsCustom.format_date) all exist at base and are named in the instruction's file references; nothing hidden depends on a private symbol. Deterministic, offline, no secrets."
+}

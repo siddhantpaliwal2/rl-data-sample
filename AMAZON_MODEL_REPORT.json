@@ -1,0 +1,379 @@
+{
+ "generated_from": "jobs/nova-*",
+ "n_jobs": 4,
+ "claude_baselines": {
+  "plaid": {
+   "sonnet": "0/5",
+   "opus": "10/10"
+  },
+  "qb": {
+   "sonnet": "0/10",
+   "opus": "7/10"
+  },
+  "calls": {
+   "sonnet": "0/5",
+   "opus": "8/10"
+  },
+  "cre4": {
+   "sonnet": "0/5",
+   "opus": "0/10"
+  },
+  "fintools": {
+   "sonnet": "0/5",
+   "opus": "8/10"
+  },
+  "market": {
+   "sonnet": "3/5",
+   "opus": "9/10"
+  }
+ },
+ "solve_table": {
+  "plaid": {
+   "task": "plaid-bank-report",
+   "sonnet": "0/5",
+   "opus": "10/10",
+   "premier": "0/0",
+   "pro": "0/5",
+   "lite": "0/5"
+  },
+  "qb": {
+   "task": "quickbooks-sync",
+   "sonnet": "0/10",
+   "opus": "7/10",
+   "premier": "-",
+   "pro": "0/5",
+   "lite": "-"
+  },
+  "calls": {
+   "task": "calls-v2",
+   "sonnet": "0/5",
+   "opus": "8/10",
+   "premier": "-",
+   "pro": "-",
+   "lite": "-"
+  },
+  "cre4": {
+   "task": "cre-scoring-latent-4",
+   "sonnet": "0/5",
+   "opus": "0/10",
+   "premier": "-",
+   "pro": "-",
+   "lite": "-"
+  },
+  "fintools": {
+   "task": "latent-financial-tools",
+   "sonnet": "0/5",
+   "opus": "8/10",
+   "premier": "-",
+   "pro": "-",
+   "lite": "-"
+  },
+  "market": {
+   "task": "latent-market-structure",
+   "sonnet": "3/5",
+   "opus": "9/10",
+   "premier": "-",
+   "pro": "-",
+   "lite": "-"
+  }
+ },
+ "failure_mode_distribution": {
+  "premier": {},
+  "pro": {
+   "e_regression": 4,
+   "a_format": 5,
+   "c_localization": 1
+  },
+  "lite": {
+   "a_format": 5
+  }
+ },
+ "infra_errors_by_model": {
+  "premier": 0,
+  "pro": 0,
+  "lite": 0
+ },
+ "cost_usd_by_model": {
+  "premier": 0.0,
+  "pro": 0.5186,
+  "lite": 0.083
+ },
+ "trials_by_model": {
+  "premier": 0,
+  "pro": 10,
+  "lite": 5
+ },
+ "solved_by_model": {
+  "premier": 0,
+  "pro": 0,
+  "lite": 0
+ },
+ "cost_per_solved_task_usd": {
+  "premier": null,
+  "pro": null,
+  "lite": null
+ },
+ "jobs": {
+  "nova-lite-plaid": {
+   "job": "nova-lite-plaid",
+   "task": "plaid",
+   "finished": true,
+   "n_trials": 5,
+   "solved": 0,
+   "solve_rate": "0/5",
+   "n_infra": 0,
+   "job_cost_usd": 0.0,
+   "computed_cost_usd": 0.083,
+   "mode_dist": {
+    "a_format": 5
+   }
+  },
+  "nova-premier-plaid": {
+   "job": "nova-premier-plaid",
+   "task": "plaid",
+   "finished": false,
+   "n_trials": 0,
+   "solved": 0,
+   "solve_rate": "0/0",
+   "n_infra": 0,
+   "job_cost_usd": null,
+   "computed_cost_usd": 0,
+   "mode_dist": {}
+  },
+  "nova-pro-plaid": {
+   "job": "nova-pro-plaid",
+   "task": "plaid",
+   "finished": true,
+   "n_trials": 5,
+   "solved": 0,
+   "solve_rate": "0/5",
+   "n_infra": 0,
+   "job_cost_usd": 0.0,
+   "computed_cost_usd": 0.3959,
+   "mode_dist": {
+    "e_regression": 2,
+    "a_format": 3
+   }
+  },
+  "nova-pro-qb": {
+   "job": "nova-pro-qb",
+   "task": "qb",
+   "finished": false,
+   "n_trials": 5,
+   "solved": 0,
+   "solve_rate": "0/5",
+   "n_infra": 0,
+   "job_cost_usd": 0.0,
+   "computed_cost_usd": 0.1227,
+   "mode_dist": {
+    "e_regression": 2,
+    "a_format": 2,
+    "c_localization": 1
+   }
+  }
+ },
+ "job_trials": {
+  "nova-lite-plaid": [
+   {
+    "trial": "plaid-bank-report__4gftv4m",
+    "reward": 0.0,
+    "cost_usd": 0.0057908000000000005,
+    "n_input_tokens": 13736,
+    "n_output_tokens": 668,
+    "n_steps": 3,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=3"
+   },
+   {
+    "trial": "plaid-bank-report__G9RdgnZ",
+    "reward": 0.0,
+    "cost_usd": 0.051009900000000004,
+    "n_input_tokens": 11208,
+    "n_output_tokens": 19059,
+    "n_steps": 2,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=2"
+   },
+   {
+    "trial": "plaid-bank-report__PJNB7xY",
+    "reward": 0.0,
+    "cost_usd": 0.0042637000000000005,
+    "n_input_tokens": 5704,
+    "n_output_tokens": 1021,
+    "n_steps": 1,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=1"
+   },
+   {
+    "trial": "plaid-bank-report__wQ9M7yL",
+    "reward": 0.0,
+    "cost_usd": 0.015222800000000002,
+    "n_input_tokens": 13401,
+    "n_output_tokens": 4481,
+    "n_steps": 2,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=2"
+   },
+   {
+    "trial": "plaid-bank-report__yq5fEoV",
+    "reward": 0.0,
+    "cost_usd": 0.0067527,
+    "n_input_tokens": 13209,
+    "n_output_tokens": 1116,
+    "n_steps": 2,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=2"
+   }
+  ],
+  "nova-premier-plaid": [],
+  "nova-pro-plaid": [
+   {
+    "trial": "plaid-bank-report__3cWpzty",
+    "reward": 0.0,
+    "cost_usd": 0.0692872,
+    "n_input_tokens": 75649,
+    "n_output_tokens": 2740,
+    "n_steps": 17,
+    "exit_status": "Submitted",
+    "n_noncall": 0,
+    "exception": null,
+    "mode": "e_regression",
+    "detail": "edits broke module import (0 tests collected); steps=17"
+   },
+   {
+    "trial": "plaid-bank-report__STdbGgL",
+    "reward": 0.0,
+    "cost_usd": 0.1419704,
+    "n_input_tokens": 155783,
+    "n_output_tokens": 5420,
+    "n_steps": 17,
+    "exit_status": "Submitted",
+    "n_noncall": 0,
+    "exception": null,
+    "mode": "e_regression",
+    "detail": "edits broke module import (0 tests collected); steps=17"
+   },
+   {
+    "trial": "plaid-bank-report__hpXyGDV",
+    "reward": 0.0,
+    "cost_usd": 0.013911199999999999,
+    "n_input_tokens": 13861,
+    "n_output_tokens": 882,
+    "n_steps": 3,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=3"
+   },
+   {
+    "trial": "plaid-bank-report__mwsq43x",
+    "reward": 0.0,
+    "cost_usd": 0.11670639999999999,
+    "n_input_tokens": 118475,
+    "n_output_tokens": 6852,
+    "n_steps": 9,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=9"
+   },
+   {
+    "trial": "plaid-bank-report__pBf6BpF",
+    "reward": 0.0,
+    "cost_usd": 0.0540056,
+    "n_input_tokens": 48319,
+    "n_output_tokens": 4797,
+    "n_steps": 4,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=4"
+   }
+  ],
+  "nova-pro-qb": [
+   {
+    "trial": "quickbooks-sync__FGsbUV9",
+    "reward": 0.0,
+    "cost_usd": 0.061090399999999996,
+    "n_input_tokens": 67683,
+    "n_output_tokens": 2170,
+    "n_steps": 12,
+    "exit_status": "Submitted",
+    "n_noncall": 0,
+    "exception": null,
+    "mode": "e_regression",
+    "detail": "broke 3/3 p2p; f2p 0/12"
+   },
+   {
+    "trial": "quickbooks-sync__NYwdent",
+    "reward": 0.0,
+    "cost_usd": 0.061632,
+    "n_input_tokens": 65204,
+    "n_output_tokens": 2959,
+    "n_steps": 12,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=12"
+   },
+   {
+    "trial": "quickbooks-sync__YKuntGY",
+    "reward": 0.0,
+    "cost_usd": null,
+    "n_input_tokens": null,
+    "n_output_tokens": null,
+    "n_steps": 13,
+    "exit_status": "Submitted",
+    "n_noncall": 0,
+    "exception": null,
+    "mode": "c_localization",
+    "detail": "no edit commands issued; steps=13"
+   },
+   {
+    "trial": "quickbooks-sync__i32prJV",
+    "reward": 0.0,
+    "cost_usd": null,
+    "n_input_tokens": null,
+    "n_output_tokens": null,
+    "n_steps": 17,
+    "exit_status": "RepeatedFormatError",
+    "n_noncall": 3,
+    "exception": null,
+    "mode": "a_format",
+    "detail": "RepeatedFormatError; 3 'no tool call' rejections; steps=17"
+   },
+   {
+    "trial": "quickbooks-sync__n4cgz2D",
+    "reward": 0.0,
+    "cost_usd": null,
+    "n_input_tokens": null,
+    "n_output_tokens": null,
+    "n_steps": 13,
+    "exit_status": "Submitted",
+    "n_noncall": 0,
+    "exception": null,
+    "mode": "e_regression",
+    "detail": "broke 3/3 p2p; f2p 0/12"
+   }
+  ]
+ }
+}

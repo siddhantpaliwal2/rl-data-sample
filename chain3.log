@@ -1,0 +1,44 @@
+[16:07:10] parallel chain driver up: TASK_WORKERS=3, sonnet n=5, opus n=10
+[16:07:40] latent-financial-tools: claimed
+[16:07:40] latent-financial-tools/nop: harbor run -p latent-financial-tools -o jobs --job-name latent-financial-tools--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:08:06] latent-financial-tools/oracle: harbor run -p latent-financial-tools -o jobs --job-name latent-financial-tools--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:08:29] latent-financial-tools/sonnet: harbor run -p latent-financial-tools -o jobs --job-name latent-financial-tools--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[16:13:40] cre-scoring-latent-4: claimed
+[16:13:40] cre-scoring-latent-4/nop: harbor run -p cre-scoring-latent-4 -o jobs --job-name cre-scoring-latent-4--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:14:06] cre-scoring-latent-4/oracle: harbor run -p cre-scoring-latent-4 -o jobs --job-name cre-scoring-latent-4--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:14:30] cre-scoring-latent-4/sonnet: harbor run -p cre-scoring-latent-4 -o jobs --job-name cre-scoring-latent-4--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[16:15:10] latent-market-structure: claimed
+[16:15:10] latent-market-structure/nop: harbor run -p latent-market-structure -o jobs --job-name latent-market-structure--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:15:41] latent-market-structure/oracle: harbor run -p latent-market-structure -o jobs --job-name latent-market-structure--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:16:08] latent-market-structure/sonnet: harbor run -p latent-market-structure -o jobs --job-name latent-market-structure--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[16:22:34] latent-financial-tools/opus: harbor run -p latent-financial-tools -o jobs --job-name latent-financial-tools--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-opus-4.8
+[16:22:44] latent-market-structure/opus: harbor run -p latent-market-structure -o jobs --job-name latent-market-structure--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-opus-4.8
+[16:28:48] cre-scoring-latent-4/opus: harbor run -p cre-scoring-latent-4 -o jobs --job-name cre-scoring-latent-4--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-opus-4.8
+[16:30:31] latent-financial-tools: VERDICT TOO_HARD:opus_0of10
+[16:30:41] cre-scoring-latent-bugs: claimed
+[16:30:41] cre-scoring-latent-bugs/nop: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:31:07] cre-scoring-latent-bugs/oracle: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:31:31] cre-scoring-latent-bugs/sonnet: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[16:31:37] latent-market-structure: VERDICT BROKEN:nop_nonzero
+[16:35:12] cre-scoring-latent-4: VERDICT TOO_HARD:opus_0of10
+[16:41:41] latent-market-structure: claimed
+[16:41:41] latent-market-structure/nop: harbor run -p latent-market-structure -o jobs --job-name latent-market-structure--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:41:45] cre-scoring-latent-bugs: VERDICT TOO_HARD:opus_0of10
+[16:42:05] latent-market-structure/oracle: harbor run -p latent-market-structure -o jobs --job-name latent-market-structure--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:42:29] latent-market-structure/sonnet: harbor run -p latent-market-structure -o jobs --job-name latent-market-structure--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[16:44:11] latent-credit-normalize: claimed
+[16:44:11] latent-credit-normalize/nop: harbor run -p latent-credit-normalize -o jobs --job-name latent-credit-normalize--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:44:34] latent-credit-normalize/oracle: harbor run -p latent-credit-normalize -o jobs --job-name latent-credit-normalize--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:44:57] latent-credit-normalize/sonnet: harbor run -p latent-credit-normalize -o jobs --job-name latent-credit-normalize--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[16:54:41] latent-phone-invites: claimed
+[16:54:41] latent-phone-invites/nop: harbor run -p latent-phone-invites -o jobs --job-name latent-phone-invites--nop-c2 -k 1 -n 1 -q -y -a nop
+[17:01:34] latent-credit-normalize: VERDICT TOO_HARD:opus_0of10
+[17:01:34] latent-market-structure: VERDICT TOO_EASY:sonnet_3of5
+[17:01:36] latent-phone-invites/oracle: harbor run -p latent-phone-invites -o jobs --job-name latent-phone-invites--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[17:01:41] latent-doc-extractors: claimed
+[17:01:41] latent-doc-extractors/nop: harbor run -p latent-doc-extractors -o jobs --job-name latent-doc-extractors--nop-c2 -k 1 -n 1 -q -y -a nop
+[17:02:07] latent-phone-invites/sonnet: harbor run -p latent-phone-invites -o jobs --job-name latent-phone-invites--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[17:02:07] latent-doc-extractors/oracle: harbor run -p latent-doc-extractors -o jobs --job-name latent-doc-extractors--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[17:02:44] latent-doc-extractors/sonnet: harbor run -p latent-doc-extractors -o jobs --job-name latent-doc-extractors--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m openrouter/anthropic/claude-sonnet-4.6
+[17:24:12] latent-phone-invites: VERDICT TOO_HARD:opus_0of10
+[17:24:13] latent-doc-extractors: VERDICT TOO_HARD:opus_0of10

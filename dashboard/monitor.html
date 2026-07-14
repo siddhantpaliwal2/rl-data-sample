@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Silver pipeline · live monitor</title>
+<style>
+:root {
+  --surface-1: #fcfcfb; --page: #f9f9f7;
+  --ink-1: #0b0b0b; --ink-2: #52514e; --ink-3: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --good: #0ca30c; --good-text: #006300; --warning: #fab219; --critical: #d03b3b;
+  --series-1: #2a78d6;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --ink-1: #ffffff; --ink-2: #c3c2b7; --ink-3: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --good-text: #0ca30c; --series-1: #3987e5;
+  }
+}
+* { box-sizing: border-box; margin: 0; }
+body { background: var(--page); color: var(--ink-1);
+  font: 14px/1.5 -apple-system, "SF Pro Text", "Segoe UI", sans-serif; padding: 32px 24px 64px; }
+main { max-width: 1080px; margin: 0 auto; display: grid; gap: 18px; }
+h1 { font-size: 20px; font-weight: 650; }
+h1 small { color: var(--ink-3); font-weight: 450; font-size: 13px; display: block; margin-top: 2px; }
+section { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; }
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.tile { border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.tile .v { font-size: 20px; font-weight: 650; font-variant-numeric: tabular-nums; }
+.tile .k { color: var(--ink-3); font-size: 12px; }
+.taskhead { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.taskhead h2 { font-size: 15px; font-weight: 650; font-family: ui-monospace, Menlo, monospace; }
+.mono { font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+.meta { color: var(--ink-3); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.verdictline { margin-top: 4px; font-size: 13px; }
+.verdictline.good { color: var(--good-text); font-weight: 600; }
+.verdictline.bad { color: var(--critical); font-weight: 600; }
+.verdictline.pending { color: var(--ink-2); }
+.notes { color: var(--ink-3); font-size: 12.5px; margin-top: 2px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 550;
+  padding: 1px 9px 1px 7px; border-radius: 999px; border: 1px solid var(--border); }
+.chip .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.chip.ok { color: var(--good-text); } .chip.ok .dot { background: var(--good); }
+.chip.bad { color: var(--critical); } .chip.bad .dot { background: var(--critical); }
+.chip.working { color: var(--ink-2); } .chip.working .dot { background: var(--series-1); animation: pulse 1.4s infinite; }
+.chip.partial { color: var(--ink-2); } .chip.partial .dot { background: var(--warning); }
+.modelgroup { border-top: 1px solid var(--grid); margin-top: 14px; padding-top: 12px; }
+.modelgroup.void { opacity: 0.45; }
+.modelhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
+.modelname { font-weight: 600; font-size: 13.5px; }
+.gatelabel { color: var(--ink-3); font-size: 12px; }
+.verdict { font-size: 12.5px; font-weight: 600; }
+.verdict.hit { color: var(--good-text); } .verdict.miss { color: var(--critical); }
+.verdict.pending { color: var(--ink-2); font-weight: 500; }
+.voidtag { font-size: 11px; font-weight: 650; color: var(--critical); text-transform: uppercase; letter-spacing: 0.05em; }
+.trials { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.trial { min-width: 86px; border: 1px solid var(--border); border-radius: 7px; padding: 6px 9px;
+  font-size: 11.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.trial b { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
+.trial .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.run  .dot { background: var(--series-1); animation: pulse 1.4s ease-in-out infinite; }
+.pass .dot { background: var(--good); } .pass b { color: var(--good-text); }
+.fail .dot { background: var(--critical); } .fail b { color: var(--critical); }
+.err  .dot { background: var(--warning); }
+@keyframes pulse { 50% { opacity: 0.35; } }
+.harnessline { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+#updated { color: var(--ink-3); font-size: 12px; }
+.scaffchip { margin-left: auto; }
+details.oldjobs summary { cursor: pointer; color: var(--ink-3); font-size: 12.5px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Silver pipeline · live monitor
+    <small><span id="updated">loading…</span> · auto-refreshes every 3 s · <a href="index.html" style="color:var(--series-1)">static overview →</a></small>
+  </h1>
+  <section><div class="tiles" id="summary"></div></section>
+  <div id="board">loading…</div>
+</main>
+<script>
+const GATE = {
+  easiness:   { label: "easiness — advance if ≤ 1 solved", ok: s => s <= 1 },
+  difficulty: { label: "difficulty — need 1–4 solved",     ok: s => s >= 1 && s <= 4 },
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shortModel = m => (m || "").split("/").pop() || "harness";
+
+function trialChip(t) {
+  const cls = t.state === "running" ? "run" : t.state === "error" ? "err" : (t.reward === 1 ? "pass" : "fail");
+  const lbl = t.state === "running" ? "running" : t.state === "error" ? "crashed" : (t.reward === 1 ? "solved" : "failed");
+  const sub = t.steps ? `step ${t.steps} · $${(t.cost ?? 0).toFixed(2)}` : "—";
+  return `<div class="trial ${cls}"><b><span class="dot"></span>${lbl}</b><span>${esc(sub)}</span></div>`;
+}
+
+function jobBlock(j) {
+  const gate = GATE[j.kind];
+  const voidTag = j.void ? `<span class="voidtag">void — infra crashed</span>` : "";
+  const v = !gate || j.void ? "" :
+    j.done < j.total ? `<span class="verdict pending">${j.solved}/${j.total} solved · ${j.total - j.done} running</span>` :
+    `<span class="verdict ${gate.ok(j.solved) ? "hit" : "miss"}">${j.solved}/${j.total} solved → ${gate.ok(j.solved) ? "PASS" : "FAIL"}</span>`;
+  return `<div class="modelgroup${j.void ? " void" : ""}"><div class="modelhead">
+    <span class="modelname">${esc(shortModel(j.model))}</span>
+    <span class="gatelabel">${esc(gate ? gate.label : j.kind)} · <span class="mono">${esc(j.job)}</span></span>
+    ${voidTag}${v}<span class="meta">$${j.cost.toFixed(2)}</span>
+  </div><div class="trials">${j.trials.map(trialChip).join("")}</div></div>`;
+}
+
+function render(d) {
+  document.getElementById("updated").textContent = "data as of " + d.generated_at;
+  const s = d.summary || {};
+  document.getElementById("summary").innerHTML = `
+    <div class="tile"><div class="v">$${(s.total_spend ?? 0).toFixed(2)}</div><div class="k">total probe spend</div></div>
+    <div class="tile"><div class="v">${s.trials_running ?? 0}</div><div class="k">trials running</div></div>
+    <div class="tile"><div class="v">${s.candidates ?? 0}</div><div class="k">submission candidates</div></div>
+    <div class="tile"><div class="v">${s.too_easy ?? 0}</div><div class="k">too easy — need hardening</div></div>`;
+  const board = document.getElementById("board");
+  const byTask = {};
+  for (const t of d.tasks) byTask[t.task] = { scaffold: t, probe: [], harness: [], old: [] };
+  for (const j of d.jobs) {
+    if (!byTask[j.task]) byTask[j.task] = { scaffold: null, probe: [], harness: [], old: [] };
+    const slot = byTask[j.task];
+    if (j.kind === "harness") { slot.harness.push(j); continue; }
+    const isCurrent = slot.scaffold &&
+      ((slot.scaffold.ease_gate && slot.scaffold.ease_gate.job === j.job) ||
+       (slot.scaffold.diff_gate && slot.scaffold.diff_gate.job === j.job) || !j.finished);
+    (isCurrent ? slot.probe : slot.old).push(j);
+  }
+  const order = Object.keys(byTask).sort((a, b) => {
+    const va = byTask[a].scaffold?.verdict || "", vb = byTask[b].scaffold?.verdict || "";
+    const rank = v => v.includes("SUBMISSION") ? 0 : v.includes("pending") || v.includes("running") || v.includes("iterating") ? 1 : 2;
+    return rank(va) - rank(vb) || a.localeCompare(b);
+  });
+  board.innerHTML = "";
+  for (const taskName of order) {
+    const slot = byTask[taskName];
+    const sc = slot.scaffold;
+    const scaffChip = !sc ? "" :
+      sc.state === "verified" ? `<span class="chip ok scaffchip"><span class="dot"></span>scaffold verified · f2p ${sc.f2p} · p2p ${sc.p2p}</span>` :
+      `<span class="chip working scaffchip"><span class="dot"></span>${esc(sc.state)}</span>`;
+    const vd = sc?.verdict || "";
+    const vcls = vd.includes("SUBMISSION") || vd.includes("passed") ? "good" : vd.startsWith("too easy") ? "bad" : "pending";
+    let html = `<section><div class="taskhead"><h2>${esc(taskName)}</h2>${scaffChip}</div>
+      <div class="verdictline ${vcls}">${esc(vd)}${sc?.spend ? ` <span class="meta">· $${sc.spend.toFixed(2)} spent</span>` : ""}</div>
+      ${sc?.note ? `<div class="notes">${esc(sc.note)}</div>` : ""}`;
+    for (const j of slot.probe.sort((a, b) => a.kind.localeCompare(b.kind))) html += jobBlock(j);
+    if (slot.harness.length) {
+      const chips = slot.harness.map(j => {
+        const ok = j.agent === "nop" ? j.solved === 0 : j.solved === j.total;
+        return `<span class="chip ${ok ? "ok" : "bad"}"><span class="dot"></span>${esc(j.agent)} ${ok ? "✓" : "✗"}</span>`;
+      }).join("");
+      html += `<div class="modelgroup"><div class="modelhead"><span class="modelname">harness</span>
+        <span class="gatelabel">nop must fail · oracle must solve</span>${chips}</div></div>`;
+    }
+    if (slot.old.length) {
+      html += `<details class="oldjobs"><summary>${slot.old.length} earlier round(s)</summary>` +
+        slot.old.sort((a, b) => b.mtime - a.mtime).map(jobBlock).join("") + `</details>`;
+    }
+    board.insertAdjacentHTML("beforeend", html + "</section>");
+  }
+}
+async function tick() {
+  try {
+    const r = await fetch("status.json?t=" + Date.now());
+    if (r.ok) render(await r.json());
+  } catch (e) { document.getElementById("updated").textContent = "status.json unavailable — is the generator loop running?"; }
+}
+tick(); setInterval(tick, 3000);
+</script>
+</body>
+</html>

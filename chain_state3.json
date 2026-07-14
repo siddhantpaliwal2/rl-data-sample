@@ -1,0 +1,190 @@
+{
+ "latent-financial-tools": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 0,
+    "total": 0,
+    "errors": 0,
+    "note": "OPUS PRELAUNCHED EXTERNALLY (concurrent with sonnet); merge real results post-hoc; ignore auto-verdict"
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T16:30:31.473683"
+ },
+ "cre-scoring-latent-4": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 0,
+    "total": 10,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T16:35:12.828706"
+ },
+ "cre-scoring-latent-bugs": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 0,
+    "total": 10,
+    "errors": 0,
+    "note": "SKIPPED, not run: contains the median-side and clamp-existence defects proven underdetermined (0/10 uniform, same-4-tests profile in cre-scoring-latent-4 opus). Superseded by derivable-defect variant."
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T16:41:45.604466"
+ },
+ "latent-market-structure": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 0,
+    "total": 0,
+    "errors": 0,
+    "note": "OPUS PRELAUNCHED EXTERNALLY (concurrent with sonnet); merge real results post-hoc; ignore auto-verdict"
+   },
+   "sonnet": {
+    "solved": 3,
+    "total": 5,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_EASY:sonnet_3of5",
+  "finished_at": "2026-07-13T17:01:34.263866"
+ },
+ "latent-credit-normalize": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 0,
+    "total": 0,
+    "errors": 0,
+    "note": "OPUS PRELAUNCHED EXTERNALLY (concurrent with sonnet); merge real results post-hoc; ignore auto-verdict"
+   },
+   "sonnet": {
+    "solved": 1,
+    "total": 5,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T17:01:34.258436"
+ },
+ "latent-phone-invites": {
+  "stages": {
+   "opus": {
+    "solved": 0,
+    "total": 0,
+    "errors": 0,
+    "note": "OPUS PRELAUNCHED EXTERNALLY (concurrent with sonnet); merge real results post-hoc; ignore auto-verdict"
+   },
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T17:24:12.783046"
+ },
+ "latent-doc-extractors": {
+  "stages": {
+   "opus": {
+    "solved": 0,
+    "total": 0,
+    "errors": 0,
+    "note": "OPUS PRELAUNCHED EXTERNALLY (opusB job); merge post-hoc"
+   },
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T17:24:13.194996"
+ }
+}

@@ -1,0 +1,76 @@
+{
+  "task": "forge-lending-flow",
+  "style": "planted-defect (forge, hardened per CONSTRUCTION_V2)",
+  "base_commit": "04b8abc5515c22bdb7a2da32bf2719c8ac702174",
+  "fix_commit": null,
+  "defect_count": 9,
+  "files_touched": [
+    "loangen-agent/agent/services/cre_qualification/facts.py",
+    "loangen-agent/agent/services/cre_qualification/lender_match.py",
+    "loangen-agent/agent/services/cre_qualification/required_docs.py",
+    "loangen-agent/agent/services/cre_qualification/recommendation.py",
+    "loangen-agent/agent/documents/extractors/cre_fields.py"
+  ],
+  "interacting_pair": {
+    "path": "resolve_construction_budget (facts.py)",
+    "defects": [
+      "remaining source: get_fact('remaining_budget') -> get_fact('costs_to_complete')",
+      "fallback total: spent + remaining -> spent - remaining"
+    ],
+    "verified": "fix-A-only FAIL (returns None), fix-B-only FAIL (returns 76750), fix-both PASS (290750)"
+  },
+  "distance_defect": {
+    "defect": "resolve_liquid_assets PFS summation: total += amount -> total = amount",
+    "symptom_hops": 2,
+    "surfaces_at": "tests/test_cre_qualification.py::TestCreQualificationScoring::test_liquidity_ratio_when_pfs_and_loan (engine sponsor head)",
+    "verified": "applied alone flips ONLY the engine liquidity test; the direct resolve_liquid_assets unit test stays green (takes the pfs_cash branch)"
+  },
+  "f2p": [
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_liquidity_ratio_when_pfs_and_loan",
+    "tests/test_oak_hill_qualification.py::TestOakHillQualificationEngine::test_construction_budget_is_spent_plus_remaining",
+    "tests/test_oak_hill_qualification.py::TestOakHillQualificationEngine::test_oak_hill_term_app_filters_non_matching_products",
+    "tests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_bridge_application_product_fit",
+    "tests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_liquid_assets_rejects_total_assets_mistake",
+    "tests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_term_construction_matches_only_term_product",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_review_band",
+    "tests/test_lender_product_match.py::TestLenderProductMatch::test_term_matches_business_term_loan_only",
+    "tests/test_lender_product_match.py::TestLenderProductMatch::test_term_still_matches_when_cre_collateral_present",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_normalize_enum_style_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget",
+    "tests/test_cre_field_extraction.py::TestCreFieldExtraction::test_appraisal_extracts_as_is_value"
+  ],
+  "f2p_count": 12,
+  "f2p_source_files_spanned": 5,
+  "p2p_count": 21,
+  "selected_test_files_to_run": [
+    "tests/test_cre_qualification.py",
+    "tests/test_oak_hill_qualification.py",
+    "tests/test_bridge_broadway_qualification.py",
+    "tests/test_qualification_recommendation.py",
+    "tests/test_lender_product_match.py",
+    "tests/test_required_docs.py",
+    "tests/test_cre_field_extraction.py",
+    "tests/test_qualification_report_pdf.py",
+    "tests/test_oak_hill_extraction.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "21/33",
+  "oracle_reward": 1,
+  "oracle_required_passed": "33/33",
+  "partial_fix_reward": 0,
+  "partial_fix_required_passed": "30/33",
+  "partial_fix_scope": "reversed the 5 non-facts.py defects (lender_match, required_docs, recommendation, cre_fields); the 4 facts.py defects (distance + interaction pair + liquidity guard) left planted",
+  "visible_suite_green": true,
+  "git_history_len": 1,
+  "env": {},
+  "leak_checks": {
+    "git_log_oneline_count": 1,
+    "git_diff_empty": true,
+    "gold_test_files_absent_from_tree": true,
+    "defects_recoverable_from_history": false,
+    "note": "Single 'import codebase' commit contains the already-planted source as the initial import; git diff is empty and there is no base->planted delta in history, log -p, stash, or reflog. The seven gold test files are not in the committed tree; they enter only via the verifier test_patch at grade time."
+  },
+  "visible_suite_note": "Full tests/ suite: 7 pre-existing env-gated failures on the CLEAN base (test_inbound_calls x3, test_document_ingestion_readiness x2, test_document_report x1, test_ingestion_stale_recovery x1) — all unrelated to CRE qualification. Planted + 7 gold files removed yields the IDENTICAL 7 failures (0 new failures introduced by the defects). The nine CRE/qualification test files that remain visible to the agent are green at the planted state.",
+  "fairness_audit": "Gold tests are the repository's own CRE tests, restored verbatim; they assert observable values/names (budget total, liquid figure, matched product name, recommendation band, normalized doc type, extracted amount) using SimpleNamespace / LoanProductCriteria typed fakes with explicit attribute values, never a bare MagicMock patched at a consumer module, so a near-correct fix cannot crash on a mock. No f2p assertion depends on task env (none is set). Alternative-implementation audit passes: each assertion pins a value or a name, not the oracle's control flow, so a materially different correct implementation still passes.",
+  "notes": "Hardened forge task. Nine natural, type-preserving logic slips across the CRE qualification flow (4 modules + 1 upstream extractor) flip 12 existing tests, restored only via test_patch. Includes one interacting defect pair on the construction-budget path (fixing one alone changes the failure mode, not clears it) and one distance defect whose sole symptom is an engine liquidity verdict 2 call-hops downstream. solve.sh reverse-applies the source defect patch. Full ladder verified in docker; sonnet/opus probes NOT run per instructions."
+}

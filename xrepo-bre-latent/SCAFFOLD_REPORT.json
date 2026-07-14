@@ -1,0 +1,96 @@
+{
+  "task": "xrepo-bre-latent",
+  "pattern": "latent-bug",
+  "instance_id": "boostmoney-bre-boundary-latent",
+  "repo": "boostmoney/business-rule-engine",
+  "base_commit": "5afc479f95727d1bb8376d01151d891a958475bc",
+  "task_image": "silver-task-latent",
+  "repo_image": "bre-repo:v1 (python:3.11-slim + git + COPY . /app + pip install pytest pymongo python-dateutil)",
+  "defect_count": 5,
+  "f2p": [
+    "tests/test_bre_boundaries.py::TestBetweenLowerBound::test_value_exactly_on_lower_bound_is_inside_range",
+    "tests/test_bre_boundaries.py::TestFieldExtractorFirstIndex::test_first_list_element_is_addressable",
+    "tests/test_bre_boundaries.py::TestActiveAccountsCeiling::test_amount_exactly_on_ceiling_qualifies",
+    "tests/test_bre_boundaries.py::TestOverdueExclusionCutoff::test_overdue_exactly_on_cutoff_is_excluded",
+    "tests/test_bre_boundaries.py::TestCreditScoreMinimum::test_score_exactly_on_threshold_passes"
+  ],
+  "p2p": [
+    "tests/test_bre_boundaries.py::TestBetweenAdjacent::test_value_on_upper_bound_is_inside_range",
+    "tests/test_bre_boundaries.py::TestBetweenAdjacent::test_value_inside_range",
+    "tests/test_bre_boundaries.py::TestBetweenAdjacent::test_value_below_range",
+    "tests/test_bre_boundaries.py::TestFieldExtractorAdjacent::test_second_list_element",
+    "tests/test_bre_boundaries.py::TestFieldExtractorAdjacent::test_nested_dict_access",
+    "tests/test_bre_boundaries.py::TestFieldExtractorAdjacent::test_out_of_range_index_returns_default",
+    "tests/test_bre_boundaries.py::TestActiveAccountsAdjacent::test_amount_well_within_limit_qualifies",
+    "tests/test_bre_boundaries.py::TestActiveAccountsAdjacent::test_amount_above_limit_does_not_qualify",
+    "tests/test_bre_boundaries.py::TestOverdueAdjacent::test_overdue_well_above_cutoff_flags",
+    "tests/test_bre_boundaries.py::TestOverdueAdjacent::test_overdue_below_cutoff_passes",
+    "tests/test_bre_boundaries.py::TestCreditScoreAdjacent::test_score_above_threshold_passes",
+    "tests/test_bre_boundaries.py::TestCreditScoreAdjacent::test_score_far_below_threshold_fails"
+  ],
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "partial_note": "Applied the oracle fix for only 2 of the 5 defects (the two zype_functions boundaries); the other 3 f2p tests still FAILED, so required-passed was 14/17 and reward was 0.",
+  "git_history_len": 1,
+  "git_diff_empty_at_planted": true,
+  "base_defects_visible_suite": "GREEN/vacuous: the repo ships no runnable test suite, so there is no visible red for the agent to chase; the 12 p2p adjacent-behavior tests pass at base+defects (verified in-image).",
+  "litmus_result": "A strong dev given only instruction.md cannot land on a specific line in <2 min: the instruction names two engine directories and gives two representative symptoms without naming functions, files-of-plant, boundary directions, trigger values, or a count.",
+  "env": {},
+  "env_note": "No task-specific env required. Targets are pure/deterministic/offline. pymongo and python-dateutil are installed only so the config/custom-function packages import; neither connects at import time. The IRE rule-evaluation module is loaded from its file path in the gold test to avoid importing its package __init__ (which pulls google-cloud-aiplatform / pymongo / openai).",
+  "defects": [
+    {
+      "id": 1,
+      "file": "bre_engine/engine/operator_handler.py:46",
+      "function": "OperatorHandler.evaluate (the 'between' operator lambda)",
+      "boundary_changed": "e[0] <= a <= e[1]  ->  e[0] < a <= e[1]",
+      "edge_input": "a value exactly equal to the lower bound, e.g. evaluate(25000, 'between', [25000, 100000])",
+      "wrong_output": "returns False (reported outside the range) instead of True",
+      "derivability": "MEDIUM. Correct side (inclusive lower) is uniquely derivable from the in-repo parallel implementation of 'between' in custom_functions/base._apply_operator, which uses float(min) <= a <= float(max) on both ends, and from the fact that the planted line leaves the UPPER bound inclusive while making only the lower exclusive (asymmetry with no justification). No convention guess: a real second implementation pins it.",
+      "why_no_ordinary_input_catches": "Ordinary range checks feed values strictly inside [lo, hi]; only a == lo distinguishes < from <=. The 3 p2p between-tests (inside, on-upper-bound, below) agree under both variants."
+    },
+    {
+      "id": 2,
+      "file": "bre_engine/engine/field_extractor.py:49",
+      "function": "FieldExtractor.get_value (dot-notation array indexing)",
+      "boundary_changed": "0 <= index < len(value)  ->  0 < index < len(value)",
+      "edge_input": "a dot path selecting the first list element, e.g. get_value({'items':[{'name':'alpha'}]}, 'items.0.name')",
+      "wrong_output": "returns the default (None) as if the element were missing, instead of 'alpha'",
+      "derivability": "MEDIUM (probe-exposure noted). Correct side (index 0 valid) is pinned by the inline comment one line above: \"Support array indexing: 'items.0.name'\", which documents index-0 access as a supported feature; rejecting index 0 contradicts the documented behavior. Mild probe-exposure: an agent that specifically probes array indexing might try '.0.' first; the instruction does not signpost field extraction, so localization still requires reasoning.",
+      "why_no_ordinary_input_catches": "Object/dict dot paths and positive indices (>=1) are unaffected; only index exactly 0 changes. p2p covers index 1, nested dict, and out-of-range default."
+    },
+    {
+      "id": 3,
+      "file": "bre_engine/engine/custom_functions/zype_functions.py:237",
+      "function": "ActiveAccountsCheckFunction._check_active_accounts",
+      "boundary_changed": "0 < amount <= max_limit  ->  0 < amount < max_limit",
+      "edge_input": "an active PL/CC with sanctioned amount exactly on the ceiling, e.g. sanctionedAmountOrHighestCredit == '200000' with default max_limit 200000",
+      "wrong_output": "the account is dropped (has_qualifying_account False -> passed False) instead of qualifying (passed True)",
+      "derivability": "EASY. Correct side (inclusive ceiling) is pinned by the inline comment \"Check if amount is within limit (up to max_limit)\" and the class docstring \"sanctioned amount up to specified limit (default 2 lakhs)\". \"up to X\" is inclusive of X.",
+      "why_no_ordinary_input_catches": "Ordinary amounts are strictly below the ceiling (both variants qualify) or above it (neither qualifies); only amount == max_limit flips. p2p covers well-within and above-limit."
+    },
+    {
+      "id": 4,
+      "file": "bre_engine/engine/custom_functions/zype_functions.py:149",
+      "function": "AmountOverdueThresholdCheckFunction._check_overdue_amounts",
+      "boundary_changed": "overdue_amount > threshold  ->  overdue_amount >= threshold",
+      "edge_input": "an account whose overdue is exactly the cutoff, e.g. amountOverdue == '3000' with default threshold 3000",
+      "wrong_output": "the account is flagged as high-overdue (has_high_overdue True -> passed False) instead of being excluded (passed True)",
+      "derivability": "EASY. Correct side (strict >) is pinned verbatim by the class docstring: \"Exclude overdue up to ₹3000 from DPD computations. This checks if any account has overdue > threshold (default 3000)\" — the cutoff value itself is excluded, and the docstring literally states the comparison as strict '>'.",
+      "why_no_ordinary_input_catches": "Overdue clearly above 3000 flags under both variants; clearly below 3000 passes under both; only overdue == 3000 flips. p2p covers above and below."
+    },
+    {
+      "id": 5,
+      "file": "intelligent_recommendation_engine/services/rule_evaluation_service.py:199",
+      "function": "RuleEvaluationService._evaluate_credit_score",
+      "boundary_changed": "credit_score >= threshold  ->  credit_score > threshold",
+      "edge_input": "a score exactly at the configured minimum, e.g. score 700 with rule threshold 700",
+      "wrong_output": "status downgraded from PASS to WARNING (\"below threshold but close\") for a score that meets the minimum",
+      "derivability": "MEDIUM. Correct side (inclusive) is pinned by the PASS branch's own message string, f\"Credit score {credit_score} meets minimum requirement of {threshold}\": a score equal to the threshold MEETS the minimum requirement, which is exactly the PASS semantics; the FAIL branch message says \"below minimum requirement\". Deriving it requires reading the branch messages, not just the comparison.",
+      "why_no_ordinary_input_catches": "Scores comfortably above threshold PASS and scores below threshold-50 FAIL under both variants; only score == threshold flips PASS->WARNING. p2p covers above-threshold PASS and far-below FAIL."
+    }
+  ],
+  "derivability_summary": "2 EASY (docstring/inline-comment pinned: zype ActiveAccounts 'up to max_limit', zype AmountOverdue 'overdue > threshold') + 3 MEDIUM (require tracing to in-repo evidence: operator_handler 'between' vs the parallel base._apply_operator impl; field_extractor index-0 vs the 'items.0.name' example; credit-score band vs the 'meets minimum requirement' branch message). Zero convention-only picks: every correct side is fixed by concrete in-repo evidence, not by a taste call on which way a bare band-edge should go.",
+  "fairness_audit": "Gold tests are pure-input unittest with ZERO mocks. Alternative-implementation audit: each f2p asserts an observable verdict/return value on an exact-edge input, not an oracle-chosen code path — any boundary correction that makes 'between' inclusive on the lower end, restores index-0 addressing, makes the ceiling/cutoff inclusive/strict per the docs, and makes the score band inclusive will pass. The IRE module is exec-loaded from its file so the test needs no cloud/DB SDK, and the instance is built with __new__ so no rule-file loader runs. No hidden test references a name that is absent at base. All five defected functions are live on the engine's rule-execution / recommendation-evaluation paths.",
+  "resistance_assessment": "Targeting Opus 1-4/10. A solve requires finding and correcting ALL FIVE independent single-token boundary slips spread across 4 files and 2 top-level packages, with no failing test to chase (the repo has no runnable suite, removing the run-pytest-see-red gradient) and no visible git history of the plant. The two EASY defects are discoverable by careful reading of docstrings/comments; the three MEDIUM defects require tracing to a parallel implementation, an inline example, or a branch message. Breadth (5 tests over 4 source files in 2 packages), distance (a wrong operator/extraction helper surfaces only as a wrong eligibility verdict downstream), and the all-five-required gate together suppress the solve rate; an agent that only fixes the two literal examples in the instruction still fails 3 f2p."
+}

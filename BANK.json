@@ -1,0 +1,71 @@
+{
+ "bar": "sonnet <=1/5 AND opus 1-6/10 (user's internal benchmark; AQI strict is 1-4)",
+ "banked": [
+  {
+   "task": "latent-phone-invites",
+   "repo": "loangenus",
+   "sonnet": "0/5",
+   "opus": "1/10",
+   "strict_corridor": true
+  },
+  {
+   "task": "latent-market-structure",
+   "repo": "loangenus",
+   "sonnet": "1/5 (1 errored trial)",
+   "opus": "6/10",
+   "strict_corridor": false
+  },
+  {
+   "task": "latent-financial-tools",
+   "repo": "loangenus",
+   "sonnet": "0/4",
+   "opus": "4/10",
+   "strict_corridor": true
+  },
+  {
+   "task": "xrepo-correlation-latent",
+   "repo": "correlation-core",
+   "sonnet": "0/5",
+   "opus": "1/10",
+   "strict_corridor": true
+  },
+  {
+   "task": "xrepo-loangenai-latent",
+   "repo": "loan-genai-backend",
+   "sonnet": "0/5",
+   "opus": "6/10",
+   "strict_corridor": false
+  },
+  {
+   "task": "latent-credit-normalize",
+   "repo": "loangenus",
+   "sonnet": "0/5",
+   "opus": "3/10",
+   "strict_corridor": true,
+   "note": "re-gated on restored build (fresh evidence)"
+  },
+  {
+   "task": "xrepo-txenrich-latent",
+   "repo": "transaction-enrichment-python",
+   "sonnet": "0/5",
+   "opus": "1/10",
+   "strict_corridor": true
+  },
+  {
+   "task": "latent-doc-extractors",
+   "repo": "loangenus",
+   "sonnet": "0/5",
+   "opus": "1/10",
+   "strict_corridor": true
+  }
+ ],
+ "regate_pending": [],
+ "needs_rework": [
+  {
+   "task": "xrepo-finscore-latent",
+   "sonnet": "2/5",
+   "opus": "9/10",
+   "fix": "harden the 2 easy defects (max->min extremum, *100->*10 scale) \u2014 Sonnet finds them; convert to medium cross-trace"
+  }
+ ]
+}

@@ -1,0 +1,116 @@
+{
+  "task": "forge-chat-pipeline",
+  "pattern": "forge / planted-defect, edge-conditioned (visible suite stays green; each defect correct on common inputs)",
+  "instance_id": "loangenus-forge-chat-pipeline",
+  "repo": "boostmoney/loangenus",
+  "base_commit": "04b8abc5515c22bdb7a2da32bf2719c8ac702174",
+  "task_image": "silver-task-forge-chat-pipeline",
+  "defect_count": 6,
+  "interacting_pair": "defects 4+5 in context_builder.get_missing_data_response (missing_required `in`->`not in`; connected_keys `not in`->`in`): same path; fixing one leaves the other's assertion failing.",
+  "distance_defect": "defect 2 pipeline.detect_intent sorted(INTENT_PATTERNS.items()): surfaces two call-hops downstream as wrong/empty enrichment in enrich_user_message (test_credit_question_yields_credit_snapshot).",
+  "f2p_count": 10,
+  "p2p_count": 8,
+  "f2p": [
+    "tests/test_chat_pipeline_seams.py::TestLoanAmountExtraction::test_fractional_thousands_amount",
+    "tests/test_chat_pipeline_seams.py::TestLoanAmountExtraction::test_fractional_millions_amount",
+    "tests/test_chat_pipeline_seams.py::TestIntentPrecedence::test_credit_score_trend_is_personal_credit",
+    "tests/test_chat_pipeline_seams.py::TestIntentPrecedence::test_dscr_question_is_qb_financials",
+    "tests/test_chat_pipeline_seams.py::TestIntentDrivenEnrichment::test_credit_question_yields_credit_snapshot",
+    "tests/test_chat_pipeline_seams.py::TestContextualGreeting::test_no_sources_connected_greeting",
+    "tests/test_chat_pipeline_seams.py::TestMissingDataResponse::test_missing_source_is_the_unlinked_required_one",
+    "tests/test_chat_pipeline_seams.py::TestMissingDataResponse::test_connected_sources_exclude_the_missing_one",
+    "tests/test_chat_pipeline_seams.py::TestMissingDataResponse::test_no_response_when_no_required_source_missing",
+    "tests/test_chat_pipeline_seams.py::TestCreditEnrichmentDefault::test_db_credit_enrichment_enabled_by_default"
+  ],
+  "p2p": [
+    "tests/test_chat_pipeline_seams.py::TestLoanAmountExtraction::test_round_thousands_amount",
+    "tests/test_chat_pipeline_seams.py::TestLoanAmountExtraction::test_round_millions_amount",
+    "tests/test_chat_pipeline_seams.py::TestLoanAmountExtraction::test_plain_dollar_amount",
+    "tests/test_chat_pipeline_seams.py::TestIntentPrecedence::test_utilization_stays_personal_credit",
+    "tests/test_chat_pipeline_seams.py::TestIntentPrecedence::test_cash_flow_stays_bank_cashflow",
+    "tests/test_chat_pipeline_seams.py::TestContextualGreeting::test_one_connected_greeting",
+    "tests/test_chat_pipeline_seams.py::TestContextualGreeting::test_two_connected_greeting",
+    "tests/test_chat_pipeline_seams.py::TestContextualGreeting::test_all_connected_greeting"
+  ],
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "partial_note": "Reverting 3 of 6 defects (context_builder x2 + config x1) leaves the 3 pipeline defects -> 7 f2p still fail -> reward 0.",
+  "visible_suite_green": "IDENTICAL with and without defects (clean base and base+defects both give 166 passed / 24 skipped / 7 pre-existing rot failures under minimal JWT-only env). No existing test imports these seams; defects add ZERO new failures.",
+  "git_history_len": 1,
+  "env": {},
+  "env_note": "No task-specific env. Tests import agent.pipeline / agent.context_builder / agent.core.config and run offline on the baked JWT_SECRET_KEY. Dockerfile sets no ENV block (matches cre-scoring-latent-bugs).",
+  "edge_conditioning": {
+    "directive": "team-lead: edge-condition defects that would surface on casual REPL probing so they fire only on inputs nobody types casually; keep the abstract cre-scoring instruction voice with NO concrete trigger values.",
+    "edge_conditioned": {
+      "1_amount": "decimal-strip fires only on FRACTIONAL amounts ('$2.5k'); round '$5k'/'$3m'/'$50,000' correct at base (p2p controls pass at base).",
+      "2_intent": "already latent \u2014 sorted() flips only two-topic messages; single-topic correct (p2p controls pass at base).",
+      "3_greeting": "if-not-None fires only on the ZERO-connected edge; one/two/all-connected correct at base (p2p controls pass at base)."
+    },
+    "kept_observable_non_casual": {
+      "4_5_missing_data": "pure set-membership; no numeric boundary to condition without contrivance. Symptom is a wrong LABEL surfaced only by calling a structured internal method with a partial missing_sources (point-3 escape: label not number).",
+      "6_config": "boolean flag; symptom (thin credit summary) manifests only through the Mongo enrichment path, not observable by a casual offline probe."
+    }
+  },
+  "defects": [
+    {
+      "id": 1,
+      "file": "loangen-agent/agent/pipeline.py",
+      "function": "_extract_loan_details",
+      "change": "raw.replace(',', '') gains .replace('.', '')",
+      "edge": "fractional amounts only; round amounts correct",
+      "seam": "public enrich_user_message (qualification path), typed fake captures desired_amount"
+    },
+    {
+      "id": 2,
+      "file": "loangen-agent/agent/pipeline.py",
+      "function": "detect_intent",
+      "change": "for-loop wrapped in sorted(INTENT_PATTERNS.items())",
+      "edge": "two-topic-overlap messages only",
+      "seam": "public detect_intent; DISTANCE via enrich_user_message"
+    },
+    {
+      "id": 3,
+      "file": "loangen-agent/agent/pipeline.py",
+      "function": "get_greeting",
+      "change": "`if connected:` -> `if connected is not None:`",
+      "edge": "zero-connected only",
+      "seam": "public get_greeting"
+    },
+    {
+      "id": 4,
+      "file": "loangen-agent/agent/context_builder.py",
+      "function": "get_missing_data_response",
+      "change": "missing_required `in`->`not in`",
+      "edge": "label-wrong on any partial missing set (INTERACTION with 5)",
+      "seam": "public get_missing_data_response"
+    },
+    {
+      "id": 5,
+      "file": "loangen-agent/agent/context_builder.py",
+      "function": "get_missing_data_response",
+      "change": "connected_keys `not in`->`in`",
+      "edge": "connected-list inverted (INTERACTION with 4)",
+      "seam": "public get_missing_data_response"
+    },
+    {
+      "id": 6,
+      "file": "loangen-agent/agent/core/config.py",
+      "field": "chat_enrichment_refresh_credit_from_raw_db",
+      "change": "default True->False",
+      "edge": "symptom only via DB enrichment path",
+      "seam": "settings singleton"
+    }
+  ],
+  "fairness_audit": "Every gold assertion is at a PUBLIC seam: LoanGenPipeline.detect_intent/.get_greeting/.enrich_user_message, ContextBuilder.get_missing_data_response, and the settings singleton. Private _extract_loan_details is exercised only through its public caller. Collaborator is an explicit typed fake (_FakeContextBuilder, no MagicMock); the only settings interaction uses patch.object on the singleton, never module-attribute patching. No hidden name is referenced that isn't in base code. Alternative-implementation audit: tests assert observable outputs (amount value, intent string, greeting/enrichment substrings, list contents, bool default), so any correct restoration passes.",
+  "leak_checks": {
+    "git_history_len": 1,
+    "git_diff_empty": true,
+    "git_status_clean": true,
+    "git_seal_in_dockerfile": "rm -rf .git && git init -qb main ... commit 'import codebase' present (verified)",
+    "no_failing_visible_test_points_at_defects": true,
+    "instruction_leak": "no file/module/function/config-key/count/shape; NO concrete trigger values (no '$2.5k'); symptom classes only"
+  },
+  "litmus_result": "PASS. Instruction names no file/function/config-key/count/shape and gives no concrete trigger values. Area is inferable but every defect is correct on the obvious first input, so neither reading the abstract symptoms nor casual REPL probing localizes the specific slip \u2014 the agent must read and reason about 3 modules and find inputs that expose each edge.",
+  "resistance_assessment": "Edge-conditioned forge with a green visible suite. No failing-test gradient; each of the 6 defects returns correct output on the common/obvious input (round amounts, single-topic questions, partial/all greetings all pass at base), so the only discovery channel is reading the code and constructing the exact edge inputs. 10 f2p across 3 files (breadth) + a 2-hop distance defect + a same-path interaction pair. Three defects are strictly edge-latent (decimal-only, two-topic-only, empty-set-only); the missing-data pair and config flag are non-casual (structured-seam label error / DB-only symptom) per the team-lead point-3 escape, flagged because set-membership and boolean flags have no numeric boundary to condition without contrivance. Expect materially harder than the observable-forge variant; probe chain adjudicates."
+}

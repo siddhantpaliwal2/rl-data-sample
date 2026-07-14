@@ -1,0 +1,6844 @@
+{
+ "generated_at": "2026-07-13 18:18:40",
+ "jobs": [
+  {
+   "job": "array-difficulty",
+   "task": "array-credit-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "4XMf4d9",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "NfePLyh",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "eniaRWj",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "oLqmTUK",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "qRjPMDQ",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "rwXaNxY",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "vxoiU94",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "x5rbAEP",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 0,
+   "errors": 0,
+   "total": 8,
+   "cost": 0,
+   "finished": false,
+   "void": false,
+   "mtime": 1783971593.4764352
+  },
+  {
+   "job": "array-easiness",
+   "task": "array-credit-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "3gJSXhH",
+     "state": "done",
+     "reward": 1,
+     "steps": 102,
+     "cost": 3.41
+    },
+    {
+     "name": "4DBDYtc",
+     "state": "done",
+     "reward": 1,
+     "steps": 101,
+     "cost": 3.01
+    },
+    {
+     "name": "WZiYR26",
+     "state": "done",
+     "reward": 1,
+     "steps": 92,
+     "cost": 3.0
+    },
+    {
+     "name": "ewRZfTG",
+     "state": "done",
+     "reward": 0,
+     "steps": 73,
+     "cost": 2.28
+    },
+    {
+     "name": "kz7T7wn",
+     "state": "done",
+     "reward": 1,
+     "steps": 81,
+     "cost": 2.4
+    }
+   ],
+   "solved": 4,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 14.1,
+   "finished": true,
+   "void": false,
+   "mtime": 1783970927.2819285
+  },
+  {
+   "job": "array-easiness-restyled",
+   "task": "array-credit-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "RPbJEwH",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "dnLDRrF",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "hSAif9k",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "pgHwgXs",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "t5taXaq",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 5,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": true,
+   "mtime": 1783977974.2890637
+  },
+  {
+   "job": "array-easiness-restyled2",
+   "task": "array-credit-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "QJvcd8x",
+     "state": "done",
+     "reward": 1,
+     "steps": 115,
+     "cost": 3.95
+    },
+    {
+     "name": "YAErS7E",
+     "state": "done",
+     "reward": 0,
+     "steps": 106,
+     "cost": 4.13
+    },
+    {
+     "name": "dDQkLV4",
+     "state": "done",
+     "reward": 1,
+     "steps": 75,
+     "cost": 2.2
+    },
+    {
+     "name": "fSeKyG2",
+     "state": "done",
+     "reward": 1,
+     "steps": 69,
+     "cost": 2.2
+    },
+    {
+     "name": "oQqcxeN",
+     "state": "done",
+     "reward": 0,
+     "steps": 82,
+     "cost": 2.73
+    }
+   ],
+   "solved": 3,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 15.21,
+   "finished": true,
+   "void": false,
+   "mtime": 1783978746.4382305
+  },
+  {
+   "job": "array-v2--nop-c2",
+   "task": "array-v2",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "ffgYZiM",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983849.1814702
+  },
+  {
+   "job": "array-v2--oracle-c2",
+   "task": "array-v2",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "wgsL9nJ",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983906.039317
+  },
+  {
+   "job": "array-v2--sonnet-c2",
+   "task": "array-v2",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "Rrm7vZL",
+     "state": "done",
+     "reward": 1,
+     "steps": 105,
+     "cost": 3.29
+    },
+    {
+     "name": "k3ovZZx",
+     "state": "done",
+     "reward": 0,
+     "steps": 124,
+     "cost": 3.8
+    },
+    {
+     "name": "r7dN4Yd",
+     "state": "done",
+     "reward": 1,
+     "steps": 120,
+     "cost": 4.81
+    },
+    {
+     "name": "wPwkQcf",
+     "state": "done",
+     "reward": 0,
+     "steps": 97,
+     "cost": 4.07
+    },
+    {
+     "name": "x2YgYaT",
+     "state": "done",
+     "reward": 0,
+     "steps": 100,
+     "cost": 3.34
+    }
+   ],
+   "solved": 2,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 19.31,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983933.0757656
+  },
+  {
+   "job": "calls-difficulty-opus",
+   "task": "inbound-call-routing",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "MspRCC7",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "STaK2HJ",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "fdCekEy",
+     "state": "error",
+     "reward": null,
+     "steps": 11,
+     "cost": 0.2
+    },
+    {
+     "name": "gEd743J",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "gh2uwVT",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "giHUntn",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "jNqi5AS",
+     "state": "error",
+     "reward": null,
+     "steps": 13,
+     "cost": 0.31
+    },
+    {
+     "name": "kQH2Vgu",
+     "state": "error",
+     "reward": null,
+     "steps": 9,
+     "cost": 0.19
+    },
+    {
+     "name": "mGFTuXJ",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "ziRE7x3",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 10,
+   "total": 10,
+   "cost": 0.7,
+   "finished": true,
+   "void": true,
+   "mtime": 1783970002.9767735
+  },
+  {
+   "job": "calls-difficulty-v2",
+   "task": "inbound-call-routing",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "8B7Fixm",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "LM9w4a5",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "UkMApuD",
+     "state": "error",
+     "reward": null,
+     "steps": 5,
+     "cost": 0.1
+    },
+    {
+     "name": "agFhmgh",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "b5mmBKn",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "iEPMWps",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "sAoJLAR",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "shA2bKy",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 8,
+   "errors": 8,
+   "total": 8,
+   "cost": 0.1,
+   "finished": true,
+   "void": true,
+   "mtime": 1783970407.3871787
+  },
+  {
+   "job": "calls-easiness-sonnet",
+   "task": "inbound-call-routing",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "HaJGVcG",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "QewR7Lz",
+     "state": "error",
+     "reward": null,
+     "steps": 12,
+     "cost": 0.13
+    },
+    {
+     "name": "f23LM3Q",
+     "state": "error",
+     "reward": null,
+     "steps": 12,
+     "cost": 0.19
+    },
+    {
+     "name": "fYcxeDo",
+     "state": "error",
+     "reward": null,
+     "steps": 10,
+     "cost": 0.15
+    },
+    {
+     "name": "wKUWt29",
+     "state": "error",
+     "reward": null,
+     "steps": 15,
+     "cost": 0.23
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 5,
+   "total": 5,
+   "cost": 0.7,
+   "finished": true,
+   "void": true,
+   "mtime": 1783969986.6685226
+  },
+  {
+   "job": "calls-easiness-v2",
+   "task": "inbound-call-routing",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "2gMk8Pj",
+     "state": "done",
+     "reward": 1,
+     "steps": 43,
+     "cost": 0.83
+    },
+    {
+     "name": "Bsq8GWt",
+     "state": "done",
+     "reward": 1,
+     "steps": 38,
+     "cost": 0.68
+    },
+    {
+     "name": "a9Am9Rp",
+     "state": "done",
+     "reward": 1,
+     "steps": 52,
+     "cost": 0.92
+    },
+    {
+     "name": "kUYXHXU",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 0.66
+    },
+    {
+     "name": "mqMMtqx",
+     "state": "done",
+     "reward": 1,
+     "steps": 51,
+     "cost": 0.77
+    }
+   ],
+   "solved": 5,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.86,
+   "finished": true,
+   "void": false,
+   "mtime": 1783970095.1638982
+  },
+  {
+   "job": "calls-v2--nop-c2",
+   "task": "calls-v2",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "ksSj5Sa",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982744.6560943
+  },
+  {
+   "job": "calls-v2--opus-c2",
+   "task": "calls-v2",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "LeTRr5H",
+     "state": "done",
+     "reward": 1,
+     "steps": 55,
+     "cost": 1.8
+    },
+    {
+     "name": "UEKp4nD",
+     "state": "done",
+     "reward": 1,
+     "steps": 61,
+     "cost": 1.92
+    },
+    {
+     "name": "dTghnKW",
+     "state": "done",
+     "reward": 1,
+     "steps": 56,
+     "cost": 1.87
+    },
+    {
+     "name": "jPyxGJs",
+     "state": "done",
+     "reward": 1,
+     "steps": 54,
+     "cost": 1.68
+    },
+    {
+     "name": "mescZj4",
+     "state": "done",
+     "reward": 1,
+     "steps": 43,
+     "cost": 1.23
+    },
+    {
+     "name": "o86ymZK",
+     "state": "done",
+     "reward": 0,
+     "steps": 57,
+     "cost": 1.75
+    },
+    {
+     "name": "pHFa6Fs",
+     "state": "done",
+     "reward": 0,
+     "steps": 57,
+     "cost": 1.78
+    },
+    {
+     "name": "pMLVkbs",
+     "state": "done",
+     "reward": 1,
+     "steps": 53,
+     "cost": 1.51
+    },
+    {
+     "name": "sn2QfWq",
+     "state": "done",
+     "reward": 1,
+     "steps": 56,
+     "cost": 1.5
+    },
+    {
+     "name": "x4W3jc2",
+     "state": "done",
+     "reward": 1,
+     "steps": 46,
+     "cost": 1.3
+    }
+   ],
+   "solved": 8,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 16.34,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983344.5055923
+  },
+  {
+   "job": "calls-v2--oracle-c2",
+   "task": "calls-v2",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "68qGTgr",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982768.583098
+  },
+  {
+   "job": "calls-v2--sonnet-c2",
+   "task": "calls-v2",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "5vsfNxD",
+     "state": "done",
+     "reward": 0,
+     "steps": 100,
+     "cost": 2.22
+    },
+    {
+     "name": "GY5iwf9",
+     "state": "done",
+     "reward": 0,
+     "steps": 98,
+     "cost": 2.38
+    },
+    {
+     "name": "MQCwLvJ",
+     "state": "done",
+     "reward": 0,
+     "steps": 80,
+     "cost": 1.84
+    },
+    {
+     "name": "Ty4hWrm",
+     "state": "done",
+     "reward": 0,
+     "steps": 97,
+     "cost": 2.08
+    },
+    {
+     "name": "Ymgaqu9",
+     "state": "done",
+     "reward": 0,
+     "steps": 95,
+     "cost": 2.19
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 10.71,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982792.2562516
+  },
+  {
+   "job": "chat-context-builder--nop-c2",
+   "task": "chat-context-builder",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "j3t6Qnr",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983314.9404452
+  },
+  {
+   "job": "chat-context-builder--oracle-c2",
+   "task": "chat-context-builder",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "mCz3HYv",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983338.3157227
+  },
+  {
+   "job": "chat-context-builder--sonnet-c2",
+   "task": "chat-context-builder",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "42LMNgC",
+     "state": "done",
+     "reward": 1,
+     "steps": 48,
+     "cost": 1.14
+    },
+    {
+     "name": "AvJn7Cg",
+     "state": "done",
+     "reward": 0,
+     "steps": 44,
+     "cost": 1.35
+    },
+    {
+     "name": "WiXvgq6",
+     "state": "done",
+     "reward": 1,
+     "steps": 51,
+     "cost": 1.39
+    },
+    {
+     "name": "aqYfDDw",
+     "state": "done",
+     "reward": 1,
+     "steps": 35,
+     "cost": 0.88
+    },
+    {
+     "name": "ynmgNr9",
+     "state": "done",
+     "reward": 1,
+     "steps": 53,
+     "cost": 1.63
+    }
+   ],
+   "solved": 4,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 6.39,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983364.4446712
+  },
+  {
+   "job": "cre-difficulty",
+   "task": "cre-qualification-fixes",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "2Kazc3g",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "4rhSZVw",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "6Cui2th",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "DhT6Lgs",
+     "state": "done",
+     "reward": 1,
+     "steps": 23,
+     "cost": 0.4
+    },
+    {
+     "name": "MkWxf4P",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "W2QSVEW",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.53
+    },
+    {
+     "name": "fr4YpcT",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.38
+    },
+    {
+     "name": "mjDYRe5",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "tDZPTbb",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "y7Rbjsm",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 3,
+   "done": 10,
+   "errors": 7,
+   "total": 10,
+   "cost": 1.31,
+   "finished": true,
+   "void": true,
+   "mtime": 1783970893.9814725
+  },
+  {
+   "job": "cre-easiness",
+   "task": "cre-qualification-fixes",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "2eVqCkA",
+     "state": "done",
+     "reward": 1,
+     "steps": 30,
+     "cost": 0.46
+    },
+    {
+     "name": "JBLXCj4",
+     "state": "done",
+     "reward": 1,
+     "steps": 55,
+     "cost": 0.8
+    },
+    {
+     "name": "ZRRZZX3",
+     "state": "done",
+     "reward": 1,
+     "steps": 30,
+     "cost": 0.49
+    },
+    {
+     "name": "vJutVCZ",
+     "state": "done",
+     "reward": 1,
+     "steps": 34,
+     "cost": 0.6
+    },
+    {
+     "name": "wVxrXJU",
+     "state": "done",
+     "reward": 1,
+     "steps": 41,
+     "cost": 0.72
+    }
+   ],
+   "solved": 5,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.07,
+   "finished": true,
+   "void": false,
+   "mtime": 1783970530.472148
+  },
+  {
+   "job": "cre-scoring-latent-4--nop-c2",
+   "task": "cre-scoring-latent-4",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "7nexpcr",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984421.8802633
+  },
+  {
+   "job": "cre-scoring-latent-4--opus-c2",
+   "task": "cre-scoring-latent-4",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "29aL8Br",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.0
+    },
+    {
+     "name": "2K6c2Gf",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.0
+    },
+    {
+     "name": "6kvzwNR",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.0
+    },
+    {
+     "name": "TngS9Hg",
+     "state": "done",
+     "reward": 0,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "ZEVBs4w",
+     "state": "done",
+     "reward": 0,
+     "steps": 21,
+     "cost": 0.0
+    },
+    {
+     "name": "dfkdqNP",
+     "state": "done",
+     "reward": 0,
+     "steps": 22,
+     "cost": 0.0
+    },
+    {
+     "name": "pDfapxe",
+     "state": "done",
+     "reward": 0,
+     "steps": 22,
+     "cost": 0.0
+    },
+    {
+     "name": "r49aJu8",
+     "state": "done",
+     "reward": 0,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "rL286ub",
+     "state": "done",
+     "reward": 0,
+     "steps": 25,
+     "cost": 0.0
+    },
+    {
+     "name": "thDobHb",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783985330.8923676
+  },
+  {
+   "job": "cre-scoring-latent-4--oracle-c2",
+   "task": "cre-scoring-latent-4",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "HALjM8z",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984446.8249907
+  },
+  {
+   "job": "cre-scoring-latent-4--sonnet-c2",
+   "task": "cre-scoring-latent-4",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "CR2Jx7X",
+     "state": "done",
+     "reward": 0,
+     "steps": 44,
+     "cost": 1.15
+    },
+    {
+     "name": "FtXAYJy",
+     "state": "done",
+     "reward": 0,
+     "steps": 57,
+     "cost": 1.6
+    },
+    {
+     "name": "JqfqChD",
+     "state": "done",
+     "reward": 0,
+     "steps": 53,
+     "cost": 1.93
+    },
+    {
+     "name": "dCidCEL",
+     "state": "done",
+     "reward": 0,
+     "steps": 35,
+     "cost": 0.95
+    },
+    {
+     "name": "k5fWc4X",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 0.96
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 6.59,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984472.3940482
+  },
+  {
+   "job": "cre-scoring-latent-bugs--nop-c2",
+   "task": "cre-scoring-latent-bugs",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "WjtuWUx",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783985442.1135316
+  },
+  {
+   "job": "cre-scoring-latent-bugs--oracle-c2",
+   "task": "cre-scoring-latent-bugs",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "iSTGwDc",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783985468.2361233
+  },
+  {
+   "job": "cre-scoring-latent-bugs--sonnet-c2",
+   "task": "cre-scoring-latent-bugs",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "43NjgUo",
+     "state": "done",
+     "reward": 0,
+     "steps": 49,
+     "cost": 1.19
+    },
+    {
+     "name": "46QKeFS",
+     "state": "done",
+     "reward": 0,
+     "steps": 48,
+     "cost": 1.06
+    },
+    {
+     "name": "YxuAvgq",
+     "state": "done",
+     "reward": 0,
+     "steps": 45,
+     "cost": 1.15
+    },
+    {
+     "name": "upGAEUE",
+     "state": "done",
+     "reward": 0,
+     "steps": 36,
+     "cost": 0.63
+    },
+    {
+     "name": "v3bMaHo",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 0.93
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 4.96,
+   "finished": true,
+   "void": false,
+   "mtime": 1783985493.3184533
+  },
+  {
+   "job": "difficulty-opus-v1",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "8vGy2CU",
+     "state": "done",
+     "reward": 0,
+     "steps": 46,
+     "cost": 1.6
+    },
+    {
+     "name": "CybqEwH",
+     "state": "done",
+     "reward": 0,
+     "steps": 28,
+     "cost": 1.0
+    },
+    {
+     "name": "Fhb2Gn8",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 1.12
+    },
+    {
+     "name": "NmngVPi",
+     "state": "done",
+     "reward": 0,
+     "steps": 35,
+     "cost": 1.28
+    },
+    {
+     "name": "d6S4Ytv",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 1.3
+    },
+    {
+     "name": "f28eTQF",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 1.4
+    },
+    {
+     "name": "hNtdEvo",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 1.11
+    },
+    {
+     "name": "i7PPfLY",
+     "state": "done",
+     "reward": 0,
+     "steps": 45,
+     "cost": 1.5
+    },
+    {
+     "name": "ioM6kqJ",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 1.57
+    },
+    {
+     "name": "mLKk3gH",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 1.17
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 13.05,
+   "finished": true,
+   "void": false,
+   "mtime": 1783969119.7748334
+  },
+  {
+   "job": "difficulty-opus-v2",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "2di9NMH",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 1.55
+    },
+    {
+     "name": "4nr9Fuv",
+     "state": "done",
+     "reward": 0,
+     "steps": 41,
+     "cost": 1.52
+    },
+    {
+     "name": "EvWTSnd",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 1.25
+    },
+    {
+     "name": "GNn4Bf8",
+     "state": "done",
+     "reward": 0,
+     "steps": 39,
+     "cost": 1.38
+    },
+    {
+     "name": "MnjCjQE",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 1.19
+    },
+    {
+     "name": "R8FJ9Zf",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 1.13
+    },
+    {
+     "name": "Zg6jHyu",
+     "state": "done",
+     "reward": 0,
+     "steps": 40,
+     "cost": 1.42
+    },
+    {
+     "name": "cDcM9DG",
+     "state": "done",
+     "reward": 0,
+     "steps": 35,
+     "cost": 1.28
+    },
+    {
+     "name": "gP7JXmY",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 1.38
+    },
+    {
+     "name": "xSCAZ4W",
+     "state": "done",
+     "reward": 0,
+     "steps": 32,
+     "cost": 1.17
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 13.27,
+   "finished": true,
+   "void": false,
+   "mtime": 1783969822.6492052
+  },
+  {
+   "job": "easiness-sonnet",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "3c2fGYa",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "TZjnHHH",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "U6XPXK7",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "eschJFe",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "vcCPTJo",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 0,
+   "errors": 0,
+   "total": 5,
+   "cost": 0,
+   "finished": false,
+   "void": false,
+   "mtime": 1783967277.29127
+  },
+  {
+   "job": "easiness-sonnet-v2",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "ViMBkRL",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "aF8tBny",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "cyf2zcz",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "yEAiL8B",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "zeDNg7Q",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783967817.2872272
+  },
+  {
+   "job": "easiness-sonnet-v3",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "KRRrFEi",
+     "state": "done",
+     "reward": 0,
+     "steps": 62,
+     "cost": 1.45
+    },
+    {
+     "name": "RGL62z9",
+     "state": "done",
+     "reward": 0,
+     "steps": 69,
+     "cost": 1.47
+    },
+    {
+     "name": "ZSkHieV",
+     "state": "done",
+     "reward": 0,
+     "steps": 98,
+     "cost": 2.81
+    },
+    {
+     "name": "uff3jux",
+     "state": "done",
+     "reward": 0,
+     "steps": 71,
+     "cost": 1.56
+    },
+    {
+     "name": "yEBbc7e",
+     "state": "done",
+     "reward": 0,
+     "steps": 73,
+     "cost": 1.51
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 8.8,
+   "finished": true,
+   "void": false,
+   "mtime": 1783969042.7368858
+  },
+  {
+   "job": "easiness-sonnet-v4",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "8yZJyn7",
+     "state": "done",
+     "reward": 0,
+     "steps": 88,
+     "cost": 2.08
+    },
+    {
+     "name": "DXBNUdD",
+     "state": "done",
+     "reward": 0,
+     "steps": 59,
+     "cost": 1.21
+    },
+    {
+     "name": "Rh7mUgd",
+     "state": "done",
+     "reward": 0,
+     "steps": 124,
+     "cost": 3.87
+    },
+    {
+     "name": "b9gbYTn",
+     "state": "done",
+     "reward": 0,
+     "steps": 71,
+     "cost": 1.64
+    },
+    {
+     "name": "pU8PVEu",
+     "state": "done",
+     "reward": 0,
+     "steps": 68,
+     "cost": 1.65
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 10.45,
+   "finished": true,
+   "void": false,
+   "mtime": 1783969822.6303911
+  },
+  {
+   "job": "forge-chat-pipeline--nop-c2",
+   "task": "forge-chat-pipeline",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "muarpZ8",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984479.0129573
+  },
+  {
+   "job": "forge-chat-pipeline--oracle-c2",
+   "task": "forge-chat-pipeline",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "aWt9MYX",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984504.196958
+  },
+  {
+   "job": "forge-chat-pipeline--sonnet-c2",
+   "task": "forge-chat-pipeline",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "8jxviLp",
+     "state": "done",
+     "reward": 1,
+     "steps": 79,
+     "cost": 2.59
+    },
+    {
+     "name": "bDK5G4f",
+     "state": "done",
+     "reward": 1,
+     "steps": 90,
+     "cost": 2.84
+    },
+    {
+     "name": "hq95cJP",
+     "state": "done",
+     "reward": 1,
+     "steps": 98,
+     "cost": 2.86
+    },
+    {
+     "name": "jdTgHPY",
+     "state": "done",
+     "reward": 1,
+     "steps": 88,
+     "cost": 2.73
+    },
+    {
+     "name": "tjkKKvL",
+     "state": "done",
+     "reward": 1,
+     "steps": 80,
+     "cost": 2.82
+    }
+   ],
+   "solved": 5,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 13.84,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984538.3070238
+  },
+  {
+   "job": "forge-contacts-invites--nop-c2",
+   "task": "forge-contacts-invites",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "giKScWn",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982654.4048033
+  },
+  {
+   "job": "forge-contacts-invites--oracle-c2",
+   "task": "forge-contacts-invites",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "SeaNGtu",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982677.8202713
+  },
+  {
+   "job": "forge-contacts-invites--sonnet-c2",
+   "task": "forge-contacts-invites",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "BnTZLYa",
+     "state": "done",
+     "reward": 1,
+     "steps": 74,
+     "cost": 1.77
+    },
+    {
+     "name": "DHKizsd",
+     "state": "done",
+     "reward": 1,
+     "steps": 88,
+     "cost": 2.59
+    },
+    {
+     "name": "Xvacxbn",
+     "state": "done",
+     "reward": 1,
+     "steps": 94,
+     "cost": 2.42
+    },
+    {
+     "name": "eKNZMo8",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "t56eXG3",
+     "state": "done",
+     "reward": 1,
+     "steps": 105,
+     "cost": 2.45
+    }
+   ],
+   "solved": 4,
+   "done": 5,
+   "errors": 1,
+   "total": 5,
+   "cost": 9.23,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982704.6563292
+  },
+  {
+   "job": "forge-credit-pdf--nop-c2",
+   "task": "forge-credit-pdf",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "zekaegr",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983849.1817381
+  },
+  {
+   "job": "forge-credit-pdf--oracle-c2",
+   "task": "forge-credit-pdf",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "RJUVcT6",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983906.0394478
+  },
+  {
+   "job": "forge-credit-pdf--sonnet-c2",
+   "task": "forge-credit-pdf",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "CcE5jNL",
+     "state": "done",
+     "reward": 0,
+     "steps": 48,
+     "cost": 1.11
+    },
+    {
+     "name": "Lo7Un3x",
+     "state": "done",
+     "reward": 1,
+     "steps": 44,
+     "cost": 0.94
+    },
+    {
+     "name": "gcKXcXt",
+     "state": "done",
+     "reward": 1,
+     "steps": 47,
+     "cost": 0.85
+    },
+    {
+     "name": "iBqD3W5",
+     "state": "done",
+     "reward": 1,
+     "steps": 50,
+     "cost": 1.03
+    },
+    {
+     "name": "xBhhPHF",
+     "state": "done",
+     "reward": 1,
+     "steps": 84,
+     "cost": 1.77
+    }
+   ],
+   "solved": 4,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 5.7,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983933.074855
+  },
+  {
+   "job": "forge-lending-flow--nop-c2",
+   "task": "forge-lending-flow",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "5tSvJFN",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983849.18147
+  },
+  {
+   "job": "forge-lending-flow--oracle-c2",
+   "task": "forge-lending-flow",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "bEgxwRu",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983906.0393822
+  },
+  {
+   "job": "forge-lending-flow--sonnet-c2",
+   "task": "forge-lending-flow",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "4PsCQa2",
+     "state": "done",
+     "reward": 1,
+     "steps": 67,
+     "cost": 1.4
+    },
+    {
+     "name": "6DtEYEb",
+     "state": "done",
+     "reward": 1,
+     "steps": 87,
+     "cost": 2.3
+    },
+    {
+     "name": "D5ezmJw",
+     "state": "done",
+     "reward": 1,
+     "steps": 48,
+     "cost": 0.97
+    },
+    {
+     "name": "FWadnRa",
+     "state": "done",
+     "reward": 1,
+     "steps": 55,
+     "cost": 1.06
+    },
+    {
+     "name": "NNBae7T",
+     "state": "done",
+     "reward": 1,
+     "steps": 101,
+     "cost": 2.87
+    }
+   ],
+   "solved": 5,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 8.6,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983934.3715582
+  },
+  {
+   "job": "ingestion-easiness-r3",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "AiEJrQY",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "JQXG5Q4",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "nCTz393",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "oUoeGnV",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 4,
+   "errors": 4,
+   "total": 4,
+   "cost": 0,
+   "finished": true,
+   "void": true,
+   "mtime": 1783972349.0278723
+  },
+  {
+   "job": "ingestion-easiness-r3b",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "FPJEG5c",
+     "state": "done",
+     "reward": 0,
+     "steps": 85,
+     "cost": 2.03
+    },
+    {
+     "name": "cMG8uLC",
+     "state": "done",
+     "reward": 1,
+     "steps": 73,
+     "cost": 1.74
+    },
+    {
+     "name": "kSSJ76Q",
+     "state": "done",
+     "reward": 1,
+     "steps": 78,
+     "cost": 1.56
+    },
+    {
+     "name": "kzZyXPA",
+     "state": "error",
+     "reward": null,
+     "steps": 70,
+     "cost": 1.71
+    },
+    {
+     "name": "yLEwNS5",
+     "state": "done",
+     "reward": 1,
+     "steps": 66,
+     "cost": 1.47
+    }
+   ],
+   "solved": 3,
+   "done": 5,
+   "errors": 1,
+   "total": 5,
+   "cost": 8.51,
+   "finished": true,
+   "void": false,
+   "mtime": 1783975891.3861709
+  },
+  {
+   "job": "ingestion-stale-v2--nop-c2",
+   "task": "ingestion-stale-v2",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "Xuo6wfF",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982414.5442605
+  },
+  {
+   "job": "ingestion-stale-v2--opus-c2",
+   "task": "ingestion-stale-v2",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "3GfjVuv",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 1.14
+    },
+    {
+     "name": "5tUh3xE",
+     "state": "done",
+     "reward": 0,
+     "steps": 44,
+     "cost": 1.59
+    },
+    {
+     "name": "Hip3b6X",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 1.28
+    },
+    {
+     "name": "NtKajKG",
+     "state": "done",
+     "reward": 0,
+     "steps": 41,
+     "cost": 1.48
+    },
+    {
+     "name": "YMETYsT",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 1.52
+    },
+    {
+     "name": "iq9a4DH",
+     "state": "done",
+     "reward": 0,
+     "steps": 41,
+     "cost": 1.5
+    },
+    {
+     "name": "jHziAuM",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 1.23
+    },
+    {
+     "name": "mQjJ8GE",
+     "state": "done",
+     "reward": 0,
+     "steps": 41,
+     "cost": 1.57
+    },
+    {
+     "name": "nYtd322",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 1.02
+    },
+    {
+     "name": "vbXJJrH",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 1.36
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 13.69,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983556.6377678
+  },
+  {
+   "job": "ingestion-stale-v2--oracle-c2",
+   "task": "ingestion-stale-v2",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "pCxMX6h",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982441.434885
+  },
+  {
+   "job": "ingestion-stale-v2--sonnet-c2",
+   "task": "ingestion-stale-v2",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "7tJut6C",
+     "state": "done",
+     "reward": 0,
+     "steps": 113,
+     "cost": 3.69
+    },
+    {
+     "name": "XK4TUMo",
+     "state": "done",
+     "reward": 0,
+     "steps": 120,
+     "cost": 3.43
+    },
+    {
+     "name": "ZXBESuC",
+     "state": "done",
+     "reward": 0,
+     "steps": 106,
+     "cost": 2.86
+    },
+    {
+     "name": "hEWi9Xj",
+     "state": "done",
+     "reward": 0,
+     "steps": 99,
+     "cost": 2.83
+    },
+    {
+     "name": "xWHNXit",
+     "state": "done",
+     "reward": 0,
+     "steps": 93,
+     "cost": 2.77
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 15.58,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982467.127076
+  },
+  {
+   "job": "latent-credit-normalize--nop-c2",
+   "task": "latent-credit-normalize",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "tqG26ke",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986252.2702768
+  },
+  {
+   "job": "latent-credit-normalize--opus-c2",
+   "task": "latent-credit-normalize",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "6z4MSwJ",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "GvtPehn",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "HYqLqd2",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "LGUoZG4",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "QBBQY8C",
+     "state": "done",
+     "reward": 1,
+     "steps": 15,
+     "cost": 0.0
+    },
+    {
+     "name": "dmhSnyQ",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.0
+    },
+    {
+     "name": "i3aUiMs",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "jv9ZtVU",
+     "state": "done",
+     "reward": 1,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "mdvg9cE",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "mwbnytG",
+     "state": "done",
+     "reward": 1,
+     "steps": 18,
+     "cost": 0.0
+    }
+   ],
+   "solved": 10,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986661.9467514
+  },
+  {
+   "job": "latent-credit-normalize--opusN2-c2",
+   "task": "latent-credit-normalize",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "CgxDeCp",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.0
+    },
+    {
+     "name": "Gs73WKf",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "Rxf7iWZ",
+     "state": "done",
+     "reward": 1,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "SBQrZfQ",
+     "state": "done",
+     "reward": 0,
+     "steps": 23,
+     "cost": 0.0
+    },
+    {
+     "name": "SSSLbsu",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "nr5eXJp",
+     "state": "done",
+     "reward": 1,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "ovNeQAs",
+     "state": "done",
+     "reward": 0,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "q8xFkB2",
+     "state": "done",
+     "reward": 0,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "rrqkXou",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "sLf9mSe",
+     "state": "done",
+     "reward": 0,
+     "steps": 15,
+     "cost": 0.0
+    }
+   ],
+   "solved": 3,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987554.3545144
+  },
+  {
+   "job": "latent-credit-normalize--opusR-c2",
+   "task": "latent-credit-normalize",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "77YCfsh",
+     "state": "done",
+     "reward": 0,
+     "steps": 15,
+     "cost": 0.0
+    },
+    {
+     "name": "C8gzDT4",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.0
+    },
+    {
+     "name": "FXtFbrP",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "FZB3rtY",
+     "state": "done",
+     "reward": 0,
+     "steps": 15,
+     "cost": 0.0
+    },
+    {
+     "name": "L6vubjX",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "MnFrdHt",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.0
+    },
+    {
+     "name": "YqdwUJo",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "ZPoRVzp",
+     "state": "done",
+     "reward": 1,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "g576j6U",
+     "state": "done",
+     "reward": 0,
+     "steps": 14,
+     "cost": 0.0
+    },
+    {
+     "name": "vRQKbAM",
+     "state": "done",
+     "reward": 0,
+     "steps": 21,
+     "cost": 0.0
+    }
+   ],
+   "solved": 3,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783989563.0522585
+  },
+  {
+   "job": "latent-credit-normalize--oracle-c2",
+   "task": "latent-credit-normalize",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "LQKNKa4",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986275.4313276
+  },
+  {
+   "job": "latent-credit-normalize--sonnet-c2",
+   "task": "latent-credit-normalize",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "BwmyyCR",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 0.6
+    },
+    {
+     "name": "XiQdjLG",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.43
+    },
+    {
+     "name": "cihaU6i",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 0.91
+    },
+    {
+     "name": "trwWusU",
+     "state": "done",
+     "reward": 1,
+     "steps": 45,
+     "cost": 1.15
+    },
+    {
+     "name": "uF2bG7k",
+     "state": "done",
+     "reward": 0,
+     "steps": 39,
+     "cost": 0.58
+    }
+   ],
+   "solved": 1,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.67,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986299.8470068
+  },
+  {
+   "job": "latent-credit-normalize--sonnetN2-c2",
+   "task": "latent-credit-normalize",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "E3dcbQK",
+     "state": "done",
+     "reward": 0,
+     "steps": 50,
+     "cost": 0.81
+    },
+    {
+     "name": "HHEa7CQ",
+     "state": "done",
+     "reward": 0,
+     "steps": 54,
+     "cost": 0.91
+    },
+    {
+     "name": "MeCmeVN",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 0.44
+    },
+    {
+     "name": "rJq7JyE",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 0.54
+    },
+    {
+     "name": "uMtWcHm",
+     "state": "done",
+     "reward": 0,
+     "steps": 25,
+     "cost": 0.43
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.13,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987554.3243473
+  },
+  {
+   "job": "latent-credit-normalize--sonnetR-c2",
+   "task": "latent-credit-normalize",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "6fxgo5J",
+     "state": "done",
+     "reward": 0,
+     "steps": 32,
+     "cost": 0.45
+    },
+    {
+     "name": "EqnnxdG",
+     "state": "done",
+     "reward": 0,
+     "steps": 29,
+     "cost": 0.44
+    },
+    {
+     "name": "PgwDkm4",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 0.59
+    },
+    {
+     "name": "frvDosX",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 0.77
+    },
+    {
+     "name": "hbTrCfZ",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 0.53
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 2.78,
+   "finished": true,
+   "void": false,
+   "mtime": 1783989563.0361092
+  },
+  {
+   "job": "latent-difficulty",
+   "task": "cre-scoring-latent-bugs",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "FpN8UZx",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.92
+    },
+    {
+     "name": "HWmnb6j",
+     "state": "done",
+     "reward": 1,
+     "steps": 23,
+     "cost": 0.7
+    },
+    {
+     "name": "JgRuZLS",
+     "state": "done",
+     "reward": 0,
+     "steps": 48,
+     "cost": 1.77
+    },
+    {
+     "name": "JnA4SBV",
+     "state": "done",
+     "reward": 1,
+     "steps": 50,
+     "cost": 2.0
+    },
+    {
+     "name": "KyaEpaf",
+     "state": "done",
+     "reward": 0,
+     "steps": 47,
+     "cost": 1.28
+    },
+    {
+     "name": "MnJtCh5",
+     "state": "done",
+     "reward": 0,
+     "steps": 40,
+     "cost": 1.25
+    },
+    {
+     "name": "cgmRFA9",
+     "state": "done",
+     "reward": 0,
+     "steps": 21,
+     "cost": 0.57
+    },
+    {
+     "name": "pGiP6qM",
+     "state": "done",
+     "reward": 1,
+     "steps": 27,
+     "cost": 0.66
+    },
+    {
+     "name": "yHkAZJ4",
+     "state": "done",
+     "reward": 1,
+     "steps": 17,
+     "cost": 0.44
+    },
+    {
+     "name": "yvWAkQF",
+     "state": "done",
+     "reward": 1,
+     "steps": 18,
+     "cost": 0.45
+    }
+   ],
+   "solved": 5,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 10.04,
+   "finished": true,
+   "void": false,
+   "mtime": 1783981288.3612227
+  },
+  {
+   "job": "latent-doc-extractors--nop-c2",
+   "task": "latent-doc-extractors",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "ZpfVNu6",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987302.2047982
+  },
+  {
+   "job": "latent-doc-extractors--opusB-c2",
+   "task": "latent-doc-extractors",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "6S8fZgr",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "D4EUsnE",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "DTysMVG",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.0
+    },
+    {
+     "name": "GtBdDC5",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.0
+    },
+    {
+     "name": "MiqtKk5",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "MiyYTkE",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.0
+    },
+    {
+     "name": "UbzunPX",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "i6Qnaj8",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "mFDPdJm",
+     "state": "done",
+     "reward": 0,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "ysCz3yW",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986962.6566482
+  },
+  {
+   "job": "latent-doc-extractors--opusR4b-c2",
+   "task": "latent-doc-extractors",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "377Tvij",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "D59MYXu",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "QuxTwpV",
+     "state": "done",
+     "reward": 1,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "RToduS2",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "S5Z6wpH",
+     "state": "done",
+     "reward": 0,
+     "steps": 15,
+     "cost": 0.0
+    },
+    {
+     "name": "UQtHfsM",
+     "state": "done",
+     "reward": 0,
+     "steps": 21,
+     "cost": 0.0
+    },
+    {
+     "name": "qJZH2eQ",
+     "state": "done",
+     "reward": 0,
+     "steps": 25,
+     "cost": 0.0
+    },
+    {
+     "name": "wYCoagQ",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.0
+    },
+    {
+     "name": "y3MG7Tw",
+     "state": "done",
+     "reward": 0,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "yjemSUW",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.0
+    }
+   ],
+   "solved": 1,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783991222.6729157
+  },
+  {
+   "job": "latent-doc-extractors--oracle-c2",
+   "task": "latent-doc-extractors",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "m3uNyrP",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987328.5001762
+  },
+  {
+   "job": "latent-doc-extractors--sonnet-c2",
+   "task": "latent-doc-extractors",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "KqgC2Ud",
+     "state": "done",
+     "reward": 0,
+     "steps": 42,
+     "cost": 0.75
+    },
+    {
+     "name": "VHWBnQX",
+     "state": "done",
+     "reward": 0,
+     "steps": 27,
+     "cost": 0.51
+    },
+    {
+     "name": "oUQDKb2",
+     "state": "done",
+     "reward": 0,
+     "steps": 44,
+     "cost": 0.85
+    },
+    {
+     "name": "qeR5JKa",
+     "state": "done",
+     "reward": 0,
+     "steps": 44,
+     "cost": 0.9
+    },
+    {
+     "name": "wV92F5N",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.29
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.3,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987366.9932215
+  },
+  {
+   "job": "latent-doc-extractors--sonnetR4-c2",
+   "task": "latent-doc-extractors",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "PhjFMRG",
+     "state": "done",
+     "reward": 0,
+     "steps": 36,
+     "cost": 0.77
+    },
+    {
+     "name": "SeEzv3y",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 0.73
+    },
+    {
+     "name": "XkawtfF",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 0.73
+    },
+    {
+     "name": "rJ4Tgjj",
+     "state": "done",
+     "reward": 0,
+     "steps": 46,
+     "cost": 1.01
+    },
+    {
+     "name": "sfekffA",
+     "state": "done",
+     "reward": 0,
+     "steps": 27,
+     "cost": 0.39
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.63,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987460.1668334
+  },
+  {
+   "job": "latent-easiness",
+   "task": "cre-scoring-latent-bugs",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "8Lb2TYb",
+     "state": "done",
+     "reward": 0,
+     "steps": 61,
+     "cost": 1.89
+    },
+    {
+     "name": "JisXymC",
+     "state": "done",
+     "reward": 0,
+     "steps": 61,
+     "cost": 1.24
+    },
+    {
+     "name": "S88YhE8",
+     "state": "done",
+     "reward": 0,
+     "steps": 25,
+     "cost": 0.63
+    },
+    {
+     "name": "ddjYEpc",
+     "state": "done",
+     "reward": 0,
+     "steps": 60,
+     "cost": 1.56
+    },
+    {
+     "name": "sCKKf82",
+     "state": "done",
+     "reward": 0,
+     "steps": 78,
+     "cost": 2.8
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 8.12,
+   "finished": true,
+   "void": false,
+   "mtime": 1783981285.7911763
+  },
+  {
+   "job": "latent-financial-tools--nop-c2",
+   "task": "latent-financial-tools",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "xXWi4Ni",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984061.9103875
+  },
+  {
+   "job": "latent-financial-tools--opus-c2",
+   "task": "latent-financial-tools",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "5tg94un",
+     "state": "done",
+     "reward": 0,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "89ipNKg",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 0.0
+    },
+    {
+     "name": "GwToXKX",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 0.0
+    },
+    {
+     "name": "MwmxKwm",
+     "state": "done",
+     "reward": 0,
+     "steps": 41,
+     "cost": 0.0
+    },
+    {
+     "name": "PSBTWaS",
+     "state": "done",
+     "reward": 0,
+     "steps": 32,
+     "cost": 0.0
+    },
+    {
+     "name": "VyjGrPW",
+     "state": "done",
+     "reward": 0,
+     "steps": 34,
+     "cost": 0.0
+    },
+    {
+     "name": "iAYnbKE",
+     "state": "done",
+     "reward": 0,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "oJEzhGQ",
+     "state": "done",
+     "reward": 0,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "qUFFkB5",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 0.0
+    },
+    {
+     "name": "rJJ7ygQ",
+     "state": "done",
+     "reward": 0,
+     "steps": 40,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984957.0905354
+  },
+  {
+   "job": "latent-financial-tools--opusB-c2",
+   "task": "latent-financial-tools",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "7V9cQzu",
+     "state": "done",
+     "reward": 1,
+     "steps": 28,
+     "cost": 0.0
+    },
+    {
+     "name": "Q4Sq5HV",
+     "state": "done",
+     "reward": 1,
+     "steps": 36,
+     "cost": 0.0
+    },
+    {
+     "name": "RxbSDtg",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 0.0
+    },
+    {
+     "name": "TnTNAtW",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 0.0
+    },
+    {
+     "name": "a38dfqz",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 0.0
+    },
+    {
+     "name": "my6rYxu",
+     "state": "done",
+     "reward": 0,
+     "steps": 32,
+     "cost": 0.0
+    },
+    {
+     "name": "swRpyQY",
+     "state": "done",
+     "reward": 1,
+     "steps": 32,
+     "cost": 0.0
+    },
+    {
+     "name": "u5h4H8T",
+     "state": "done",
+     "reward": 1,
+     "steps": 36,
+     "cost": 0.0
+    },
+    {
+     "name": "vQJvQa2",
+     "state": "done",
+     "reward": 1,
+     "steps": 39,
+     "cost": 0.0
+    },
+    {
+     "name": "xFEehyA",
+     "state": "done",
+     "reward": 1,
+     "steps": 39,
+     "cost": 0.0
+    }
+   ],
+   "solved": 8,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986855.1082957
+  },
+  {
+   "job": "latent-financial-tools--opusC-c2",
+   "task": "latent-financial-tools",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "2VqhXsE",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "4yi4rkm",
+     "state": "done",
+     "reward": 1,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "EQFtkZx",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "HGDos7Y",
+     "state": "done",
+     "reward": 1,
+     "steps": 31,
+     "cost": 0.0
+    },
+    {
+     "name": "Wsycb95",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "YpNPKdP",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "eqBHvUi",
+     "state": "done",
+     "reward": 1,
+     "steps": 37,
+     "cost": 0.0
+    },
+    {
+     "name": "fdb29PC",
+     "state": "done",
+     "reward": 1,
+     "steps": 38,
+     "cost": 0.0
+    },
+    {
+     "name": "mwH4DUj",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "tCinaK5",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 4,
+   "done": 10,
+   "errors": 6,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": true,
+   "mtime": 1783988895.9222848
+  },
+  {
+   "job": "latent-financial-tools--oracle-c2",
+   "task": "latent-financial-tools",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "qRwMepD",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984086.8540328
+  },
+  {
+   "job": "latent-financial-tools--sonnet-c2",
+   "task": "latent-financial-tools",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "2g2pfLB",
+     "state": "done",
+     "reward": 0,
+     "steps": 81,
+     "cost": 2.68
+    },
+    {
+     "name": "BEm6zqu",
+     "state": "done",
+     "reward": 0,
+     "steps": 63,
+     "cost": 2.55
+    },
+    {
+     "name": "mLygzx7",
+     "state": "done",
+     "reward": 0,
+     "steps": 120,
+     "cost": 4.2
+    },
+    {
+     "name": "tPmL4VQ",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 1.41
+    },
+    {
+     "name": "x3xFka8",
+     "state": "done",
+     "reward": 0,
+     "steps": 59,
+     "cost": 1.94
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 12.78,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984112.142863
+  },
+  {
+   "job": "latent-financial-tools--sonnetB-c2",
+   "task": "latent-financial-tools",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "29BDzDU",
+     "state": "done",
+     "reward": 0,
+     "steps": 55,
+     "cost": 1.19
+    },
+    {
+     "name": "SV9yyn5",
+     "state": "done",
+     "reward": 1,
+     "steps": 56,
+     "cost": 1.27
+    },
+    {
+     "name": "e7AaBfT",
+     "state": "done",
+     "reward": 0,
+     "steps": 46,
+     "cost": 1.13
+    },
+    {
+     "name": "uuqgEvU",
+     "state": "done",
+     "reward": 0,
+     "steps": 41,
+     "cost": 1.45
+    },
+    {
+     "name": "xt5zgYv",
+     "state": "done",
+     "reward": 0,
+     "steps": 10,
+     "cost": 0.08
+    }
+   ],
+   "solved": 1,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 5.12,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987380.2357073
+  },
+  {
+   "job": "latent-financial-tools--sonnetC-c2",
+   "task": "latent-financial-tools",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "N3vHTpG",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "Nn35o4N",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "u9zKAje",
+     "state": "done",
+     "reward": 0,
+     "steps": 63,
+     "cost": 1.79
+    },
+    {
+     "name": "wSAXpEP",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "yQNZbNY",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 4,
+   "total": 5,
+   "cost": 1.79,
+   "finished": true,
+   "void": true,
+   "mtime": 1783988895.9061859
+  },
+  {
+   "job": "latent-market-structure--nop-c2",
+   "task": "latent-market-structure",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "Ngn8XSP",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986102.2759295
+  },
+  {
+   "job": "latent-market-structure--opus-c2",
+   "task": "latent-market-structure",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "9kDphyh",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.0
+    },
+    {
+     "name": "DakX4vx",
+     "state": "done",
+     "reward": 0,
+     "steps": 28,
+     "cost": 0.0
+    },
+    {
+     "name": "G2GTyuV",
+     "state": "done",
+     "reward": 1,
+     "steps": 30,
+     "cost": 0.0
+    },
+    {
+     "name": "Ka3jkfa",
+     "state": "done",
+     "reward": 1,
+     "steps": 35,
+     "cost": 0.0
+    },
+    {
+     "name": "Po45Fuu",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.0
+    },
+    {
+     "name": "eTchkZQ",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 0.0
+    },
+    {
+     "name": "nyHWv6N",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.0
+    },
+    {
+     "name": "ohNKpRL",
+     "state": "done",
+     "reward": 1,
+     "steps": 39,
+     "cost": 0.0
+    },
+    {
+     "name": "xLuSmog",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.0
+    },
+    {
+     "name": "yRhPgh2",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.0
+    }
+   ],
+   "solved": 9,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986661.9475908
+  },
+  {
+   "job": "latent-market-structure--opusR4-c2",
+   "task": "latent-market-structure",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "C3zgLpj",
+     "state": "done",
+     "reward": 1,
+     "steps": 38,
+     "cost": 0.0
+    },
+    {
+     "name": "FBFohrM",
+     "state": "done",
+     "reward": 0,
+     "steps": 36,
+     "cost": 0.0
+    },
+    {
+     "name": "TamCXSf",
+     "state": "done",
+     "reward": 0,
+     "steps": 36,
+     "cost": 0.0
+    },
+    {
+     "name": "VcgbDAJ",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.0
+    },
+    {
+     "name": "bKczXFC",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.0
+    },
+    {
+     "name": "cHRRSgt",
+     "state": "done",
+     "reward": 1,
+     "steps": 41,
+     "cost": 0.0
+    },
+    {
+     "name": "grBeydF",
+     "state": "done",
+     "reward": 0,
+     "steps": 9,
+     "cost": 0.0
+    },
+    {
+     "name": "hY9hKzi",
+     "state": "done",
+     "reward": 1,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "u3NRz6c",
+     "state": "done",
+     "reward": 0,
+     "steps": 35,
+     "cost": 0.0
+    },
+    {
+     "name": "uMXSXiN",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.0
+    }
+   ],
+   "solved": 6,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987380.2656994
+  },
+  {
+   "job": "latent-market-structure--oracle-c2",
+   "task": "latent-market-structure",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "nC5uNrQ",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986125.714233
+  },
+  {
+   "job": "latent-market-structure--sonnet-c2",
+   "task": "latent-market-structure",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "GPGT8Hu",
+     "state": "done",
+     "reward": 0,
+     "steps": 78,
+     "cost": 1.97
+    },
+    {
+     "name": "UVrqYPQ",
+     "state": "done",
+     "reward": 1,
+     "steps": 42,
+     "cost": 0.84
+    },
+    {
+     "name": "dAbdZ4L",
+     "state": "done",
+     "reward": 1,
+     "steps": 70,
+     "cost": 1.71
+    },
+    {
+     "name": "hUXCFKf",
+     "state": "done",
+     "reward": 1,
+     "steps": 59,
+     "cost": 1.6
+    },
+    {
+     "name": "jYZVWar",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 0.63
+    }
+   ],
+   "solved": 3,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 6.75,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986152.047236
+  },
+  {
+   "job": "latent-market-structure--sonnetR4-c2",
+   "task": "latent-market-structure",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "JsVgkJh",
+     "state": "done",
+     "reward": 0,
+     "steps": 40,
+     "cost": 0.9
+    },
+    {
+     "name": "RwEGjHK",
+     "state": "done",
+     "reward": 1,
+     "steps": 65,
+     "cost": 1.58
+    },
+    {
+     "name": "VJsLnsV",
+     "state": "done",
+     "reward": 0,
+     "steps": 44,
+     "cost": 1.11
+    },
+    {
+     "name": "sNHwD4E",
+     "state": "done",
+     "reward": 0,
+     "steps": 7,
+     "cost": 0.08
+    },
+    {
+     "name": "ykLDYWt",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 5,
+   "errors": 1,
+   "total": 5,
+   "cost": 3.67,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987380.2379348
+  },
+  {
+   "job": "latent-phone-invites--nop-c2",
+   "task": "latent-phone-invites",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "TRYZZPR",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986883.0181963
+  },
+  {
+   "job": "latent-phone-invites--opusB-c2",
+   "task": "latent-phone-invites",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "5m7RiYp",
+     "state": "done",
+     "reward": 0,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "9gpKYoL",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.0
+    },
+    {
+     "name": "Ak9NMw3",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.0
+    },
+    {
+     "name": "QKHJonY",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.0
+    },
+    {
+     "name": "QapUPjM",
+     "state": "done",
+     "reward": 0,
+     "steps": 24,
+     "cost": 0.0
+    },
+    {
+     "name": "di3VAFs",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.0
+    },
+    {
+     "name": "gchchuM",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.0
+    },
+    {
+     "name": "hWVVFFH",
+     "state": "done",
+     "reward": 0,
+     "steps": 27,
+     "cost": 0.0
+    },
+    {
+     "name": "mC8Mzry",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.0
+    },
+    {
+     "name": "snBFQ36",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.0
+    }
+   ],
+   "solved": 1,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783986855.108039
+  },
+  {
+   "job": "latent-phone-invites--oracle-c2",
+   "task": "latent-phone-invites",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "m92hbsL",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987296.8794818
+  },
+  {
+   "job": "latent-phone-invites--sonnet-c2",
+   "task": "latent-phone-invites",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "CYWdy4M",
+     "state": "done",
+     "reward": 0,
+     "steps": 18,
+     "cost": 0.21
+    },
+    {
+     "name": "EWhsnWc",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 0.48
+    },
+    {
+     "name": "GmxoiK3",
+     "state": "done",
+     "reward": 0,
+     "steps": 25,
+     "cost": 0.38
+    },
+    {
+     "name": "PxU68Nm",
+     "state": "done",
+     "reward": 0,
+     "steps": 22,
+     "cost": 0.36
+    },
+    {
+     "name": "aMe2LAg",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.34
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 1.77,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987330.4306772
+  },
+  {
+   "job": "multibug-difficulty",
+   "task": "loangen-agent-multibug",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "7tkHPVj",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 0.71
+    },
+    {
+     "name": "8MCBzwa",
+     "state": "done",
+     "reward": 1,
+     "steps": 24,
+     "cost": 0.52
+    },
+    {
+     "name": "C46VEn9",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.59
+    },
+    {
+     "name": "Y4fqYde",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.51
+    },
+    {
+     "name": "akDQjbS",
+     "state": "done",
+     "reward": 1,
+     "steps": 15,
+     "cost": 0.34
+    },
+    {
+     "name": "asBMLBu",
+     "state": "done",
+     "reward": 1,
+     "steps": 12,
+     "cost": 0.29
+    },
+    {
+     "name": "esS8LAG",
+     "state": "done",
+     "reward": 1,
+     "steps": 64,
+     "cost": 1.96
+    },
+    {
+     "name": "taRahz4",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.46
+    },
+    {
+     "name": "vNBiQhD",
+     "state": "done",
+     "reward": 1,
+     "steps": 19,
+     "cost": 0.44
+    },
+    {
+     "name": "vzR5GGJ",
+     "state": "done",
+     "reward": 1,
+     "steps": 43,
+     "cost": 1.44
+    }
+   ],
+   "solved": 10,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 7.26,
+   "finished": true,
+   "void": false,
+   "mtime": 1783979406.654413
+  },
+  {
+   "job": "multibug-easiness",
+   "task": "loangen-agent-multibug",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "5wcjAaf",
+     "state": "done",
+     "reward": 1,
+     "steps": 125,
+     "cost": 3.64
+    },
+    {
+     "name": "KWiPzLe",
+     "state": "done",
+     "reward": 1,
+     "steps": 107,
+     "cost": 2.66
+    },
+    {
+     "name": "ZcBdJy6",
+     "state": "done",
+     "reward": 1,
+     "steps": 137,
+     "cost": 4.1
+    },
+    {
+     "name": "hppkJxi",
+     "state": "done",
+     "reward": 1,
+     "steps": 79,
+     "cost": 2.12
+    },
+    {
+     "name": "iyGcY4n",
+     "state": "done",
+     "reward": 1,
+     "steps": 207,
+     "cost": 7.85
+    }
+   ],
+   "solved": 5,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 20.37,
+   "finished": true,
+   "void": false,
+   "mtime": 1783979404.069347
+  },
+  {
+   "job": "nop-check",
+   "task": "ingestion-stale-blocker",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "6qCuLRo",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783966729.4037316
+  },
+  {
+   "job": "nop-check-2",
+   "task": "ingestion-stale-blocker",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "CoswHxu",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783966965.122905
+  },
+  {
+   "job": "normalize-checksum-verify",
+   "task": "latent-credit-normalize",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "w7MfADT",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783989517.8363194
+  },
+  {
+   "job": "nova-lite-plaid",
+   "task": "plaid-bank-report",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/amazon/nova-2-lite-v1",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "4gftv4m",
+     "state": "done",
+     "reward": 0,
+     "steps": 3,
+     "cost": 0.0
+    },
+    {
+     "name": "G9RdgnZ",
+     "state": "done",
+     "reward": 0,
+     "steps": 2,
+     "cost": 0.0
+    },
+    {
+     "name": "PJNB7xY",
+     "state": "done",
+     "reward": 0,
+     "steps": 1,
+     "cost": 0.0
+    },
+    {
+     "name": "wQ9M7yL",
+     "state": "done",
+     "reward": 0,
+     "steps": 2,
+     "cost": 0.0
+    },
+    {
+     "name": "yq5fEoV",
+     "state": "done",
+     "reward": 0,
+     "steps": 2,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987525.9911528
+  },
+  {
+   "job": "nova-premier-plaid",
+   "task": "plaid-bank-report",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/amazon/nova-premier-v1",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "QrRTyZA",
+     "state": "done",
+     "reward": 0,
+     "steps": 1,
+     "cost": 0.0
+    },
+    {
+     "name": "WBPX9FV",
+     "state": "done",
+     "reward": 0,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "wfYtHs9",
+     "state": "done",
+     "reward": 0,
+     "steps": 7,
+     "cost": 0.0
+    },
+    {
+     "name": "xr842eq",
+     "state": "error",
+     "reward": null,
+     "steps": 10,
+     "cost": 0.0
+    },
+    {
+     "name": "zXxhnjg",
+     "state": "done",
+     "reward": 0,
+     "steps": 14,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 1,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783988760.5311913
+  },
+  {
+   "job": "nova-premier-qb",
+   "task": "quickbooks-sync",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/amazon/nova-premier-v1",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "5v3HaMj",
+     "state": "done",
+     "reward": 0,
+     "steps": 8,
+     "cost": 0.0
+    },
+    {
+     "name": "EVQJPTZ",
+     "state": "error",
+     "reward": null,
+     "steps": 15,
+     "cost": 0.0
+    },
+    {
+     "name": "M8QGXA6",
+     "state": "error",
+     "reward": null,
+     "steps": 8,
+     "cost": 0.0
+    },
+    {
+     "name": "gDJg6dX",
+     "state": "error",
+     "reward": null,
+     "steps": 16,
+     "cost": 0.0
+    },
+    {
+     "name": "rjvxKYX",
+     "state": "done",
+     "reward": 0,
+     "steps": 22,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 3,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": true,
+   "mtime": 1783990377.3673527
+  },
+  {
+   "job": "nova-pro-calls",
+   "task": "calls-v2",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/amazon/nova-pro-v1",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "2yiYsJb",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.0
+    },
+    {
+     "name": "6o9GYme",
+     "state": "done",
+     "reward": 0,
+     "steps": 29,
+     "cost": 0.0
+    },
+    {
+     "name": "NzBsz2p",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 0.0
+    },
+    {
+     "name": "fusnA9R",
+     "state": "done",
+     "reward": 0,
+     "steps": 46,
+     "cost": 0.0
+    },
+    {
+     "name": "mwhoWjB",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783990779.6298642
+  },
+  {
+   "job": "nova-pro-plaid",
+   "task": "plaid-bank-report",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/amazon/nova-pro-v1",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "3cWpzty",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "STdbGgL",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "hpXyGDV",
+     "state": "done",
+     "reward": 0,
+     "steps": 3,
+     "cost": 0.0
+    },
+    {
+     "name": "mwsq43x",
+     "state": "done",
+     "reward": 0,
+     "steps": 9,
+     "cost": 0.0
+    },
+    {
+     "name": "pBf6BpF",
+     "state": "done",
+     "reward": 0,
+     "steps": 4,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987494.949476
+  },
+  {
+   "job": "nova-pro-qb",
+   "task": "quickbooks-sync",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/amazon/nova-pro-v1",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "FGsbUV9",
+     "state": "done",
+     "reward": 0,
+     "steps": 12,
+     "cost": 0.0
+    },
+    {
+     "name": "NYwdent",
+     "state": "done",
+     "reward": 0,
+     "steps": 12,
+     "cost": 0.0
+    },
+    {
+     "name": "YKuntGY",
+     "state": "done",
+     "reward": 0,
+     "steps": 13,
+     "cost": 0.0
+    },
+    {
+     "name": "i32prJV",
+     "state": "done",
+     "reward": 0,
+     "steps": 17,
+     "cost": 0.0
+    },
+    {
+     "name": "n4cgz2D",
+     "state": "done",
+     "reward": 0,
+     "steps": 13,
+     "cost": 0.0
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783988760.5314114
+  },
+  {
+   "job": "oracle-check",
+   "task": "ingestion-stale-blocker",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "scFUvGd",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783966760.0096326
+  },
+  {
+   "job": "oracle-check-2",
+   "task": "ingestion-stale-blocker",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "FCXg6BH",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783966986.0588331
+  },
+  {
+   "job": "plaid-bank-report--nop-c2",
+   "task": "plaid-bank-report",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "ToKaiWx",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783981617.2302964
+  },
+  {
+   "job": "plaid-bank-report--opus-c2",
+   "task": "plaid-bank-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "HC4Ljm5",
+     "state": "done",
+     "reward": 1,
+     "steps": 35,
+     "cost": 0.86
+    },
+    {
+     "name": "J5SVXSr",
+     "state": "done",
+     "reward": 1,
+     "steps": 39,
+     "cost": 1.2
+    },
+    {
+     "name": "MkTcxBH",
+     "state": "done",
+     "reward": 1,
+     "steps": 28,
+     "cost": 0.84
+    },
+    {
+     "name": "NazgW2x",
+     "state": "done",
+     "reward": 1,
+     "steps": 38,
+     "cost": 1.07
+    },
+    {
+     "name": "PTrQYKr",
+     "state": "done",
+     "reward": 1,
+     "steps": 31,
+     "cost": 0.77
+    },
+    {
+     "name": "WnePcjJ",
+     "state": "done",
+     "reward": 1,
+     "steps": 35,
+     "cost": 1.07
+    },
+    {
+     "name": "ZoYPoz7",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.89
+    },
+    {
+     "name": "dEsyRVt",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 1.0
+    },
+    {
+     "name": "kqtS9Z6",
+     "state": "done",
+     "reward": 1,
+     "steps": 36,
+     "cost": 1.17
+    },
+    {
+     "name": "yKTMv34",
+     "state": "done",
+     "reward": 1,
+     "steps": 30,
+     "cost": 0.78
+    }
+   ],
+   "solved": 10,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 9.65,
+   "finished": true,
+   "void": false,
+   "mtime": 1783982356.04174
+  },
+  {
+   "job": "plaid-bank-report--oracle-c2",
+   "task": "plaid-bank-report",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "t6ngavf",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783981656.0399218
+  },
+  {
+   "job": "plaid-bank-report--sonnet-c2",
+   "task": "?",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [],
+   "solved": 0,
+   "done": 0,
+   "errors": 0,
+   "total": 0,
+   "cost": 0,
+   "finished": true,
+   "void": true,
+   "mtime": 1783982477.4718263
+  },
+  {
+   "job": "plaid-difficulty",
+   "task": "plaid-bank-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "5EsdaBK",
+     "state": "done",
+     "reward": 0,
+     "steps": 27,
+     "cost": 0.8
+    },
+    {
+     "name": "7SJjR8a",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 0.85
+    },
+    {
+     "name": "Bz9ufdw",
+     "state": "done",
+     "reward": 0,
+     "steps": 31,
+     "cost": 0.89
+    },
+    {
+     "name": "DzuNxcU",
+     "state": "done",
+     "reward": 0,
+     "steps": 32,
+     "cost": 0.85
+    },
+    {
+     "name": "KQPES93",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 0.93
+    },
+    {
+     "name": "XAZMKBE",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.69
+    },
+    {
+     "name": "ZuQVsM4",
+     "state": "done",
+     "reward": 0,
+     "steps": 27,
+     "cost": 0.84
+    },
+    {
+     "name": "eUKV8Dy",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.48
+    },
+    {
+     "name": "fey4PUd",
+     "state": "done",
+     "reward": 0,
+     "steps": 26,
+     "cost": 0.78
+    },
+    {
+     "name": "o7zH7E7",
+     "state": "done",
+     "reward": 0,
+     "steps": 28,
+     "cost": 1.01
+    }
+   ],
+   "solved": 0,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 8.12,
+   "finished": true,
+   "void": false,
+   "mtime": 1783971169.3987358
+  },
+  {
+   "job": "plaid-easiness",
+   "task": "plaid-bank-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "8n6ia2T",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "Cm95Cv9",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "egitVU7",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "pBLBkvZ",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "xfLNmpo",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 5,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": true,
+   "mtime": 1783970830.2869687
+  },
+  {
+   "job": "plaid-easiness-r2",
+   "task": "plaid-bank-report",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "2JQ3DWV",
+     "state": "done",
+     "reward": 0,
+     "steps": 46,
+     "cost": 0.79
+    },
+    {
+     "name": "kSZrMNf",
+     "state": "done",
+     "reward": 0,
+     "steps": 56,
+     "cost": 1.42
+    },
+    {
+     "name": "mDeXq6y",
+     "state": "done",
+     "reward": 0,
+     "steps": 52,
+     "cost": 1.22
+    },
+    {
+     "name": "q8qJiBX",
+     "state": "done",
+     "reward": 0,
+     "steps": 48,
+     "cost": 1.07
+    },
+    {
+     "name": "yCRpsNj",
+     "state": "done",
+     "reward": 0,
+     "steps": 62,
+     "cost": 1.46
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 5.96,
+   "finished": true,
+   "void": false,
+   "mtime": 1783972053.0824132
+  },
+  {
+   "job": "quickbooks-sync--nop-c2",
+   "task": "quickbooks-sync",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "dWLxRaD",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983674.8157787
+  },
+  {
+   "job": "quickbooks-sync--opus-c2",
+   "task": "quickbooks-sync",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "3zhbv3J",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.78
+    },
+    {
+     "name": "6UtVKuk",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.73
+    },
+    {
+     "name": "AAYJPYC",
+     "state": "done",
+     "reward": 0,
+     "steps": 30,
+     "cost": 1.12
+    },
+    {
+     "name": "QiDMnWZ",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.67
+    },
+    {
+     "name": "ax3sHXb",
+     "state": "done",
+     "reward": 1,
+     "steps": 19,
+     "cost": 0.59
+    },
+    {
+     "name": "oFSffJx",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.73
+    },
+    {
+     "name": "wRJSr9k",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.67
+    },
+    {
+     "name": "whXvKWo",
+     "state": "done",
+     "reward": 1,
+     "steps": 27,
+     "cost": 0.96
+    },
+    {
+     "name": "y6ECTFn",
+     "state": "done",
+     "reward": 0,
+     "steps": 23,
+     "cost": 0.81
+    },
+    {
+     "name": "yTkRvoK",
+     "state": "done",
+     "reward": 1,
+     "steps": 23,
+     "cost": 0.91
+    }
+   ],
+   "solved": 7,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 7.97,
+   "finished": true,
+   "void": false,
+   "mtime": 1783984240.9835334
+  },
+  {
+   "job": "quickbooks-sync--opusH-c2",
+   "task": "quickbooks-sync",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "5DwYvn7",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.65
+    },
+    {
+     "name": "EC6VeL6",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.78
+    },
+    {
+     "name": "FVSnGdu",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.63
+    },
+    {
+     "name": "MzDgEfn",
+     "state": "done",
+     "reward": 1,
+     "steps": 19,
+     "cost": 0.55
+    },
+    {
+     "name": "UCRKeJa",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.86
+    },
+    {
+     "name": "Virf8kk",
+     "state": "done",
+     "reward": 1,
+     "steps": 21,
+     "cost": 0.68
+    },
+    {
+     "name": "i47QnDW",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.73
+    },
+    {
+     "name": "iDonncs",
+     "state": "done",
+     "reward": 0,
+     "steps": 19,
+     "cost": 0.7
+    },
+    {
+     "name": "tBTzPYS",
+     "state": "done",
+     "reward": 1,
+     "steps": 17,
+     "cost": 0.59
+    },
+    {
+     "name": "tZDKXWL",
+     "state": "done",
+     "reward": 0,
+     "steps": 28,
+     "cost": 0.96
+    }
+   ],
+   "solved": 8,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 7.13,
+   "finished": true,
+   "void": false,
+   "mtime": 1783987585.577426
+  },
+  {
+   "job": "quickbooks-sync--oracle-c2",
+   "task": "quickbooks-sync",
+   "agent": "?",
+   "model": "",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "fJJjoWD",
+     "state": "done",
+     "reward": 1,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 1,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983697.1359122
+  },
+  {
+   "job": "quickbooks-sync--sonnet-c2",
+   "task": "quickbooks-sync",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "27d28gs",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 0.93
+    },
+    {
+     "name": "EXCC4jv",
+     "state": "done",
+     "reward": 0,
+     "steps": 29,
+     "cost": 0.57
+    },
+    {
+     "name": "JEzCgf4",
+     "state": "done",
+     "reward": 0,
+     "steps": 43,
+     "cost": 0.85
+    },
+    {
+     "name": "QbwX8ku",
+     "state": "done",
+     "reward": 0,
+     "steps": 23,
+     "cost": 0.59
+    },
+    {
+     "name": "sTtREe8",
+     "state": "done",
+     "reward": 0,
+     "steps": 33,
+     "cost": 0.67
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.61,
+   "finished": true,
+   "void": false,
+   "mtime": 1783983881.1447952
+  },
+  {
+   "job": "smoke-chain-flags",
+   "task": "ingestion-stale-blocker",
+   "agent": "nop",
+   "model": "",
+   "kind": "harness",
+   "trials": [
+    {
+     "name": "E6uxPed",
+     "state": "done",
+     "reward": 0,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783980986.9052281
+  },
+  {
+   "job": "smoke-fastapi-fix",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "mrwmHCZ",
+     "state": "running",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 0,
+   "errors": 0,
+   "total": 1,
+   "cost": 0,
+   "finished": false,
+   "void": false,
+   "mtime": 1783968195.4000394
+  },
+  {
+   "job": "smoke-proxy-fix",
+   "task": "ingestion-stale-blocker",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "x97BgnM",
+     "state": "done",
+     "reward": 0,
+     "steps": 85,
+     "cost": 2.26
+    }
+   ],
+   "solved": 0,
+   "done": 1,
+   "errors": 0,
+   "total": 1,
+   "cost": 2.26,
+   "finished": true,
+   "void": false,
+   "mtime": 1783968380.3932552
+  },
+  {
+   "job": "xrepo-bre-latent--opus-c2",
+   "task": "xrepo-bre-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "9y3hMw5",
+     "state": "done",
+     "reward": 1,
+     "steps": 31,
+     "cost": 0.74
+    },
+    {
+     "name": "Jkq3BMo",
+     "state": "done",
+     "reward": 1,
+     "steps": 23,
+     "cost": 0.72
+    },
+    {
+     "name": "N7Gjm3o",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.51
+    },
+    {
+     "name": "RabcgVh",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.89
+    },
+    {
+     "name": "RrePxwu",
+     "state": "done",
+     "reward": 0,
+     "steps": 23,
+     "cost": 0.78
+    },
+    {
+     "name": "SVHzBUo",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.65
+    },
+    {
+     "name": "Sm9hSZd",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.74
+    },
+    {
+     "name": "TXc5uer",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.59
+    },
+    {
+     "name": "vCtVZEf",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.65
+    },
+    {
+     "name": "wukBQLj",
+     "state": "done",
+     "reward": 1,
+     "steps": 25,
+     "cost": 0.87
+    }
+   ],
+   "solved": 8,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 7.14,
+   "finished": true,
+   "void": false,
+   "mtime": 1783988116.0425446
+  },
+  {
+   "job": "xrepo-bre-latent--sonnet-c2",
+   "task": "xrepo-bre-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "Ang2tVG",
+     "state": "done",
+     "reward": 1,
+     "steps": 43,
+     "cost": 0.78
+    },
+    {
+     "name": "CAnXvmT",
+     "state": "done",
+     "reward": 1,
+     "steps": 41,
+     "cost": 0.8
+    },
+    {
+     "name": "Le7NTms",
+     "state": "done",
+     "reward": 1,
+     "steps": 37,
+     "cost": 0.76
+    },
+    {
+     "name": "Y8Ed45r",
+     "state": "done",
+     "reward": 1,
+     "steps": 39,
+     "cost": 0.65
+    },
+    {
+     "name": "qMrVrVV",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 0.68
+    }
+   ],
+   "solved": 4,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 3.67,
+   "finished": true,
+   "void": false,
+   "mtime": 1783988116.0202918
+  },
+  {
+   "job": "xrepo-correlation-latent--opus-c2",
+   "task": "xrepo-correlation-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "4dJPkoY",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "5oGkG7b",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "8KhFujS",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "CHcUVNd",
+     "state": "done",
+     "reward": 1,
+     "steps": 13,
+     "cost": 0.37
+    },
+    {
+     "name": "ZSVUVkk",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "gWTrHqc",
+     "state": "done",
+     "reward": 0,
+     "steps": 15,
+     "cost": 0.37
+    },
+    {
+     "name": "huCXeUc",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "jSjFDfE",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "k8Y9Czq",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "uHCSjdb",
+     "state": "done",
+     "reward": 0,
+     "steps": 7,
+     "cost": 0.17
+    }
+   ],
+   "solved": 1,
+   "done": 10,
+   "errors": 7,
+   "total": 10,
+   "cost": 0.91,
+   "finished": true,
+   "void": true,
+   "mtime": 1783988851.4257
+  },
+  {
+   "job": "xrepo-correlation-latent--sonnet-c2",
+   "task": "xrepo-correlation-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "2hcRF33",
+     "state": "done",
+     "reward": 0,
+     "steps": 25,
+     "cost": 0.53
+    },
+    {
+     "name": "HjLgiWA",
+     "state": "done",
+     "reward": 0,
+     "steps": 21,
+     "cost": 0.41
+    },
+    {
+     "name": "cusaTz4",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "jzJUCiB",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "qm2i3YW",
+     "state": "done",
+     "reward": 0,
+     "steps": 12,
+     "cost": 0.15
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 2,
+   "total": 5,
+   "cost": 1.09,
+   "finished": true,
+   "void": false,
+   "mtime": 1783988851.4017603
+  },
+  {
+   "job": "xrepo-finscore-latent--opus-c2",
+   "task": "xrepo-finscore-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "3z8ny3N",
+     "state": "done",
+     "reward": 0,
+     "steps": 15,
+     "cost": 0.48
+    },
+    {
+     "name": "5j2qyGF",
+     "state": "done",
+     "reward": 1,
+     "steps": 35,
+     "cost": 0.88
+    },
+    {
+     "name": "BEXHLtR",
+     "state": "done",
+     "reward": 1,
+     "steps": 33,
+     "cost": 0.78
+    },
+    {
+     "name": "VFGY325",
+     "state": "done",
+     "reward": 1,
+     "steps": 36,
+     "cost": 0.92
+    },
+    {
+     "name": "iPK4M6M",
+     "state": "done",
+     "reward": 1,
+     "steps": 45,
+     "cost": 1.15
+    },
+    {
+     "name": "iUYpFnt",
+     "state": "done",
+     "reward": 1,
+     "steps": 40,
+     "cost": 0.89
+    },
+    {
+     "name": "kUHFoC4",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.67
+    },
+    {
+     "name": "orCQiGQ",
+     "state": "done",
+     "reward": 1,
+     "steps": 24,
+     "cost": 0.67
+    },
+    {
+     "name": "pDxbgYS",
+     "state": "done",
+     "reward": 1,
+     "steps": 32,
+     "cost": 0.8
+    },
+    {
+     "name": "z64ix35",
+     "state": "done",
+     "reward": 1,
+     "steps": 26,
+     "cost": 0.69
+    }
+   ],
+   "solved": 9,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 7.93,
+   "finished": true,
+   "void": false,
+   "mtime": 1783990226.191848
+  },
+  {
+   "job": "xrepo-finscore-latent--sonnet-c2",
+   "task": "xrepo-finscore-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "8KAMG5C",
+     "state": "done",
+     "reward": 1,
+     "steps": 38,
+     "cost": 0.5
+    },
+    {
+     "name": "9s4x3fA",
+     "state": "done",
+     "reward": 1,
+     "steps": 41,
+     "cost": 0.52
+    },
+    {
+     "name": "AsAEtqx",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.28
+    },
+    {
+     "name": "i8UJ2tp",
+     "state": "done",
+     "reward": 0,
+     "steps": 20,
+     "cost": 0.27
+    },
+    {
+     "name": "psAoQez",
+     "state": "done",
+     "reward": 0,
+     "steps": 59,
+     "cost": 0.74
+    }
+   ],
+   "solved": 2,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 2.31,
+   "finished": true,
+   "void": false,
+   "mtime": 1783990226.1754937
+  },
+  {
+   "job": "xrepo-loangenai-latent--opus-c2",
+   "task": "xrepo-loangenai-latent",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-opus-4.8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "2f2kLw8",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.0
+    },
+    {
+     "name": "7Zp49pp",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "GC6QTcZ",
+     "state": "done",
+     "reward": 1,
+     "steps": 22,
+     "cost": 0.0
+    },
+    {
+     "name": "P3XNfy9",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "VDUhdd9",
+     "state": "done",
+     "reward": 1,
+     "steps": 20,
+     "cost": 0.0
+    },
+    {
+     "name": "Zk5qutS",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "drC64BT",
+     "state": "done",
+     "reward": 1,
+     "steps": 23,
+     "cost": 0.0
+    },
+    {
+     "name": "hgs8eq6",
+     "state": "done",
+     "reward": 1,
+     "steps": 18,
+     "cost": 0.0
+    },
+    {
+     "name": "ty2nvZs",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "y3Loszc",
+     "state": "done",
+     "reward": 1,
+     "steps": 19,
+     "cost": 0.0
+    }
+   ],
+   "solved": 6,
+   "done": 10,
+   "errors": 4,
+   "total": 10,
+   "cost": 0,
+   "finished": true,
+   "void": false,
+   "mtime": 1783988925.463113
+  },
+  {
+   "job": "xrepo-loangenai-latent--sonnet-c2",
+   "task": "xrepo-loangenai-latent",
+   "agent": "mini-swe-agent",
+   "model": "openrouter/anthropic/claude-sonnet-4.6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "79JCjV4",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "BbmYGdw",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "S9yxx52",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "omomgGq",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    },
+    {
+     "name": "tbk4uUJ",
+     "state": "error",
+     "reward": null,
+     "steps": null,
+     "cost": null
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 5,
+   "total": 5,
+   "cost": 0,
+   "finished": true,
+   "void": true,
+   "mtime": 1783988925.4435709
+  },
+  {
+   "job": "xrepo-txenrich-latent--opus-c2",
+   "task": "xrepo-txenrich-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-opus-4-8",
+   "kind": "difficulty",
+   "trials": [
+    {
+     "name": "DeDBzFd",
+     "state": "done",
+     "reward": 0,
+     "steps": 46,
+     "cost": 2.69
+    },
+    {
+     "name": "F4sXDZ6",
+     "state": "done",
+     "reward": 0,
+     "steps": 37,
+     "cost": 2.05
+    },
+    {
+     "name": "HVaqmxB",
+     "state": "done",
+     "reward": 0,
+     "steps": 41,
+     "cost": 2.04
+    },
+    {
+     "name": "MQcW7Kt",
+     "state": "done",
+     "reward": 0,
+     "steps": 28,
+     "cost": 1.35
+    },
+    {
+     "name": "atjrrNK",
+     "state": "done",
+     "reward": 0,
+     "steps": 39,
+     "cost": 1.81
+    },
+    {
+     "name": "f6akiqg",
+     "state": "done",
+     "reward": 0,
+     "steps": 58,
+     "cost": 3.2
+    },
+    {
+     "name": "g9qyaGw",
+     "state": "done",
+     "reward": 0,
+     "steps": 50,
+     "cost": 2.7
+    },
+    {
+     "name": "kmovHWv",
+     "state": "done",
+     "reward": 0,
+     "steps": 45,
+     "cost": 2.35
+    },
+    {
+     "name": "mfN2TF3",
+     "state": "done",
+     "reward": 0,
+     "steps": 47,
+     "cost": 2.65
+    },
+    {
+     "name": "y7tzjXa",
+     "state": "done",
+     "reward": 1,
+     "steps": 57,
+     "cost": 3.37
+    }
+   ],
+   "solved": 1,
+   "done": 10,
+   "errors": 0,
+   "total": 10,
+   "cost": 24.21,
+   "finished": true,
+   "void": false,
+   "mtime": 1783989913.812637
+  },
+  {
+   "job": "xrepo-txenrich-latent--sonnet-c2",
+   "task": "xrepo-txenrich-latent",
+   "agent": "mini-swe-agent",
+   "model": "anthropic/claude-sonnet-4-6",
+   "kind": "easiness",
+   "trials": [
+    {
+     "name": "CmQM225",
+     "state": "done",
+     "reward": 0,
+     "steps": 55,
+     "cost": 1.86
+    },
+    {
+     "name": "fy84Uzc",
+     "state": "done",
+     "reward": 0,
+     "steps": 55,
+     "cost": 1.94
+    },
+    {
+     "name": "jhKqhCa",
+     "state": "done",
+     "reward": 0,
+     "steps": 65,
+     "cost": 2.03
+    },
+    {
+     "name": "qCuFaCF",
+     "state": "done",
+     "reward": 0,
+     "steps": 92,
+     "cost": 3.0
+    },
+    {
+     "name": "rwdwdZG",
+     "state": "done",
+     "reward": 0,
+     "steps": 65,
+     "cost": 2.26
+    }
+   ],
+   "solved": 0,
+   "done": 5,
+   "errors": 0,
+   "total": 5,
+   "cost": 11.09,
+   "finished": true,
+   "void": false,
+   "mtime": 1783989913.799045
+  }
+ ],
+ "tasks": [
+  {
+   "task": "__pycache__",
+   "state": "scaffolding",
+   "f2p": null,
+   "p2p": null,
+   "null_reward": null,
+   "oracle_reward": null,
+   "ease_gate": null,
+   "diff_gate": null,
+   "verdict": "probes pending",
+   "note": "",
+   "spend": 0
+  },
+  {
+   "task": "array-credit-report",
+   "state": "verified",
+   "f2p": 10,
+   "p2p": 9,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "array-easiness-restyled2",
+    "solved": 3,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "array-difficulty",
+    "solved": 0,
+    "total": 8,
+    "finished": false
+   },
+   "verdict": "too easy \u2014 sonnet 3/5",
+   "note": "too easy (sonnet 4/5, clean) \u2014 retry option: trim schema detail from instruction",
+   "spend": 29.31
+  },
+  {
+   "task": "array-v2",
+   "state": "verified",
+   "f2p": 19,
+   "p2p": 10,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "array-v2--sonnet-c2",
+    "solved": 2,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 2/5",
+   "note": "",
+   "spend": 19.31
+  },
+  {
+   "task": "banked",
+   "state": "scaffolding",
+   "f2p": null,
+   "p2p": null,
+   "null_reward": null,
+   "oracle_reward": null,
+   "ease_gate": null,
+   "diff_gate": null,
+   "verdict": "probes pending",
+   "note": "",
+   "spend": 0
+  },
+  {
+   "task": "calls-v2",
+   "state": "verified",
+   "f2p": 14,
+   "p2p": 18,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "nova-pro-calls",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "calls-v2--opus-c2",
+    "solved": 8,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "difficulty too high pass rate 8/10",
+   "note": "",
+   "spend": 27.05
+  },
+  {
+   "task": "chat-context-builder",
+   "state": "verified",
+   "f2p": 12,
+   "p2p": 4,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "chat-context-builder--sonnet-c2",
+    "solved": 4,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 4/5",
+   "note": "",
+   "spend": 6.39
+  },
+  {
+   "task": "cre-qualification-fixes",
+   "state": "verified",
+   "f2p": 7,
+   "p2p": 6,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "cre-easiness",
+    "solved": 5,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 5/5",
+   "note": "too easy (sonnet 5/5) \u2014 parked; display contract can't be unpublished",
+   "spend": 4.38
+  },
+  {
+   "task": "cre-scoring-latent-4",
+   "state": "verified",
+   "f2p": 9,
+   "p2p": 12,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "cre-scoring-latent-4--sonnet-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "cre-scoring-latent-4--opus-c2",
+    "solved": 0,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "easiness passed 0/5 \u2014 difficulty 0/10 (unverifiable, iterating)",
+   "note": "",
+   "spend": 6.59
+  },
+  {
+   "task": "cre-scoring-latent-bugs",
+   "state": "verified",
+   "f2p": 9,
+   "p2p": 12,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "cre-scoring-latent-bugs--sonnet-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "latent-difficulty",
+    "solved": 5,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "difficulty too high pass rate 5/10",
+   "note": "",
+   "spend": 23.12
+  },
+  {
+   "task": "forge-chat-pipeline",
+   "state": "verified",
+   "f2p": 10,
+   "p2p": 8,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "forge-chat-pipeline--sonnet-c2",
+    "solved": 5,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 5/5",
+   "note": "",
+   "spend": 13.84
+  },
+  {
+   "task": "forge-contacts-invites",
+   "state": "verified",
+   "f2p": 16,
+   "p2p": 0,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "forge-contacts-invites--sonnet-c2",
+    "solved": 4,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 4/5",
+   "note": "",
+   "spend": 9.23
+  },
+  {
+   "task": "forge-credit-pdf",
+   "state": "verified",
+   "f2p": 15,
+   "p2p": 9,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "forge-credit-pdf--sonnet-c2",
+    "solved": 4,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 4/5",
+   "note": "",
+   "spend": 5.7
+  },
+  {
+   "task": "forge-lending-flow",
+   "state": "verified",
+   "f2p": 12,
+   "p2p": 0,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "forge-lending-flow--sonnet-c2",
+    "solved": 5,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 5/5",
+   "note": "",
+   "spend": 8.6
+  },
+  {
+   "task": "inbound-call-routing",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 17,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "calls-easiness-v2",
+    "solved": 5,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "too easy \u2014 sonnet 5/5",
+   "note": "too easy (sonnet 5/5) \u2014 salvage plan: widen to full multi-defect scope, strip function hints",
+   "spend": 5.36
+  },
+  {
+   "task": "ingestion-stale-blocker",
+   "state": "verified",
+   "f2p": 9,
+   "p2p": 8,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "smoke-fastapi-fix",
+    "solved": 0,
+    "total": 1,
+    "finished": false
+   },
+   "diff_gate": {
+    "job": "difficulty-opus-v2",
+    "solved": 0,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "easiness probe running",
+   "note": "primary candidate \u2014 difficulty r1/r2 exposed contract gaps (fixed); round 3 pending",
+   "spend": 56.34
+  },
+  {
+   "task": "ingestion-stale-v2",
+   "state": "verified",
+   "f2p": 17,
+   "p2p": 8,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "ingestion-stale-v2--sonnet-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "ingestion-stale-v2--opus-c2",
+    "solved": 0,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "easiness passed 0/5 \u2014 difficulty 0/10 (unverifiable, iterating)",
+   "note": "",
+   "spend": 29.27
+  },
+  {
+   "task": "latent-credit-normalize",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 14,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "latent-credit-normalize--sonnetR-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "latent-credit-normalize--opusR-c2",
+    "solved": 3,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 3/10",
+   "note": "",
+   "spend": 9.58
+  },
+  {
+   "task": "latent-doc-extractors",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 14,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "latent-doc-extractors--sonnetR4-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "latent-doc-extractors--opusR4b-c2",
+    "solved": 1,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 1/10",
+   "note": "",
+   "spend": 6.93
+  },
+  {
+   "task": "latent-financial-tools",
+   "state": "verified",
+   "f2p": 8,
+   "p2p": 13,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "latent-financial-tools--sonnetB-c2",
+    "solved": 1,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "latent-financial-tools--opusB-c2",
+    "solved": 8,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "difficulty too high pass rate 8/10",
+   "note": "",
+   "spend": 19.69
+  },
+  {
+   "task": "latent-market-structure",
+   "state": "verified",
+   "f2p": 7,
+   "p2p": 20,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "latent-market-structure--sonnetR4-c2",
+    "solved": 1,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "latent-market-structure--opusR4-c2",
+    "solved": 6,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "difficulty too high pass rate 6/10",
+   "note": "",
+   "spend": 10.42
+  },
+  {
+   "task": "latent-phone-invites",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 12,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "latent-phone-invites--sonnet-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "latent-phone-invites--opusB-c2",
+    "solved": 1,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 1/10",
+   "note": "",
+   "spend": 1.77
+  },
+  {
+   "task": "loangen-agent-multibug",
+   "state": "verified",
+   "f2p": 21,
+   "p2p": 0,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "multibug-easiness",
+    "solved": 5,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "multibug-difficulty",
+    "solved": 10,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "too easy \u2014 sonnet 5/5",
+   "note": "",
+   "spend": 27.63
+  },
+  {
+   "task": "plaid-bank-report",
+   "state": "verified",
+   "f2p": 6,
+   "p2p": 3,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "nova-premier-plaid",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "plaid-bank-report--opus-c2",
+    "solved": 10,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "difficulty too high pass rate 10/10",
+   "note": "second candidate \u2014 easiness passed clean; difficulty needs output-shape diagnosis",
+   "spend": 23.73
+  },
+  {
+   "task": "quickbooks-sync",
+   "state": "verified",
+   "f2p": 12,
+   "p2p": 3,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "nova-pro-qb",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "quickbooks-sync--opusH-c2",
+    "solved": 8,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "difficulty too high pass rate 8/10",
+   "note": "",
+   "spend": 18.71
+  },
+  {
+   "task": "xrepo-bre-latent",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 12,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "xrepo-bre-latent--sonnet-c2",
+    "solved": 4,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "xrepo-bre-latent--opus-c2",
+    "solved": 8,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "too easy \u2014 sonnet 4/5",
+   "note": "",
+   "spend": 10.81
+  },
+  {
+   "task": "xrepo-correlation-latent",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 11,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "xrepo-correlation-latent--sonnet-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": null,
+   "verdict": "easiness passed 0/5 \u2014 difficulty pending",
+   "note": "",
+   "spend": 2.0
+  },
+  {
+   "task": "xrepo-finscore-latent",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 11,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "xrepo-finscore-latent--sonnet-c2",
+    "solved": 2,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "xrepo-finscore-latent--opus-c2",
+    "solved": 9,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "too easy \u2014 sonnet 2/5",
+   "note": "",
+   "spend": 10.24
+  },
+  {
+   "task": "xrepo-loangenai-latent",
+   "state": "verified",
+   "f2p": 0,
+   "p2p": 0,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": null,
+   "diff_gate": {
+    "job": "xrepo-loangenai-latent--opus-c2",
+    "solved": 6,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "probes pending",
+   "note": "",
+   "spend": 0
+  },
+  {
+   "task": "xrepo-txenrich-latent",
+   "state": "verified",
+   "f2p": 5,
+   "p2p": 12,
+   "null_reward": 0,
+   "oracle_reward": 1,
+   "ease_gate": {
+    "job": "xrepo-txenrich-latent--sonnet-c2",
+    "solved": 0,
+    "total": 5,
+    "finished": true
+   },
+   "diff_gate": {
+    "job": "xrepo-txenrich-latent--opus-c2",
+    "solved": 1,
+    "total": 10,
+    "finished": true
+   },
+   "verdict": "SUBMISSION READY \u2014 easiness 0/5, difficulty 1/10",
+   "note": "",
+   "spend": 35.3
+  }
+ ],
+ "summary": {
+  "total_spend": 421.3,
+  "trials_running": 14,
+  "candidates": 6,
+  "too_easy": 12
+ }
+}

@@ -1,0 +1,95 @@
+{
+  "task": "xrepo-txenrich-latent",
+  "pattern": "latent-bug",
+  "instance_id": "transaction-enrichment-python-xrepo-txenrich-latent",
+  "repo": "boostmoney/transaction-enrichment-python",
+  "base_commit": "HEAD",
+  "task_image": "txenrich-task:v1",
+  "repo_image": "txenrich-repo:v1",
+  "defect_count": 5,
+  "f2p_count": 5,
+  "p2p_count": 12,
+  "f2p": [
+    "tests/test_txenrich_boundaries.py::TestChequeDepositRemarkLength::test_sixteen_char_zero_prefixed_remark_is_cheque_deposit",
+    "tests/test_txenrich_boundaries.py::TestSixDigitSavingsSalary::test_six_digit_credit_in_savings_is_salary",
+    "tests/test_txenrich_boundaries.py::TestAdjacentReversal::test_credit_mirroring_prior_debit_is_reversal",
+    "tests/test_txenrich_boundaries.py::TestRupeeOneVerification::test_negative_rupee_one_verification_debit",
+    "tests/test_txenrich_boundaries.py::TestBilInftPayeeSegment::test_payee_is_final_segment"
+  ],
+  "p2p": [
+    "tests/test_txenrich_boundaries.py::TestChequeDepositRemarkPins::test_fifteen_char_remark_is_not_cheque_deposit",
+    "tests/test_txenrich_boundaries.py::TestChequeDepositRemarkPins::test_sixteen_char_non_zero_remark_is_not_cheque_deposit",
+    "tests/test_txenrich_boundaries.py::TestSalaryPins::test_six_digit_credit_in_current_is_not_salary",
+    "tests/test_txenrich_boundaries.py::TestSalaryPins::test_a2aint_credit_still_salary",
+    "tests/test_txenrich_boundaries.py::TestReversalPins::test_lone_credit_without_prior_debit_is_not_reversal",
+    "tests/test_txenrich_boundaries.py::TestReversalPins::test_mismatched_amount_is_not_reversal",
+    "tests/test_txenrich_boundaries.py::TestVerificationPins::test_positive_rupee_one_verification_still_holds",
+    "tests/test_txenrich_boundaries.py::TestVerificationPins::test_non_sentinel_amount_is_not_verification",
+    "tests/test_txenrich_boundaries.py::TestPayeePins::test_upi_payee_extraction_unaffected",
+    "tests/test_txenrich_boundaries.py::TestPayeePins::test_bil_inft_with_extra_segment_uses_other_branch",
+    "tests/test_txenrich_boundaries.py::TestGeneralCategoryPins::test_icici_cash_withdrawal_category",
+    "tests/test_txenrich_boundaries.py::TestGeneralCategoryPins::test_hdfc_pos_card_payment_category"
+  ],
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "git_history_len": 1,
+  "litmus_result": "PASS: NULL run reward 0 with all 5 f2p reporting per-test FAILED (no collection errors); ORACLE run (solve.sh) reward 1 with 17/17 required passing; PARTIAL run (2 of 5 defects reversed: D1+D4) reward 0 with 3 f2p still FAILED. git log --oneline == 1 line, git status clean, git diff empty in the built task image.",
+  "base_defects_visible_suite": "GREEN (the repo ships no test files; the agent-visible tree has nothing to run and no failing local test points at any defect). The gold boundary suite enters only at grade time via config.json test_patch; at base it is 17/17 green, at planted exactly the 5 f2p fail and all 12 p2p stay green.",
+  "env": {},
+  "env_note": "No task-specific env, secrets, or network required. The per-bank categorization is deterministic and offline. Repo image is python:3.11-slim with numpy==1.26.4 / pandas==2.2.3 (plus scipy/scikit-learn/matplotlib/fuzzywuzzy/Levenshtein/flask) installed as wheels; the package is installed editable with --no-deps so the 2022-era setup.py pins (which have no cp311/arm64 wheels and fail to compile against modern numpy headers) are bypassed. The np.select string/amount logic runs unchanged on the modern pins; verified by exercising both bank categorizers directly.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "categorizationapp/categorizationapp/BankScripts/HDFC.py",
+      "function": "categorize_HDFC_transactions (cheque-deposit-by-remark branch)",
+      "edge": "a CREDIT whose 16-character remark is 11 zeros followed by 5 digits (exactly the layout the sibling regex ^[0]{11}[0-9]{5} matches)",
+      "change": "transactions.remark.str.len().eq(16) -> .eq(15)",
+      "derivability": "The length guard is pinned by the regex on the SAME line: ^[0]{11}[0-9]{5} matches exactly 11+5 = 16 characters, so the length must be 16. .eq(15) contradicts the regex; deriving it requires counting the two regex quantifiers. Nothing in any test signposts it.",
+      "difficulty": "medium",
+      "wrong_output": "the exact-16 zero-prefixed remark is no longer labelled CHEQUE_DEPOSIT (falls through to the default TRANSFER)"
+    },
+    {
+      "id": 2,
+      "file": "categorizationapp/categorizationapp/BankScripts/HDFC.py",
+      "function": "categorize_HDFC_transactions (six-digit savings-salary branch)",
+      "edge": "a six-digit numeric-code CREDIT in a SAVING account (the payroll reference-code salary heuristic)",
+      "change": "(accountType==\"SAVING\") -> (accountType==\"SAVINGS\")",
+      "derivability": "A casing/spelling typo pinned by the pervasive idiom: accountType==\"SAVING\" occurs 45 times across the repo (and the adjacent CURRENT branch uses the same uppercase convention). \"SAVINGS\" never matches the value the caller passes; a grep of the account-type literal reveals the singleton.",
+      "difficulty": "easy",
+      "wrong_output": "the six-digit savings credit is no longer labelled SALARY (subcategory stays empty)"
+    },
+    {
+      "id": 3,
+      "file": "categorizationapp/categorizationapp/BankScripts/HDFC.py",
+      "function": "categorize_HDFC_transactions (adjacent-reversal detector)",
+      "edge": "a CREDIT that mirrors the immediately-preceding DEBIT (same amount and description, containing IMPS/NEFT/UPI/RTGS)",
+      "change": "transactions.description.shift(periods=1) -> shift(periods=2) (on the REVERSAL branch only; the type and amount shifts and the whole AUTO_PAYMENT_BOUNCE sibling keep periods=1)",
+      "derivability": "A structural adjacency offset. The detector compares the current row to the row immediately before it (shift 1); the near-identical AUTO_PAYMENT_BOUNCE sibling on the next line uses shift(periods=1) throughout, pinning the correct offset. With shift(2) the description no longer matches the prior row, so a genuine reversal is misfiled as AUTO_PAYMENT_BOUNCE. Requires understanding the row-adjacency pattern.",
+      "difficulty": "medium",
+      "wrong_output": "an offsetting IMPS/NEFT/UPI/RTGS credit is labelled AUTO_PAYMENT_BOUNCE instead of REVERSAL"
+    },
+    {
+      "id": 4,
+      "file": "categorizationapp/categorizationapp/BankScripts/ICICI.py",
+      "function": "categorize_ICICI_transactions (account-verification branch)",
+      "edge": "a rupee-one account-verification DEBIT expressed as the sentinel amount -1",
+      "change": "transactions.amount.isin([1,-1]) -> transactions.amount.isin([1])",
+      "derivability": "A sentinel-membership drop pinned by the pervasive isin([1, -1]) idiom used 31 times across the repo to mark the rupee-one verification/skip amounts (both the +1 credit and the -1 debit form). Dropping -1 contradicts every sibling occurrence; a grep of the idiom reveals the singleton.",
+      "difficulty": "easy",
+      "wrong_output": "a -1 verification debit is no longer labelled ACCOUNT_VERIFICATION (falls through to UPI)"
+    },
+    {
+      "id": 5,
+      "file": "categorizationapp/categorizationapp/BankScripts/ICICI.py",
+      "function": "categorize_ICICI_transactions (BIL/INFT payee extraction)",
+      "edge": "a BIL/INFT bill description with exactly three slashes, i.e. four segments, whose payee is the final segment",
+      "change": "sep_by_(transactions.description,3,4) -> sep_by_(transactions.description,2,3)",
+      "derivability": "A fixed-layout slice index pinned by the guard on the SAME line: str.count('/').eq(3) means four slash-separated segments (indices 0..3), so the payee is segment 3 (the last). Shifting to segment 2 grabs the numeric reference instead of the name; deriving the correct index requires reading the count guard against the layout.",
+      "difficulty": "medium",
+      "wrong_output": "the payee name comes out as the numeric reference (which downstream cleaning then blanks), instead of the actual payee"
+    }
+  ],
+  "resistance_assessment": "Five single-token slips across two of ~40 bank scripts, each biting only an exact-length / sentinel / adjacency / account-type / fixed-layout edge that ordinary transactions never feed, so there is no failing local test and no run-pytest-see-red gradient (the repo ships no tests at all). A solve requires finding ALL five, which are deliberately distinct shapes (a length-eq literal, a string-casing typo, a shift-adjacency offset, a list-membership drop, a slice index) so no single pattern-match surfaces the rest. Two are easy-derivable (the SAVING->SAVINGS casing and the isin([1,-1])->[1] drop are greppable against 45 and 31 correct siblings, p~0.9); three are medium (the remark length pinned only by counting the sibling regex, the reversal adjacency pinned only by tracing the AUTO_PAYMENT_BOUNCE sibling, the payee slice pinned only by the count('/')==3 layout guard). Targeting Opus ~2-4/10.",
+  "fairness_audit": "Every gold test is pure-input: it builds a real pandas DataFrame of raw transaction fields and calls the actual categorize_HDFC_transactions / categorize_ICICI_transactions, asserting on the returned category/subcategory/payee columns. There are ZERO mocks, ZERO patched attributes, and no reliance on any private helper name; a materially different but correct boundary fix (e.g. restoring len==16 vs testing the digit layout directly) still passes because the assertions pin observable output, not implementation. Each f2p is disjoint (different bank, branch and input) and each has a p2p that pins the adjacent correct behavior at both base and planted state (e.g. the +1 verification and the non-sentinel amount for D4; the 15-char and non-zero 16-char remarks for D1). All five defected branches are reachable from Controller.categorize (live code, not dead paths). Deterministic and fully offline."
+}

@@ -1,0 +1,28 @@
+version = "1.0"
+
+[metadata]
+author_name = "Siddhant Paliwal"
+author_email = "paliwal.siddhant@gmail.com"
+title = "Fix boundary errors in FinScore analysis-report aggregation math"
+repository = "finscore"
+base_commit = "34d05a41748e2e862e2eaea22f4ff7b5db6e1054"
+difficulty = "hard"
+category = "debugging"
+tags = ["debugging", "swe-bench-pro", "java", "maven"]
+human_solve_time = "1h"
+requires_internet = false
+repo_type = "web-app"
+task_type = "bug-fix"
+verifier_runtime_sec = 60
+
+[verifier]
+timeout_sec = 600
+
+[agent]
+timeout_sec = 3600
+
+[environment]
+build_timeout_sec = 1800.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240

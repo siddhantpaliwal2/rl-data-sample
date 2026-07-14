@@ -1,0 +1,103 @@
+{
+  "task": "finscore-xrepo-finscore-latent-bugs",
+  "pattern": "latent-bug",
+  "instance_id": "finscore-xrepo-finscore-latent-bugs",
+  "repo": "finbit/finscore",
+  "language": "java",
+  "jdk": "8 (Temurin) / Maven 3.9, Spring Boot 2.4.5",
+  "base_commit": "34d05a41748e2e862e2eaea22f4ff7b5db6e1054",
+  "repo_image": "finscore-repo:v1",
+  "task_image": "finscore-task:v1",
+  "defect_count": 5,
+  "f2p": [
+    "FinscoreBoundaryTest::creditCardUtilization_usesMaximumMonthlyValue",
+    "FinscoreBoundaryTest::spendingCategories_percentOfIncomeUsesLeadingCategory",
+    "FinscoreBoundaryTest::monthlyObligations_percentDividesByAverageIncome",
+    "FinscoreBoundaryTest::merchantSpending_keepsTopFiveMerchants",
+    "FinscoreBoundaryTest::incomeExpenses_averageMonthlyIncomePercentScaledTo100"
+  ],
+  "p2p": [
+    "FinscoreBoundaryTest::bankScore_customerFieldsAreMapped",
+    "FinscoreBoundaryTest::monthlyIncomeAnalysis_incomeReadFromBankAnalysis",
+    "FinscoreBoundaryTest::monthlyIncomeAnalysis_expensesAreSummedAndRounded",
+    "FinscoreBoundaryTest::monthlyIncomeAnalysis_investmentsAndObligationsFromCategories",
+    "FinscoreBoundaryTest::spendingCategories_perCategoryPercentAndOrdering",
+    "FinscoreBoundaryTest::spendingCategories_roundOffKeepsTwoDecimals",
+    "FinscoreBoundaryTest::investments_percentOfIncomeUsesLeadingChild",
+    "FinscoreBoundaryTest::monthlyObligations_stableWhenAverageEqualsTotalIncome",
+    "FinscoreBoundaryTest::merchantSpending_belowFiveKeepsAllMerchants",
+    "FinscoreBoundaryTest::merchantSpending_percentageTotalIncomeUsesLeadingMerchant",
+    "FinscoreBoundaryTest::scoreAnalysis_isPassedThrough"
+  ],
+  "f2p_count": 5,
+  "p2p_count": 11,
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "partial_detail": "fixed 2 of 5 (max extremum + *100 scale); 13/16 pass, the other 3 f2p still fail -> reward 0",
+  "git_history_len": 1,
+  "git_diff_empty": true,
+  "base_defects_visible_suite": "GREEN/EMPTY (the shipped @SpringBootTest smoke test is deleted at plant because it needs live Postgres+Keycloak and cannot run offline; no src/test/*.java is visible to the agent, so the visible suite trivially passes)",
+  "offline_verified": "all ladder runs executed with --network none; mvn -o test needs no network (Surefire junit-platform provider warmed at repo-image build time)",
+  "env": {},
+  "env_note": "No task-specific env or secrets required. Gold tests are pure-input JUnit 5 on the static mapper (no Spring context, no DB). The FinScore analysis math is deterministic and offline.",
+  "defects": [
+    {
+      "id": 1,
+      "derivability": "EASY",
+      "file": "src/main/java/com/finbit/finscore/mapper/FinScoreAnalysisMapper.java:263",
+      "function": "getCreditCardUtilization",
+      "edit": ".stream().max(Comparator.comparing(MonthlyExpensesDTO::getValue))  ->  .stream().min(...)",
+      "edge_input": "a monthly credit-card series with a clear peak, e.g. [1000, 5000, 3000]",
+      "wrong_output": "highestCreditCardUtilization = 1000 (the minimum) instead of 5000 (the maximum)",
+      "derivability_evidence": "Pinned on/next to the line: the local variable is named highestValue and the sink is setHighestCreditCardUtilization(...). 'Highest' can only be the max; min is unambiguously wrong.",
+      "why_no_visible_test_catches": "Nothing in the deleted context-load test exercises this static mapper; the gold peak-vs-trough input is injected only at grade time."
+    },
+    {
+      "id": 2,
+      "derivability": "EASY",
+      "file": "src/main/java/com/finbit/finscore/mapper/FinScoreAnalysisMapper.java:151",
+      "function": "getIncomeAndExpenses",
+      "edit": "roundOff((averageBankBalance / averageIncome) * 100)  ->  * 10",
+      "edge_input": "averageBankBalance=5000, averageIncome=8000",
+      "wrong_output": "averageMonthlyIncomePercent = 6.25 instead of 62.5 (an order of magnitude too small)",
+      "derivability_evidence": "Pinned by seven sibling percentage formulas in the same class that all multiply the ratio by 100 to produce a percent; the lone * 10 is the anomaly.",
+      "why_no_visible_test_catches": "Requires both an AverageBankBalance and an Income analysis row with the guard averageIncome>0 && averageBankBalance>0 true; supplied only by the gold test."
+    },
+    {
+      "id": 3,
+      "derivability": "MEDIUM",
+      "file": "src/main/java/com/finbit/finscore/mapper/FinScoreAnalysisMapper.java:194",
+      "function": "getSpendingCategories (percentOfTotalIncome)",
+      "edit": "result.getSpendingCategoryList().get(0).getTotal()  ->  .get(1)",
+      "edge_input": "several spending categories, e.g. RENT=3000, FOOD=1000, plus an Income row total=10000",
+      "wrong_output": "percentOfTotalIncome = 10.0 (2nd-largest) instead of 30.0 (largest)",
+      "derivability_evidence": "Pinned only by tracing the descending Collections.sort(..., comparator.reversed()) executed earlier in the same method: index 0 is the leading category, so the leading share must read get(0). Requires cross-line reasoning about sort direction, not a local tell.",
+      "why_no_visible_test_catches": "Needs >=2 categories AND an Income row with a non-empty monthlyTotal; single-category or income-less inputs never reach the get(0) read."
+    },
+    {
+      "id": 4,
+      "derivability": "MEDIUM",
+      "file": "src/main/java/com/finbit/finscore/mapper/FinScoreAnalysisMapper.java:330",
+      "function": "getMonthlyObligations (percentageAverageMonthlyIncome)",
+      "edit": "result.getAverageMonthlyObligation() / bankAnalysisDetailDTO.getAverage()  ->  .getTotal()",
+      "edge_input": "LOAN_REPAYMENT average=2000, Income row average=8000 total=10000 (average != total)",
+      "wrong_output": "percentageAverageMonthlyIncome = 20.0 (obligation/total-income) instead of 25.0 (obligation/average-income)",
+      "derivability_evidence": "Pinned by cross-reference: the field is percentageAverageMonthlyIncome and the numerator is getAverageMonthlyObligation() (a ratio of averages), and the sibling getMonthlyIncomeAnalysis reads getAverage() for 'average income'. The divisor must be getAverage(). (Distinct from the credit-card percent line, which legitimately divides by getTotal() at HEAD and is left untouched.)",
+      "why_no_visible_test_catches": "Only fires with a LOAN_REPAYMENT category (sets the average obligation) plus an Income row whose average != total; the gold test supplies exactly that."
+    },
+    {
+      "id": 5,
+      "derivability": "MEDIUM",
+      "file": "src/main/java/com/finbit/finscore/mapper/FinScoreAnalysisMapper.java:289",
+      "function": "getMerchantSpendingList (top-N cap)",
+      "edit": "merchantDetailDTO.getMerchantAnalysis().stream().limit(5)  ->  .limit(4)",
+      "edge_input": "exactly five (or more) merchants",
+      "wrong_output": "the report lists 4 top merchants instead of 5 (the smallest of the five is dropped)",
+      "derivability_evidence": "Pinned by the guard on the immediately preceding line, `if (size() >= 5)`: the branch is entered specifically to keep five, so the cap must be 5. limit(4) contradicts its own guard.",
+      "why_no_visible_test_catches": "Only observable with >=5 merchants; a sub-5 list takes the else branch (all merchants) where the cap never applies."
+    }
+  ],
+  "fairness_audit": "Gold tests use only plain Lombok POJO inputs (new + setters) driving the public static getAnalysisReport(...) and asserting public response getters with a 1e-6 delta; there are no mocks, no Spring context, no reflection, and no private-name or module-name coupling, so no test encodes the oracle's implementation. Each of the five oracle values is derivable from the code itself (a 'highest' variable name, seven sibling *100 formulas, a reversed sort, an average-vs-total field name, a >=5 guard) rather than from convention, and an alternative-implementation audit holds: any correct boundary fix (e.g. Comparator.reverseOrder for the max, or an explicit sort+first for the leading category) also passes. Cross-defect interference is contained: every f2p fixture that reaches the get(1) line supplies >=2 categories so the planted index never throws IndexOutOfBounds, and each f2p fails solely on its own asserted field (verified: NULL run shows exactly 5 failures, 0 errors). The instruction is a report-level symptom writeup with two concrete examples and names no file, method, line, edit direction, trigger value, or defect count; fixing only the two reported symptoms still fails 3 hidden f2p tests.",
+  "resistance_assessment": "Targeting Opus 1-4/10. A solve requires finding ALL five single-token slips in one 372-line class across 8 aggregation methods, with no failing local test to point the way (the visible suite is empty/green). Two are EASY (a max/min extremum pinned by a 'highest' name; a lone *10 among seven *100 siblings). Three are MEDIUM, pinned only by cross-line/cross-method tracing: the leading-element index depends on realizing an earlier reversed sort; the obligation divisor depends on distinguishing average-income from total-income (and NOT 'correcting' the sibling credit-card line that divides by total by design); the merchant cap depends on reading its own >=5 guard. Five distinct edit shapes (extremum swap, index off-by-one, accessor swap, limit off-by-one, scale factor) defeat grep-for-the-twin. The instruction surfaces only two of the five as symptoms, so literal-fix agents miss >=3 hidden tests."
+}

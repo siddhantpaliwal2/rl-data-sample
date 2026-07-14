@@ -1,0 +1,28 @@
+version = "1.0"
+
+[metadata]
+author_name = "Siddhant Paliwal"
+author_email = "paliwal.siddhant@gmail.com"
+title = "Fix lender calling: return-call routing, voice-presence persistence, user-facing errors, and access-log noise"
+repository = "loangenus"
+base_commit = "9c4590385df3bac827fc5b3082b25c70e274da39"
+difficulty = "hard"
+category = "debugging"
+tags = ["debugging", "swe-bench-pro"]
+human_solve_time = "2h"
+requires_internet = false
+repo_type = "web-app"
+task_type = "bug-fix"
+verifier_runtime_sec = 20
+
+[verifier]
+timeout_sec = 600
+
+[agent]
+timeout_sec = 3600
+
+[environment]
+build_timeout_sec = 1800.0
+cpus = 2
+memory_mb = 4096
+storage_mb = 10240

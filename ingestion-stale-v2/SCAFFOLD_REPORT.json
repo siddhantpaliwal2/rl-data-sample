@@ -1,0 +1,80 @@
+{
+  "task": "ingestion-stale-v2",
+  "style": "real fix-commit (breadth-hardened variant of ingestion-stale-blocker)",
+  "base_commit": "ba5fa0a3e27c5b5a74e86d26a77271bfca1d661d",
+  "fix_commit": "a6f2dd0",
+  "derived_from": "silver-tasks/ingestion-stale-blocker",
+  "new_tests_added": 8,
+  "new_tests_file": "tests/test_ingestion_stale_breadth.py",
+  "f2p": [
+    "tests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_deleted_document_ids_do_not_show_as_missing",
+    "tests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_failed_documents_do_not_block_when_non_blocking_enabled",
+    "tests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_queued_recently_is_not_stale",
+    "tests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_queued_old_is_stale",
+    "tests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_ready_is_never_stale",
+    "tests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_normalize_string_status",
+    "tests/test_ingestion_stale_recovery.py::RecoverStaleDocumentsTests::test_recovers_stale_queued_document_for_application",
+    "tests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_can_retry_reported_for_not_queued_documents",
+    "tests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_pending_documents_visible_when_gating_inactive_but_failures_exist",
+    "tests/test_ingestion_stale_breadth.py::RecoverForApplicationBreadthTests::test_recovers_multiple_stale_documents_in_one_sweep",
+    "tests/test_ingestion_stale_breadth.py::RecoverForApplicationBreadthTests::test_mixed_fresh_and_stale_only_recovers_stale",
+    "tests/test_ingestion_stale_breadth.py::RecoverForApplicationBreadthTests::test_failed_document_is_not_auto_recovered",
+    "tests/test_ingestion_stale_breadth.py::RecoverForApplicationBreadthTests::test_repeated_recovery_is_idempotent_after_requeue",
+    "tests/test_ingestion_stale_breadth.py::RecoverForApplicationBreadthTests::test_recovery_is_noop_when_ingestion_disabled",
+    "tests/test_ingestion_stale_breadth.py::ReaperBreadthTests::test_reaper_recovers_stale_and_skips_fresh",
+    "tests/test_ingestion_stale_breadth.py::ReEnqueueServiceGuardTests::test_re_enqueue_returns_false_for_ready_document",
+    "tests/test_ingestion_stale_breadth.py::StatusPayloadStaleTelemetryTests::test_build_status_reports_stale_jobs_for_stuck_queued_doc"
+  ],
+  "f2p_count": 17,
+  "p2p": [
+    "tests/test_document_ingestion_readiness.py::GetApplicationDocumentIdsTests::test_excludes_deleted_ids_from_application_document_ids",
+    "tests/test_document_ingestion_readiness.py::GetApplicationDocumentIdsTests::test_includes_linked_documents_not_in_application_document_ids",
+    "tests/test_document_ingestion_readiness.py::PruneStaleApplicationDocumentIdsTests::test_prune_removes_deleted_document_ids",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_appraisal_without_doc_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_pfs_and_credit",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_normalize_enum_style_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_project_score_not_inflated_without_budget",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget"
+  ],
+  "p2p_count": 8,
+  "selected_test_files_to_run": [
+    "tests/test_document_ingestion_readiness.py",
+    "tests/test_ingestion_stale_recovery.py",
+    "tests/test_required_docs.py",
+    "tests/test_ingestion_stale_breadth.py"
+  ],
+  "source_files_covered_by_f2p": [
+    "loangen-agent/agent/documents/ingestion/stale_recovery.py",
+    "loangen-agent/agent/documents/ingestion/service.py",
+    "loangen-agent/agent/documents/ingestion/readiness.py",
+    "loangen-agent/agent/core/config.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "8/25",
+  "oracle_reward": 1,
+  "oracle_required_passed": "25/25",
+  "visible_suite_green": "yes except test_config_document_intelligence.py::test_defaults_disable_ingestion_and_qa, the known env conflict (excluded from p2p; points at config defaults, not the stale-recovery fix — no leak)",
+  "git_history_len": 1,
+  "litmus_result": "PASS — the instruction publishes the module path + function/return signatures + response field names (all imported/asserted by gold tests, underivable in <2 min) but not the staleness comparison, timezone handling, gating set arithmetic, reaper structure, or the recovery permutations now enforced only by hidden breadth tests. No single defect file to locate; it is a multi-file feature build.",
+  "fairness_audit": "All 8 new breadth tests plus the 9 round-1 gold tests (17 total) were re-run against a materially different but behaviorally-correct alternative stale_recovery.py (member-iteration normalize, loop-based progress-time resolution, timedelta staleness with a 60s floor, a _resolve_service helper, comprehension query build) — 20/20 passed, so the suite asserts observable behavior, not the oracle's internals. Collaborators are patched at their defining modules (SMBApplication.get, UserDocument.get/find) and fakes are SimpleNamespace with explicit attributes (is_deleted=False, explicit None error/timestamps) so no bare MagicMock leaks into staleness or pydantic logic. The one service-seam assertion kept (re_enqueue ready -> False) is universal; the impl-coupled fresh-queued-guard and beanie-find-dependent True-path assertions were deliberately excluded.",
+  "leak_checks": {
+    "git_history_len": 1,
+    "git_diff_empty": true,
+    "fix_commit_reachable": false,
+    "reflog_or_stash_leak": false,
+    "stale_recovery_absent_at_base": true,
+    "instruction_names_defect_file": false,
+    "notes": "Dockerfile flattens history (rm -rf .git && git init -qb main && commit 'import codebase') so the descendant fix commit a6f2dd0, reflog, and stashes are unreachable. All gold + breadth tests enter only via config.json test_patch at verify time; none are present in the agent-visible tree at base."
+  },
+  "env": {
+    "DOCUMENT_INGESTION_ENABLED": "true",
+    "DOCUMENT_QA_ENABLED": "true",
+    "AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT": "https://test.invalid",
+    "AZURE_DOCUMENT_INTELLIGENCE_KEY": "test-key",
+    "QDRANT_URL": "http://localhost:6333",
+    "QDRANT_API_KEY": "test",
+    "EMBEDDING_DEPLOYMENT_NAME": "test-embed",
+    "LLM_API_KEY": "test-llm-key"
+  },
+  "notes": "Breadth-hardened variant. Keeps the round-3 published public API (re_enqueue_stale_document + stale_recovery module) for fairness (unpublished -> 0/10, unfair) while defeating checklist-solving: the instruction is trimmed to goal + API contract (permutation matrix and per-function behavioral enumerations removed), and 8 hidden f2p breadth tests at the public service seams enforce permutations the symptom report only implies (multi-doc sweep, mixed fresh+stale, failed excluded, idempotent repeats, reaper staleness re-check, ready guard, stale telemetry). Base ba5fa0a / fix a6f2dd0 and the oracle source diff are unchanged from ingestion-stale-blocker. No sonnet/opus probes run — chain driver owns the probe fleet."
+}

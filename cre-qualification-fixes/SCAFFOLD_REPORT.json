@@ -1,0 +1,45 @@
+{
+  "task": "cre-qualification-fixes",
+  "fix_commit": "5509cc2b5775dab9ccf6faa66d62a8998f8b660d",
+  "base_commit": "2a36b03d4b42746716af8a41e409460aa0e481ab",
+  "instance_id": "loangenus-cre-qualification-fixes",
+  "solution_scope": [
+    "loangen-agent/agent/services/cre_qualification/constants.py",
+    "loangen-agent/agent/services/cre_qualification/engine.py",
+    "loangen-agent/agent/services/cre_qualification/qualification_report_pdf.py",
+    "loangen-agent/agent/services/cre_qualification/recommendation.py",
+    "loangen-agent/agent/services/cre_qualification/schemas.py"
+  ],
+  "f2p_count": 7,
+  "f2p": [
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_rich_cre_context_enables_deal_score_and_cross_checks",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_strong_proceed_at_80",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_proceed_band",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_manual_uw_band",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_review_band",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_insufficient_when_score_unavailable",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_schema_backfills_from_cached_payload_without_recommendation"
+  ],
+  "p2p_count": 6,
+  "p2p": [
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_weighted_score_renormalizes_missing_components",
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_minimal_context_returns_response",
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_liquidity_ratio_when_pfs_and_loan",
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_application_scoped_documents_only_in_readiness",
+    "tests/test_qualification_report_pdf.py::TestQualificationReportPdf::test_generates_non_empty_pdf_from_engine_output",
+    "tests/test_qualification_report_pdf.py::TestQualificationReportPdf::test_handles_minimal_insufficient_data_analysis"
+  ],
+  "selected_test_files_to_run": [
+    "tests/test_cre_qualification.py",
+    "tests/test_qualification_recommendation.py",
+    "tests/test_qualification_report_pdf.py"
+  ],
+  "env": {},
+  "env_note": "No task-specific env vars required; the repo image's baked-in JWT_SECRET_KEY and LIVEKIT_* stubs are sufficient. Tests are hermetic and offline.",
+  "null_reward": 0,
+  "null_required_passed": "6/13",
+  "oracle_reward": 1,
+  "oracle_required_passed": "13/13",
+  "difficulty": "medium",
+  "notes": "Multi-file feature/bug-fix: adds a new agent.services.cre_qualification.recommendation module and integrates it across schemas (fields + model_validator backfill), engine (populates overall), and the PDF report cover; constants gets three threshold values. Not one-liner grep-solvable (the recommendation module does not exist at base). Test-hardening applied: module-level imports of the new recommendation module were moved into test bodies so test_cre_qualification.py and test_qualification_recommendation.py collect at base and each f2p fails as an individual per-test FAILED line (the OverallQualificationSchema import stays module-level since that class exists at base). Leakage/fairness: instruction.md publishes the module path, resolve_recommendation signature, and the full band->label->color->threshold table because the gold tests assert those exact band strings, labels, and two colors (#047857, #eab308) -- API/display contract per the recipe, same pattern as the canonical task. It does not prescribe the implementation (dataclass, validator, engine call site, PDF rewrite). Solution patch is scoped to agent CRE source only; the same commit's loangen-app TS/TSX changes are excluded from the verifier."
+}

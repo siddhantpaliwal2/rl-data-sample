@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>loangenus · Silver task pipeline</title>
+<style>
+:root {
+  --surface-1: #fcfcfb; --page: #f9f9f7;
+  --ink-1: #0b0b0b; --ink-2: #52514e; --ink-3: #898781;
+  --grid: #e1e0d9; --baseline: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --good: #0ca30c; --good-text: #006300; --warning: #fab219; --serious: #ec835a; --critical: #d03b3b;
+  --series-1: #2a78d6; --seq-250: #86b6ef;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-1: #1a1a19; --page: #0d0d0d;
+    --ink-1: #ffffff; --ink-2: #c3c2b7; --ink-3: #898781;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,0.10);
+    --good: #0ca30c; --good-text: #0ca30c; --series-1: #3987e5; --seq-250: #184f95;
+  }
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  background: var(--page); color: var(--ink-1);
+  font: 14px/1.5 -apple-system, "SF Pro Text", "Segoe UI", sans-serif;
+  padding: 32px 24px 64px;
+}
+main { max-width: 1080px; margin: 0 auto; display: grid; gap: 20px; }
+h1 { font-size: 20px; font-weight: 650; letter-spacing: -0.01em; }
+h1 small { color: var(--ink-3); font-weight: 450; font-size: 13px; display: block; margin-top: 2px; }
+h2 { font-size: 13px; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+section { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12.5px; }
+
+.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.tile { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.tile .v { font-size: 22px; font-weight: 650; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.tile .k { color: var(--ink-3); font-size: 12px; margin-top: 2px; }
+.tile .s { font-size: 12px; margin-top: 2px; color: var(--ink-2); }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 550;
+  padding: 2px 10px 2px 8px; border-radius: 999px; border: 1px solid var(--border); white-space: nowrap; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.chip.pass  { color: var(--good-text); } .chip.pass .dot { background: var(--good); }
+.chip.fail  { color: var(--critical); } .chip.fail .dot { background: var(--critical); }
+.chip.warn  { color: var(--ink-2); }    .chip.warn .dot { background: var(--warning); }
+.chip.wait  { color: var(--ink-3); }    .chip.wait .dot { background: var(--baseline); }
+
+.stages { display: flex; flex-wrap: wrap; gap: 8px 6px; align-items: center; }
+.stage { display: flex; align-items: center; gap: 6px; }
+.stage + .stage::before { content: "→"; color: var(--ink-3); margin-right: 6px; }
+
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th { text-align: left; color: var(--ink-3); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em;
+  font-weight: 550; padding: 6px 10px; border-bottom: 1px solid var(--baseline); }
+td { padding: 7px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.tbl-wrap { overflow-x: auto; }
+.tag { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 4px; border: 1px solid var(--border); color: var(--ink-2); white-space: nowrap; }
+.tag.f2p { color: var(--series-1); border-color: var(--series-1); }
+
+.bar { display: flex; height: 14px; border-radius: 4px; overflow: hidden; gap: 2px; background: var(--page); margin: 10px 0 6px; }
+.bar div { height: 100%; }
+.legend { display: flex; gap: 16px; font-size: 12.5px; color: var(--ink-2); flex-wrap: wrap; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend .sw { width: 10px; height: 10px; border-radius: 3px; }
+
+.note { color: var(--ink-2); font-size: 13px; margin-top: 10px; }
+.note code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: var(--page); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--grid); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>loangenus → AfterQuery Silver
+    <small>repo image + task pipeline · local Harbor verification · updated 2026-07-13</small>
+  </h1>
+
+  <section>
+    <h2>Repo substrate</h2>
+    <div class="tiles">
+      <div class="tile"><div class="v">119,511</div><div class="k">source LOC (py 52 / tsx 33 / ts 15)</div></div>
+      <div class="tile"><div class="v">300</div><div class="k">commits · 197 PR merges</div></div>
+      <div class="tile"><div class="v">33</div><div class="k">pytest files · 464 assertions</div></div>
+      <div class="tile"><div class="v">97</div><div class="k">commits touching agent Python</div></div>
+      <div class="tile"><div class="v">83<span style="font-size:14px;color:var(--ink-3)">/100</span></div><div class="k">provenance audit (REVIEW)</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Stage 1 — repo image <span class="mono" style="text-transform:none;letter-spacing:0">loangenus-repo:v1 · 1.74 GB</span></h2>
+    <div class="stages">
+      <span class="stage"><span class="chip pass"><span class="dot"></span>Static checks — 940 B · 33 lines · 3 RUN</span></span>
+      <span class="stage"><span class="chip pass"><span class="dot"></span>Docker build</span></span>
+      <span class="stage"><span class="chip pass"><span class="dot"></span>.git history preserved</span></span>
+      <span class="stage"><span class="chip pass"><span class="dot"></span>Suite runs hermetic · 1.2 s</span></span>
+    </div>
+    <div class="bar" role="img" aria-label="Test suite at HEAD: 166 passed, 7 env-gated failures, 24 skipped">
+      <div style="flex:166;background:var(--good)"></div>
+      <div style="flex:7;background:var(--critical)"></div>
+      <div style="flex:24;background:var(--baseline)"></div>
+    </div>
+    <div class="legend">
+      <span><span class="sw" style="background:var(--good)"></span>166 passed</span>
+      <span><span class="sw" style="background:var(--critical)"></span>7 failed (env-gated / test rot at HEAD)</span>
+      <span><span class="sw" style="background:var(--baseline)"></span>24 skipped</span>
+    </div>
+    <p class="note">Required test env: <code>DOCUMENT_INGESTION_ENABLED</code>, <code>DOCUMENT_QA_ENABLED</code>, dummy Azure/Qdrant/LLM endpoints, <code>JWT_SECRET_KEY</code> — all offline dummies.</p>
+  </section>
+
+  <section>
+    <h2>Task · ingestion-stale-blocker <span class="mono" style="text-transform:none;letter-spacing:0">base ba5fa0a · fix a6f2dd0 · difficulty: hard</span></h2>
+    <div class="stages">
+      <span class="stage"><span class="chip pass"><span class="dot"></span>Task image build</span></span>
+      <span class="stage"><span class="chip pass"><span class="dot"></span>Harbor nop — reward 0.0</span></span>
+      <span class="stage"><span class="chip pass"><span class="dot"></span>Harbor oracle — reward 1.0</span></span>
+      <span class="stage"><span class="chip wait"><span class="dot"></span>Similarity</span></span>
+      <span class="stage"><span class="chip wait"><span class="dot"></span>AI text check</span></span>
+      <span class="stage"><span class="chip wait"><span class="dot"></span>Rubric review</span></span>
+      <span class="stage"><span class="chip wait"><span class="dot"></span>Easiness ×5</span></span>
+      <span class="stage"><span class="chip wait"><span class="dot"></span>Difficulty ×10</span></span>
+      <span class="stage"><span class="chip wait"><span class="dot"></span>Fairness</span></span>
+    </div>
+    <p class="note">Gray stages run server-side on the platform only. Local Harbor covers exactly the nop/oracle contract.</p>
+
+    <div class="tbl-wrap" style="margin-top:14px">
+    <table>
+      <thead><tr><th>Verifier test</th><th>Role</th><th>Null run</th><th>Oracle run</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">stale_recovery::test_queued_recently_is_not_stale</td><td><span class="tag f2p">fail_to_pass</span></td><td><span class="chip fail"><span class="dot"></span>failed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+        <tr><td class="mono">stale_recovery::test_queued_old_is_stale</td><td><span class="tag f2p">fail_to_pass</span></td><td><span class="chip fail"><span class="dot"></span>failed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+        <tr><td class="mono">stale_recovery::test_ready_is_never_stale</td><td><span class="tag f2p">fail_to_pass</span></td><td><span class="chip fail"><span class="dot"></span>failed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+        <tr><td class="mono">stale_recovery::test_normalize_string_status</td><td><span class="tag f2p">fail_to_pass</span></td><td><span class="chip fail"><span class="dot"></span>failed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+        <tr><td class="mono">stale_recovery::test_recovers_stale_queued_document_for_application</td><td><span class="tag f2p">fail_to_pass</span></td><td><span class="chip fail"><span class="dot"></span>failed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+        <tr><td class="mono">readiness::test_deleted_document_ids_do_not_show_as_missing</td><td><span class="tag f2p">fail_to_pass</span></td><td><span class="chip fail"><span class="dot"></span>failed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+        <tr><td class="mono">readiness::test_failed_documents_do_not_block_when_non_blocking_enabled</td><td><span class="tag f2p">fail_to_pass</span></td><td><span class="chip fail"><span class="dot"></span>failed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+        <tr><td class="mono">readiness (3 tests) + required_docs (5 tests)</td><td><span class="tag">pass_to_pass ×8</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td><td><span class="chip pass"><span class="dot"></span>passed</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <div class="grid2">
+  <section>
+    <h2>Mining pool — next candidates</h2>
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Commit</th><th>Bug</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">a6f2dd0</td><td>ingestion stale/blocker queue</td><td><span class="chip pass"><span class="dot"></span>scaffolded</span></td></tr>
+        <tr><td class="mono">e9774cc</td><td>Plaid bank data report</td><td><span class="chip warn"><span class="dot"></span>ready to mine</span></td></tr>
+        <tr><td class="mono">10042f3</td><td>Array credit report</td><td><span class="chip warn"><span class="dot"></span>ready to mine</span></td></tr>
+        <tr><td class="mono">2e4c15f</td><td>SMB invite flow skip</td><td><span class="chip warn"><span class="dot"></span>ready to mine</span></td></tr>
+        <tr><td class="mono">5509cc2</td><td>CRE qualification engine</td><td><span class="chip warn"><span class="dot"></span>ready to mine</span></td></tr>
+        <tr><td class="mono">768b4c8</td><td>calls/presence (multi-defect)</td><td><span class="chip warn"><span class="dot"></span>splittable ×2</span></td></tr>
+        <tr><td class="mono">869aa67</td><td>chat/context builder (multi-defect)</td><td><span class="chip warn"><span class="dot"></span>splittable ×2</span></td></tr>
+        <tr><td class="mono">efab779</td><td>QuickBooks integration</td><td><span class="chip warn"><span class="dot"></span>ready to mine</span></td></tr>
+        <tr><td class="mono">09c7e84 · 7269152</td><td>CORS / prefix sweep</td><td><span class="chip wait"><span class="dot"></span>skip — too easy</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Model probes (local pre-validation)</h2>
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Gate</th><th>Model</th><th>Protocol</th></tr></thead>
+      <tbody>
+        <tr><td>Easiness</td><td class="mono">anthropic/claude-sonnet-4.6</td><td>×5 runs · advance only if ≤ 1 solves</td></tr>
+        <tr><td>Difficulty</td><td class="mono">anthropic/claude-opus-4.8</td><td>×10 runs · target 1–4 solved</td></tr>
+        <tr><td>Cross-check</td><td class="mono">openai/gpt-5.6</td><td>×5 runs · sanity spread</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="note">Run via <code>harbor run -p ./ingestion-stale-blocker -a claude-code -m &lt;model&gt; -k N</code> (or <code>-a mini-swe-agent</code> to mirror the platform). Needs <code>ANTHROPIC_API_KEY</code> / <code>OPENAI_API_KEY</code> exported. Daytona/Modal backends exist for parallel fleets — local Docker is fine at this scale.</p>
+  </section>
+  </div>
+</main>
+</body>
+</html>

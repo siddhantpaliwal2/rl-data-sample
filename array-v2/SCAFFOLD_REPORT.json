@@ -1,0 +1,102 @@
+{
+  "task": "array-v2",
+  "rebuild_of": "array-credit-report",
+  "rebuild_reason": "Round-1 gold tests asserted private methods (_initiate_verification_with_cascade, _configured_bureaus, _normalize_auth_method, _providers_for_step), forcing the instruction to publish exact signatures = a checklist. v2 drives the identical fix through public router-facing service entry points and asserts only observable API contract.",
+  "fix_commits": [
+    "10042f322fb57d1859b776d870c448c7c78edede",
+    "2e4c15f371de36ac7f4faa19ce950f58924dfeab"
+  ],
+  "base_commit": "894425990cd42bb4d37b813db52e14c43d8106a1",
+  "task_image": "silver-task-array-v2",
+  "difficulty": "hard",
+  "solution_files": [
+    "loangen-agent/agent/array/client.py",
+    "loangen-agent/agent/array/schemas.py",
+    "loangen-agent/agent/array/service.py",
+    "loangen-agent/agent/services/smbinvites/router.py",
+    "loangen-agent/agent/services/smbinvites/schemas.py",
+    "loangen-agent/agent/services/smbinvites/service.py"
+  ],
+  "excluded_from_fix_commits": "loangen-app/** (Next.js frontend — not exercised by the backend verifier)",
+  "gold_test_files": [
+    "loangen-agent/tests/test_array_verification_cascade.py",
+    "loangen-agent/tests/test_smb_invite_public_flow.py"
+  ],
+  "public_seams_exercised": [
+    "ArrayService.create_user_and_get_questions (POST /api/v1/array/create/user)",
+    "ArrayService.start_refresh_and_get_questions (GET /api/v1/array/credit/refresh/start)",
+    "CreateArrayUserRequest (request schema)",
+    "smbinvites.resolve_invite",
+    "smbinvites.router.invite_auth_route -> smbinvites.invite_auth",
+    "smbinvites.reply_invite_conversation / start_invite_conversation"
+  ],
+  "private_name_asserts": 0,
+  "f2p_count": 19,
+  "fail_to_pass": [
+    "tests/test_array_verification_cascade.py::CreateArrayUserRequestSsnTests::test_dashed_ssn_is_normalized_to_nine_digits",
+    "tests/test_array_verification_cascade.py::CreateArrayUserRequestSsnTests::test_spaced_ssn_is_normalized_to_nine_digits",
+    "tests/test_array_verification_cascade.py::CreateArrayUserRequestSsnTests::test_ssn_with_too_few_digits_is_rejected",
+    "tests/test_array_verification_cascade.py::CreateArrayUserRequestSsnTests::test_ssn_with_too_many_digits_is_rejected",
+    "tests/test_array_verification_cascade.py::CreateUserVerificationTests::test_falls_back_to_next_bureau_when_first_cannot_start",
+    "tests/test_array_verification_cascade.py::CreateUserVerificationTests::test_walks_through_two_failures_to_the_last_bureau",
+    "tests/test_array_verification_cascade.py::CreateUserVerificationTests::test_first_bureau_success_is_not_a_transition",
+    "tests/test_array_verification_cascade.py::CreateUserVerificationTests::test_starts_on_kba_when_only_that_bureau_is_configured",
+    "tests/test_array_verification_cascade.py::CreateUserVerificationTests::test_starts_on_smfa_when_only_that_bureau_is_configured",
+    "tests/test_array_verification_cascade.py::RefreshVerificationTests::test_refresh_falls_back_when_first_bureau_cannot_start",
+    "tests/test_array_verification_cascade.py::RefreshVerificationTests::test_refresh_first_bureau_success_is_not_a_transition",
+    "tests/test_smb_invite_public_flow.py::ResolveInviteTests::test_resolve_flags_a_returning_borrower",
+    "tests/test_smb_invite_public_flow.py::ResolveInviteTests::test_resolve_flags_a_brand_new_borrower",
+    "tests/test_smb_invite_public_flow.py::InviteAuthTests::test_auth_route_forwards_the_confirmation_value",
+    "tests/test_smb_invite_public_flow.py::InviteAuthTests::test_auth_rejects_a_typo_confirmation_for_a_new_user",
+    "tests/test_smb_invite_public_flow.py::ConversationSkipTests::test_skipping_the_last_source_reaches_review",
+    "tests/test_smb_invite_public_flow.py::ConversationSkipTests::test_skipping_every_source_reaches_review",
+    "tests/test_smb_invite_public_flow.py::ConversationSkipTests::test_skipping_one_source_still_asks_for_the_other",
+    "tests/test_smb_invite_public_flow.py::ConversationSkipTests::test_skipping_a_document_drops_it_from_pending"
+  ],
+  "p2p_count": 10,
+  "pass_to_pass": [
+    "tests/test_array_verification_cascade.py::CreateArrayUserRequestSsnTests::test_valid_nine_digit_ssn_is_accepted",
+    "tests/test_array_verification_cascade.py::CreateUserVerificationTests::test_all_bureaus_exhausted_raises",
+    "tests/test_array_verification_cascade.py::RefreshVerificationTests::test_refresh_without_stored_profile_reports_unavailable",
+    "tests/test_smb_invite_public_flow.py::InviteAuthTests::test_auth_request_rejects_a_short_password",
+    "tests/test_smb_invite_public_flow.py::ConversationSkipTests::test_a_source_that_was_neither_connected_nor_skipped_is_prompted",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_appraisal_without_doc_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_pfs_and_credit",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_normalize_enum_style_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_project_score_not_inflated_without_budget",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget"
+  ],
+  "selected_test_files_to_run": [
+    "tests/test_array_verification_cascade.py",
+    "tests/test_smb_invite_public_flow.py",
+    "tests/test_required_docs.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "10/29",
+  "oracle_reward": 1,
+  "oracle_required_passed": "29/29",
+  "partial_reward": 0,
+  "partial_required_passed": "21/29 (array-only fix; all 8 invite f2p still fail)",
+  "visible_suite_green_at_base": true,
+  "git_history_len": 1,
+  "git_diff_empty": true,
+  "reflog_len": 1,
+  "env": {
+    "BUREAU_TRANSUNION": "true",
+    "BUREAU_EQUIFAX": "true",
+    "BUREAU_EXPERIAN": "true",
+    "ARRAY_APP_KEY": "test-array-key"
+  },
+  "env_notes": "Image loangenus-repo:v1 bakes in JWT_SECRET_KEY/LIVEKIT_*. default_user_mode='trial' so _is_production_instance() is false and invite_auth never makes the UAT-sync HTTP call. Bureau flags default true in config; the ENV block makes the intent explicit. mongomock_motor==0.0.35 is pip-installed at image build so the verifier can drive persistence-backed public entry points fully offline; a one-line shim lets mongomock accept beanie 2.x's list_collection_names kwargs.",
+  "litmus_result": "PASS. The instruction is a symptom report at the user/API level. It names only API contract a competent dev could not derive: the isTransition/is_existing_user response fields, the PASSWORD_MISMATCH code, the OTP->KBA->SMFA product order, the nine-digit SSN rule. It names no module path, method signature, return-tuple shape, defect count, or defect shape. A strong dev could not locate the defect files in <2 minutes without running the codebase; the fix requires understanding the cascade across client+service, not grepping a leaked name.",
+  "fairness_audit": "The Array HTTP client is injected via the ArrayService constructor as an explicit typed fake (no MagicMock); its per-bureau outcome sequence is drawn from one shared iterator by both retrieve_questions (raising) and try_retrieve_questions (non-raising), so it serves either a client-helper or an inline-try/except implementation identically. Persistence runs against a real in-memory Mongo (mongomock_motor) so no Mock leaks into pydantic or beanie. Tests assert only observable response fields and raised ArrayClientErrors — never private method names, return-tuple shapes, or call counts. isTransition is asserted per its stated contract (true only when an attempted method failed before success; an unconfigured skipped bureau is not a transition). The router-forwarding test accepts the confirmation value positionally or by keyword. Two materially different cascade implementations (client-helper vs inline retry) both satisfy all 29 tests.",
+  "leak_checks": {
+    "git_diff_at_base": "empty",
+    "git_log_len_at_base": 1,
+    "fix_commit_present_in_image": false,
+    "reflog_len": 1,
+    "gold_test_files_present_at_base": false,
+    "planted_defect_visible": "no — base is a real historical parent commit re-keyed to a single opaque 'import codebase' commit; nothing is artificially planted or diffable"
+  },
+  "notes": "Rebuild of array-credit-report with gold tests moved to public seams. Solution patch spans two real fix commits (10042f3 + 2e4c15f) restricted to six loangen-agent/agent source files; loangen-app frontend excluded. 2e4c15f contributes the skipped-document exclusion in the tracking summary (its own f2p). No sonnet/opus probes run — the chain driver owns probing."
+}

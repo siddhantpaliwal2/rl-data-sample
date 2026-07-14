@@ -1,0 +1,71 @@
+{
+  "task": "xrepo-loangenai-latent",
+  "pattern": "latent-bug",
+  "instance_id": "loangenai-xrepo-loangenai-latent",
+  "repo": "boostmoney/loan-genai-backend",
+  "base_commit": "2d8ddbe89e479956f42d08374ef403d8b7feb777",
+  "task_image": "loangenai-task:v1 (FROM loangenai-repo:v1)",
+  "defect_count": 5,
+  "f2p_count": 9,
+  "p2p_count": 13,
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "git_history_len": 1,
+  "litmus_result": "git log --oneline == 1; git diff empty; git status clean; reflog len 1; planted lines present in image.",
+  "ladder": {
+    "git_history_len_1_and_diff_empty": true,
+    "null_run": "reward 0; all 9 fail_to_pass report FAILED with per-test lines (no collection ERRORs); 13/22 required passed.",
+    "oracle_run": "solution/solve.sh -> reward 1; 22/22 required passed.",
+    "partial_run": "reverse-apply the loan-amount hunk only (fixes 2 of 5 defects) -> reward 0; 17/22 required passed."
+  },
+  "substrate_note": "loan-genai-backend has only three stdlib-only (typing) business-logic modules plus one auth helper that imports cleanly. The rich financial-offer math (EMI / rate bands in Workflow/v1/agents/loan_offer_generator_v1.py) sits behind module-top langchain/langgraph imports and was deliberately avoided. The gold test loads the three pure modules by file path to bypass the Workflow package __init__ (which wires the LangGraph agent graph); Service.otp_service imports normally.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "Workflow/state/validation_rules.py:46",
+      "function": "validate_loan_amount (minimum floor)",
+      "edge": "a loan amount exactly equal to a product's minimum (personal 1000, auto 5000, home 50000)",
+      "change": "if amount < rules[\"min_amount\"]  ->  if amount <= rules[\"min_amount\"]",
+      "derivability": "easy. The rejection message reads \"Minimum amount for {loan_type} loan is ${min}\" -- the stated minimum is the smallest ALLOWED amount, so a request equal to it must be valid. Inclusive floor is uniquely correct; the exclusive form turns the advertised minimum into the first rejected value.",
+      "why_no_routine_path_catches": "Every routine amount sits strictly between min and max, where < and <= agree; only the exact-min figure differs."
+    },
+    {
+      "id": 2,
+      "file": "Workflow/state/validation_rules.py:52",
+      "function": "validate_loan_amount (maximum ceiling)",
+      "edge": "a loan amount exactly equal to a product's maximum (personal 100000, auto 200000, home 1000000)",
+      "change": "if amount > rules[\"max_amount\"]  ->  if amount >= rules[\"max_amount\"]",
+      "derivability": "easy. The rejection message reads \"Maximum amount for {loan_type} loan is ${max}\" -- the stated maximum is the largest ALLOWED amount, so a request equal to it must be valid. Inclusive ceiling is uniquely correct.",
+      "why_no_routine_path_catches": "Only the exact-max figure differs; interior amounts agree under > and >=."
+    },
+    {
+      "id": 3,
+      "file": "Workflow/parameter_schema.py:401",
+      "function": "get_form_for_missing_fields (viability guard)",
+      "edge": "exactly 2 fields of a form overlap the missing-field set (with >=50% coverage), e.g. missing=[loan_type, amount, credit_score] against the 3-field loan-details form",
+      "change": "if overlap >= 2 and overlap_percentage >= 0.5  ->  if overlap > 2 and overlap_percentage >= 0.5",
+      "derivability": "medium. The two comment lines directly above the guard read \"# 1. At least 50% overlap with missing fields\" and \"# 2. At least 2 fields overlap\". \"At least 2\" is inclusive at 2, so >= 2 is uniquely correct; > 2 silently requires three overlapping fields and never offers a form for the exactly-two case. (The paired overlap_percentage >= 0.5 comparison is left correct; the real form sizes -- 3 and 5 -- can never produce exactly 0.5, so only the count boundary is observable.)",
+      "why_no_routine_path_catches": "Routine callers either overlap 3+ fields (agree) or 0-1 fields (no match either way); only the exactly-2 overlap flips."
+    },
+    {
+      "id": 4,
+      "file": "Workflow/state/parameter_schema.py:93",
+      "function": "calculate_completion_percentage (collected-field count)",
+      "edge": "a collected field whose value is 0 / 0.0 (e.g. credit_utilization = 0, account_balance = 0.0)",
+      "change": "if field in category_data and category_data[field] is not None  ->  if field in category_data and category_data[field]",
+      "derivability": "medium. Its sibling get_missing_parameters (same file, immediately below) defines a field as missing iff it is absent OR its value is None -- so \"collected\" must mean present AND not-None, the exact complement. A truthiness test disagrees with that sibling on a legitimately-zero value: get_missing_parameters counts credit_utilization=0 as collected while the meter would drop it. `is not None` is uniquely correct by that internal consistency.",
+      "why_no_routine_path_catches": "Only falsy-but-not-None values (0, 0.0, \"\", False) differ; typical string/positive-number fields are unaffected, and None-valued fields are dropped under both forms (a p2p pins that)."
+    },
+    {
+      "id": 5,
+      "file": "Service/otp_service.py:133",
+      "function": "verify_otp (lockout guard)",
+      "edge": "the stored failed-attempt count is exactly at the cap (attempts == max_attempts == 3) and another guess arrives",
+      "change": "if otp_data['attempts'] >= self.max_attempts  ->  if otp_data['attempts'] > self.max_attempts",
+      "derivability": "medium. The guard runs BEFORE the current guess is compared/counted, and max_attempts is the cap on failed attempts. Once attempts has reached max_attempts (3), the maximum is exhausted and the next verification must lock (raise). >= max_attempts is uniquely correct; > max_attempts lets a 4th guess through, one past the documented cap.",
+      "why_no_routine_path_catches": "Interior attempt counts (0,1,2) proceed identically under >= and >; only the count sitting exactly on the cap flips lock vs. allow."
+    }
+  ],
+  "fairness_audit": "No hidden coupling. The three pure targets import only typing and are loaded by file path (public source locations); the OTP test uses a typed _FakeCache with explicit dict values (otp/attempts/expires_at/created_at/purpose) -- never a bare MagicMock -- so a near-correct verify_otp reading any legitimate field cannot crash on a mock. Alternative-implementation audit: each fail_to_pass asserts observable behavior (is_valid flag, returned form_id / None, an exact percentage, a raised AuthenticationError), not an implementation detail, so any correct boundary fix (e.g. `< min` or `<= min-eps`, `>= 2` or `> 1`, `is not None` or an explicit presence check, `>= cap` or `>= 3`) passes equally. All five defected functions are live: validate_loan_amount via validate_loan_parameters; get_form_for_missing_fields via get_optimal_form_group / should_use_form_vs_text / ui_command_generator_v1; calculate_completion_percentage via parameter_gap_analyzer_tool and the v1 agents; verify_otp via Service/authentication/user_service. The instruction names no file, function, threshold value, or defect count; it reports four behavioral symptoms clustered at exact edges, leaving the agent to locate the exact lines and directions across four files."
+}

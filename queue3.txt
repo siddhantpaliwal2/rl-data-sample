@@ -1,0 +1,5 @@
+# driver3 (OpenRouter route = platform parity) — latent family + reworks land here
+cre-scoring-latent-4
+latent-credit-normalize
+latent-financial-tools
+latent-phone-invites

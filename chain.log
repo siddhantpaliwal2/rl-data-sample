@@ -1,0 +1,53 @@
+[15:16:56] queue drained; sleeping 120s (edit queue.txt to add tasks)
+[15:18:56] queue drained; sleeping 120s (edit queue.txt to add tasks)
+[15:20:56] queue drained; sleeping 120s (edit queue.txt to add tasks)
+[15:22:56] queue drained; sleeping 120s (edit queue.txt to add tasks)
+[15:24:56] queue drained; sleeping 120s (edit queue.txt to add tasks)
+[15:26:56] plaid-bank-report/nop: harbor run -p plaid-bank-report -o jobs --job-name plaid-bank-report--nop-c2 -k 1 -n 1 -q -y -a nop
+[15:27:35] plaid-bank-report/oracle: harbor run -p plaid-bank-report -o jobs --job-name plaid-bank-report--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[15:27:57] plaid-bank-report/sonnet: harbor run -p plaid-bank-report -o jobs --job-name plaid-bank-report--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:30:43] parallel chain driver up: TASK_WORKERS=4, sonnet n=5, opus n=10
+[15:30:43] plaid-bank-report: claimed
+[15:30:43] plaid-bank-report/sonnet: harbor run -p plaid-bank-report -o jobs --job-name plaid-bank-report--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:34:13] cre-scoring-latent-bugs: claimed
+[15:34:13] cre-scoring-latent-bugs/nop: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--nop-c2 -k 1 -n 1 -q -y -a nop
+[15:34:36] cre-scoring-latent-bugs/oracle: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[15:35:00] cre-scoring-latent-bugs/sonnet: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:39:07] plaid-bank-report: VERDICT RERUN:sonnet_errors
+[15:39:13] plaid-bank-report: claimed
+[15:39:13] plaid-bank-report/opus: harbor run -p plaid-bank-report -o jobs --job-name plaid-bank-report--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m anthropic/claude-opus-4-8
+[15:40:13] ingestion-stale-v2: claimed
+[15:40:13] ingestion-stale-v2/nop: harbor run -p ingestion-stale-v2 -o jobs --job-name ingestion-stale-v2--nop-c2 -k 1 -n 1 -q -y -a nop
+[15:40:40] ingestion-stale-v2/oracle: harbor run -p ingestion-stale-v2 -o jobs --job-name ingestion-stale-v2--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[15:41:04] ingestion-stale-v2/sonnet: harbor run -p ingestion-stale-v2 -o jobs --job-name ingestion-stale-v2--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:42:01] cre-scoring-latent-bugs: VERDICT BROKEN:nop_nonzero
+[15:43:13] cre-scoring-latent-bugs: claimed
+[15:43:13] cre-scoring-latent-bugs/nop: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--nop-c2 -k 1 -n 1 -q -y -a nop
+[15:43:38] cre-scoring-latent-bugs/oracle: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[15:44:01] cre-scoring-latent-bugs/sonnet: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:44:13] forge-contacts-invites: claimed
+[15:44:13] forge-contacts-invites/nop: harbor run -p forge-contacts-invites -o jobs --job-name forge-contacts-invites--nop-c2 -k 1 -n 1 -q -y -a nop
+[15:44:36] forge-contacts-invites/oracle: harbor run -p forge-contacts-invites -o jobs --job-name forge-contacts-invites--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[15:45:02] forge-contacts-invites/sonnet: harbor run -p forge-contacts-invites -o jobs --job-name forge-contacts-invites--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:45:14] plaid-bank-report: VERDICT TOO_EASY:opus_10of10
+[15:45:43] calls-v2: claimed
+[15:45:43] calls-v2/nop: harbor run -p calls-v2 -o jobs --job-name calls-v2--nop-c2 -k 1 -n 1 -q -y -a nop
+[15:46:07] calls-v2/oracle: harbor run -p calls-v2 -o jobs --job-name calls-v2--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[15:46:30] calls-v2/sonnet: harbor run -p calls-v2 -o jobs --job-name calls-v2--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:53:16] cre-scoring-latent-bugs/opus: harbor run -p cre-scoring-latent-bugs -o jobs --job-name cre-scoring-latent-bugs--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m anthropic/claude-opus-4-8
+[15:54:45] forge-contacts-invites: VERDICT TOO_EASY:sonnet_4of5
+[15:55:13] chat-context-builder: claimed
+[15:55:13] chat-context-builder/nop: harbor run -p chat-context-builder -o jobs --job-name chat-context-builder--nop-c2 -k 1 -n 1 -q -y -a nop
+[15:55:37] chat-context-builder/oracle: harbor run -p chat-context-builder -o jobs --job-name chat-context-builder--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[15:55:42] calls-v2/opus: harbor run -p calls-v2 -o jobs --job-name calls-v2--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m anthropic/claude-opus-4-8
+[15:56:01] chat-context-builder/sonnet: harbor run -p chat-context-builder -o jobs --job-name chat-context-builder--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[15:59:13] ingestion-stale-v2/opus: harbor run -p ingestion-stale-v2 -o jobs --job-name ingestion-stale-v2--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m anthropic/claude-opus-4-8
+[16:00:55] cre-scoring-latent-bugs: VERDICT TOO_HARD:opus_0of10
+[16:01:13] quickbooks-sync: claimed
+[16:01:13] quickbooks-sync/nop: harbor run -p quickbooks-sync -o jobs --job-name quickbooks-sync--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:01:36] quickbooks-sync/oracle: harbor run -p quickbooks-sync -o jobs --job-name quickbooks-sync--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:01:59] quickbooks-sync/sonnet: harbor run -p quickbooks-sync -o jobs --job-name quickbooks-sync--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[16:05:04] calls-v2: VERDICT TOO_EASY:opus_8of10
+[16:05:05] quickbooks-sync: VERDICT RERUN:sonnet_errors
+[16:07:16] chat-context-builder: VERDICT TOO_EASY:sonnet_4of5
+[16:07:37] ingestion-stale-v2: VERDICT TOO_HARD:opus_0of10

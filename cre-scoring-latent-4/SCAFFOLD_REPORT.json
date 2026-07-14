@@ -1,0 +1,96 @@
+{
+  "task": "cre-scoring-latent-bugs",
+  "pattern": "latent-bug",
+  "instance_id": "loangenus-cre-scoring-latent-bugs",
+  "repo": "boostmoney/loangenus",
+  "base_commit": "04b8abc5515c22bdb7a2da32bf2719c8ac702174",
+  "task_image": "silver-task-latent",
+  "defect_count": 6,
+  "f2p": [
+    "tests/test_cre_scoring_boundaries.py::TestAppraisalValueFloor::test_value_exactly_on_100k_floor_is_accepted",
+    "tests/test_cre_scoring_boundaries.py::TestAppraisalValueFloor::test_value_exactly_on_floor_via_secondary_key",
+    "tests/test_cre_scoring_boundaries.py::TestDocumentFicoBand::test_top_of_fico_band_is_accepted",
+    "tests/test_cre_scoring_boundaries.py::TestDocumentFicoMedian::test_two_bureau_scores_return_upper_median",
+    "tests/test_cre_scoring_boundaries.py::TestDocumentFicoMedian::test_four_bureau_scores_return_upper_median",
+    "tests/test_cre_scoring_boundaries.py::TestConstructionBudgetBoundary::test_spend_equal_to_stated_total_trusts_the_total",
+    "tests/test_cre_scoring_boundaries.py::TestTenantConcentrationBoundary::test_full_single_tenant_stays_a_fraction",
+    "tests/test_cre_scoring_boundaries.py::TestWeightedScoreClamping::test_over_range_component_is_clamped_to_100",
+    "tests/test_cre_scoring_boundaries.py::TestWeightedScoreClamping::test_negative_component_is_clamped_to_zero"
+  ],
+  "p2p": [
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_weighted_score_renormalizes_missing_components",
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_minimal_context_returns_response",
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_liquidity_ratio_when_pfs_and_loan",
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_rich_cre_context_enables_deal_score_and_cross_checks",
+    "tests/test_oak_hill_qualification.py::TestOakHillQualificationEngine::test_construction_budget_is_spent_plus_remaining",
+    "tests/test_oak_hill_qualification.py::TestOakHillQualificationEngine::test_oak_hill_term_app_filters_non_matching_products",
+    "tests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_liquid_assets_rejects_total_assets_mistake",
+    "tests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_bridge_application_product_fit",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_strong_proceed_at_80",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_review_band",
+    "tests/test_lender_product_match.py::TestLenderProductMatch::test_term_matches_business_term_loan_only",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget"
+  ],
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "base_defects_visible_suite": "GREEN (33 passed / 0 failed across the qualification files at base+6-defects; 26 in the graded subset on the task image)",
+  "env": {},
+  "env_note": "No task-specific env required. The CRE qualification suite is deterministic and offline; the JWT_SECRET_KEY baked into loangenus-repo:v1 is sufficient. No pydantic Settings ValidationError appears.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "loangen-agent/agent/services/cre_qualification/facts.py:149",
+      "function": "resolve_appraisal_value",
+      "boundary_changed": "v >= 100_000  ->  v > 100_000",
+      "edge_input": "an appraisal value of exactly 100_000 (e.g. {\"as_is_value\": 100_000})",
+      "wrong_output": "returns None (appraisal discarded) instead of 100_000.0",
+      "why_no_visible_test_catches": "Visible tests use appraisals of 800k / 1.7M / 1.85M / 2.0M / 3.8M \u2014 all strictly > 100k, so >= and > agree; none lands on exactly 100k."
+    },
+    {
+      "id": 2,
+      "file": "loangen-agent/agent/services/cre_qualification/facts.py:159",
+      "function": "resolve_document_fico (primary-score band)",
+      "boundary_changed": "if 300 <= score <= 850  ->  if 300 <= score < 850",
+      "edge_input": "a primary FICO of exactly 850 (the band maximum), e.g. {\"primary_fico_score\": 850}",
+      "wrong_output": "drops the score (falls through to bureau / None) instead of returning 850",
+      "why_no_visible_test_catches": "Visible tests feed primary FICOs of 665 / 712 / 720 \u2014 never the 850 upper edge; only the exact-850 case differs."
+    },
+    {
+      "id": 3,
+      "file": "loangen-agent/agent/services/cre_qualification/facts.py:167",
+      "function": "resolve_document_fico (bureau median)",
+      "boundary_changed": "scores[len(scores) // 2]  ->  scores[(len(scores) - 1) // 2]",
+      "edge_input": "an even number of bureau scores, e.g. {\"bureau_fico_scores\": {\"experian\": 660, \"equifax\": 700}}",
+      "wrong_output": "returns the lower-middle score (660) instead of the framework's upper-middle (700); identical on odd counts",
+      "why_no_visible_test_catches": "The only visible test that routes bureau scores through this resolver uses a single (odd) score; len//2 and (len-1)//2 coincide for all odd lengths."
+    },
+    {
+      "id": 4,
+      "file": "loangen-agent/agent/services/cre_qualification/facts.py:300",
+      "function": "resolve_tenant_concentration",
+      "boundary_changed": "v / 100.0 if v > 1 else v  ->  if v >= 1",
+      "edge_input": "tenant_concentration of exactly 1.0 (100% as a fraction), e.g. {\"tenant_concentration\": 1.0}",
+      "wrong_output": "returns 0.01 (treats 1.0 as the percent 1%) instead of 1.0",
+      "why_no_visible_test_catches": "No visible test supplies tenant_concentration or largest_tenant_pct at all."
+    },
+    {
+      "id": 5,
+      "file": "loangen-agent/agent/services/cre_qualification/facts.py:337",
+      "function": "resolve_construction_budget",
+      "boundary_changed": "if spent > explicit ...  ->  if spent >= explicit ...  (the CTC-rejection guard)",
+      "edge_input": "a stated total budget whose spend exactly equals it, with remaining present, e.g. {\"construction_budget\": 200_000, \"spent_to_date\": 200_000, \"remaining_budget\": 50_000}",
+      "wrong_output": "returns spent + remaining (250_000) instead of the stated total (200_000); only spend STRICTLY above the total should override it as a mislabeled cost-to-complete figure",
+      "why_no_visible_test_catches": "No visible test feeds an explicit total-budget key (total_rehab_budget/construction_budget/total_budget/budget_total); the budget tests use spent+remaining only or uploaded-doc types, never spent==explicit."
+    },
+    {
+      "id": 6,
+      "file": "loangen-agent/agent/services/cre_qualification/scoring.py:45",
+      "function": "weighted_score",
+      "boundary_changed": "total += weight * clamp(val)  ->  total += weight * val",
+      "edge_input": "a component score outside 0-100, e.g. weighted_score({\"a\": 130.0}, {\"a\": 1.0}) or {\"a\": -20.0}",
+      "wrong_output": "returns the raw out-of-range value (130.0 / -20.0) instead of the clamped 100.0 / 0.0",
+      "why_no_visible_test_catches": "The one visible test that calls weighted_score feeds an in-range component (80.0) plus a None; clamp(80.0)==80.0 and engine components in the visible scenarios stay within band. NOTE: clamp remains used elsewhere in scoring.py, so this drop leaves no dangling import/definition tell."
+    }
+  ],
+  "resistance_assessment": "Targeting Opus 1-4/10 (was 5/10 at 4 defects; Sonnet 0/5). A solve requires finding ALL six defects, so raising the count lowers the all-found rate (~0.5 -> aim 0.25-0.4). No local failing test points at any defect: the full existing qualification suite is green at base+6-defects, removing the run-pytest-see-red gradient. Five of six are single-token boundary slips (>=/>, </<=, > /  >=, len//2 vs (len-1)//2) that read as plausible code; the sixth is a dropped defensive clamp that leaves NO dangling import (clamp is still used elsewhere in scoring.py), closing the structural tell the 4-defect version had. Two defects sit inside resolve_document_fico (primary band + bureau median) but require independent realizations (an 850 edge vs an even-count parity); the construction-budget guard is buried in CTC-rejection logic and needs the spent==explicit realization. Residual fair discoverability: the tenant_concentration `>= 1` reads inconsistent against the sibling occupancy resolvers that use `> 1` \u2014 but nothing in any test signposts it."
+}

@@ -1,0 +1,60 @@
+{
+  "task": "quickbooks-sync",
+  "style": "real-commit bug-fix (mined)",
+  "base_commit": "5ea5f7533f01495f0259d11a0ff7384d4871857b",
+  "fix_commit": "efab77902089a80507468f84b0d8d87c571fec6c",
+  "files_touched": [
+    "loangen-agent/agent/integrations/quickbooks/service.py",
+    "loangen-agent/agent/integrations/quickbooks/router.py"
+  ],
+  "f2p": [
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_default_connect_has_no_invite_context",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_invite_flow_context_round_trips",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_invite_flow_requires_a_token",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_empty_invite_token_carries_no_context",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_only_invite_flow_value_is_carried",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_tampered_state_yields_no_context",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_payload_tampered_state_yields_no_context",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_malformed_state_yields_no_context",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthStateContextTests::test_auth_url_embeds_the_signed_state",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthCallbackRedirectTests::test_invite_success_returns_to_invite_advisor",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthCallbackRedirectTests::test_invite_failure_returns_to_invite_advisor",
+    "tests/test_quickbooks_oauth_state.py::QBOAuthCallbackRedirectTests::test_tampered_state_does_not_grant_invite_redirect"
+  ],
+  "f2p_count": 12,
+  "p2p": [
+    "tests/test_quickbooks_oauth_state.py::QBAuthUrlStableTests::test_auth_url_carries_client_and_response_type",
+    "tests/test_quickbooks_oauth_state.py::QBAuthUrlStableTests::test_state_token_has_two_signed_parts",
+    "tests/test_quickbooks_oauth_state.py::QBAuthUrlStableTests::test_distinct_users_get_distinct_state"
+  ],
+  "p2p_count": 3,
+  "selected_test_files_to_run": [
+    "tests/test_quickbooks_oauth_state.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "3/15",
+  "oracle_reward": 1,
+  "oracle_required_passed": "15/15",
+  "gate_history": "Round 1 (9 f2p): Sonnet 0/5 (pass), Opus 7/10 (above the internal Opus<=6/10 bar). Hardened to 12 f2p by adding 3 under-constrained permutations: empty-string invite token (both-required guard), payload-segment tamper (signature binds the invite context, distinct from the existing signature-tail tamper), and a callback security test (a state whose invite context fails verification must fall back to the generic redirect, not grant the invite return page). Awaiting Opus re-gate.",
+  "visible_suite_green": "n/a — loangen-agent/tests/ does not exist at this base; all tests enter via test_patch, so there is no agent-visible test file to keep green",
+  "git_history_len": 1,
+  "git_diff_empty": true,
+  "env": {
+    "FRONTEND_URL": "https://app.example",
+    "QUICKBOOKS_CLIENT_ID": "test-qb-client",
+    "QUICKBOOKS_REDIRECT_URI": "https://api.test/api/v1/quickbooks/oauth/callback",
+    "QUICKBOOKS_OAUTH_SUCCESS_REDIRECT": "https://app.example/user/dashboard",
+    "QUICKBOOKS_OAUTH_ERROR_REDIRECT": "https://app.example/user/dashboard"
+  },
+  "leak_checks": {
+    "git_log_count_in_image": 1,
+    "git_diff_empty_in_image": true,
+    "git_log_all_shows_only_import_commit": true,
+    "tests_dir_absent_at_base": true,
+    "instruction_leaks_fix_shape": false,
+    "defect_visible_via_git": false
+  },
+  "fairness_audit": "Public seams only: state round-trip asserted via build_auth_url + get_state_context (both published as import contract), redirects via the qb_callback handler. The only mocked collaborator is handle_oauth_callback (the module's public service function every correct router must call), replaced with an explicit SimpleNamespace(user_id=...) return — no bare MagicMock — while the redirect decision runs the real get_state_context over a real signed state. Alternative-implementation audit: an impl keying off invite_token presence vs the oracle's explicit flow/invite_token keys both satisfy the published get_state_context contract; the redirect path and qb_success/qb_error markers are published, so router tests assert contract not implementation. Settings touched only via patch.object(settings_singleton, 'frontend_url', ...). The 3 hardening tests stay inside the same fair envelope: empty-string invite token and payload tamper are pure build_auth_url + get_state_context round-trips (each derivable from the published 'partial/absent context must not be embedded' and 'modified/malformed token yields no usable context' clauses); the callback security test builds a real invite state, tampers its payload, and asserts the REAL get_state_context (over a real signature check) forces the generic redirect — no new unpublished names, no convention-picks (an impl that verifies the signature and honours the both-required guard passes them all).",
+  "litmus_result": "Instruction names the QuickBooks OAuth service/router only as the two imported public functions (build_auth_url signature + get_state_context) plus the asserted redirect contract — the same API-contract exception the canonical used. It does not specify the both-required embedding guard, the non-invite-flow exclusion, the tamper/malformed handling, the payload structure, or how the callback wires the context into the success/failure redirect branches; a literal fix that just adds a flow kwarg fails test_invite_flow_requires_a_token and test_only_invite_flow_value_is_carried.",
+  "notes": "Real April-2026 fix mined from efab779. The repo image carries full future history, so the environment/Dockerfile rebuilds a single-commit git history (rm -rf .git && git init) after resetting to base, hiding the fix commit from git log/show/reflog. 12 f2p span 2 source files: 9 on the OAuth state contract, 3 on the callback redirect (a 2-hop distance defect: the invite token in the signed state surfaces as the redirect URL). Difficulty=medium-hard after hardening: breadth + distance + permutation coverage (empty vs None vs non-invite context; payload vs signature tamper; tamper-does-not-grant-invite) per CONSTRUCTION_V2 rule 5."
+}

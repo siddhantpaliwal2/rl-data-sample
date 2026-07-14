@@ -1,0 +1,89 @@
+{
+  "task": "forge-credit-pdf",
+  "style": "planted-defect (forge)",
+  "base_commit": "04b8abc5515c22bdb7a2da32bf2719c8ac702174",
+  "fix_commit": null,
+  "defect_count": 7,
+  "files_touched": [
+    "loangen-agent/agent/documents/credit_pdf/junk_filter.py",
+    "loangen-agent/agent/documents/credit_pdf/bureau_router.py",
+    "loangen-agent/agent/documents/extractors/cre_fields.py"
+  ],
+  "defects": [
+    {"id": "D1", "file": "credit_pdf/junk_filter.py", "func": "_JUNK_CREDITOR_PATTERNS", "change": "^past\\s+due\\b -> ^past\\s+owed\\b", "role": "interacting pair (junk)"},
+    {"id": "D2", "file": "credit_pdf/bureau_router.py", "func": "_assign_tradelines", "change": "tag branch 'if bureau in tags' -> 'if bureau in active'", "role": "interacting pair (router)"},
+    {"id": "D3", "file": "extractors/cre_fields.py", "func": "extract_hud_fields", "change": "val < _MIN_HUD_LOAN_AMOUNT -> val > _MIN_HUD_LOAN_AMOUNT", "role": "distance -> HUD report card (both directions)"},
+    {"id": "D4", "file": "extractors/cre_fields.py", "func": "extract_rent_roll_fields", "change": "occupied / int(total_units) -> int(total_units) / occupied", "role": "breadth"},
+    {"id": "D5", "file": "extractors/cre_fields.py", "func": "extract_appraisal_fields", "change": "label 'as-is value' -> 'as-was value'", "role": "distance -> appraisal report card"},
+    {"id": "D6", "file": "credit_pdf/junk_filter.py", "func": "_JUNK_CREDITOR_PATTERNS", "change": "^\\[Table\\s+\\d+ -> ^\\[Tabel\\s+\\d+", "role": "breadth"},
+    {"id": "D7", "file": "extractors/cre_fields.py", "func": "extract_t12_fields", "change": "derived NOI egi - opex -> egi + opex", "role": "breadth"}
+  ],
+  "interacting_pair": "D1 (junk_filter past-due pattern) + D2 (bureau_router tag branch) on the finalize_parsed_report -> filter_tradelines -> _assign_tradelines path. Gold test test_tagged_and_junk_tradelines_resolve_to_single_bureau requires both fixes: fix-junk-only leaves TransUnion wrongly populated (router over-broadcasts), fix-router-only leaves the 'Past Due' artifact in Experian; only both fixes pass. Half-fix behaviour verified in docker.",
+  "distance_defect": "D3 and D5 are extractor-level defects whose observable symptom is a missing summary card in the document-intelligence report, two call-hops downstream: cre_fields.extract_hud_fields/extract_appraisal_fields -> extractors/generic.extract_structured_fields -> report/builders.build_report_from_facts -> summary card. Gold tests drive text -> structured fields -> report card. D3 additionally flips the other direction (a mislabeled $9,000 amount that the plausibility floor should discard is wrongly surfaced).",
+  "f2p": [
+    "tests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_past_due_label",
+    "tests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_table_artifact_creditor",
+    "tests/test_credit_pdf_pipeline.py::BureauRouterTests::test_assigns_tagged_tradeline_to_one_bureau",
+    "tests/test_cre_field_extraction.py::TestCreFieldExtraction::test_appraisal_extracts_as_is_value",
+    "tests/test_cre_field_extraction.py::TestCreFieldExtraction::test_hud_loan_amount",
+    "tests/test_cre_field_extraction.py::TestCreFieldExtraction::test_rent_roll_occupancy",
+    "tests/test_document_extraction_pipeline.py::BureauAssignmentPipelineTests::test_tagged_and_junk_tradelines_resolve_to_single_bureau",
+    "tests/test_document_extraction_pipeline.py::BureauAssignmentPipelineTests::test_tradeline_tagged_to_two_bureaus_excludes_the_third",
+    "tests/test_document_extraction_pipeline.py::JunkCreditorLabelTests::test_past_due_label_variants_are_rejected",
+    "tests/test_document_extraction_pipeline.py::JunkCreditorLabelTests::test_table_artifact_variants_are_rejected",
+    "tests/test_document_extraction_pipeline.py::CreExtractionReportTests::test_appraisal_as_is_value_appears_as_report_card",
+    "tests/test_document_extraction_pipeline.py::CreExtractionReportTests::test_below_minimum_loan_amount_is_not_reported",
+    "tests/test_document_extraction_pipeline.py::CreExtractionReportTests::test_hud_loan_amount_appears_as_report_card",
+    "tests/test_document_extraction_pipeline.py::CreExtractionReportTests::test_rent_roll_occupancy_ratio",
+    "tests/test_document_extraction_pipeline.py::CreExtractionReportTests::test_t12_noi_derived_from_income_and_expenses"
+  ],
+  "f2p_count": 15,
+  "p2p": [
+    "tests/test_credit_pdf_pipeline.py::JunkFilterTests::test_accepts_real_creditor",
+    "tests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_one_dollar_artifact_tradeline",
+    "tests/test_credit_pdf_pipeline.py::BureauRouterTests::test_broadcasts_untagged_tradelines_to_all_scored_bureaus",
+    "tests/test_credit_pdf_pipeline.py::BureauRouterTests::test_filters_junk_before_assignment",
+    "tests/test_cre_field_extraction.py::TestCreFieldExtraction::test_t12_noi",
+    "tests/test_document_extraction_pipeline.py::BureauAssignmentPipelineTests::test_untagged_tradelines_broadcast_to_all_scored_bureaus",
+    "tests/test_document_extraction_pipeline.py::JunkCreditorLabelTests::test_real_creditors_are_kept",
+    "tests/test_credit_pdf_upload.py::CreditReportSourceTests::test_legacy_row_without_source_is_array",
+    "tests/test_credit_pdf_upload.py::CreditReportSourceTests::test_pdf_upload_row_is_not_array"
+  ],
+  "p2p_count": 9,
+  "selected_test_files_to_run": [
+    "tests/test_credit_pdf_pipeline.py",
+    "tests/test_cre_field_extraction.py",
+    "tests/test_document_extraction_pipeline.py",
+    "tests/test_credit_pdf_upload.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "9/24",
+  "oracle_reward": 1,
+  "oracle_required_passed": "24/24",
+  "partial_fix_reward": 0,
+  "partial_fix_required_passed": "16/24",
+  "partial_fix_scope": "reversed junk_filter (D1,D6) + HUD (D3); left router/rent/appraisal/T12 broken. Interaction test stays red because router half of the pair is unfixed.",
+  "tamper_reward": 0,
+  "tamper_note": "Agent created a trivially-passing tests/test_credit_pdf_pipeline.py and appended to tests/test_credit_pdf_upload.py; test.sh restored the tracked file and replaced the fake gold file with the pristine one -> 9/24, reward 0.",
+  "visible_suite_green": "Agent-visible full suite (pytest tests) in the built image: 4 failed / 158 passed / 24 skipped. The 4 failures are pre-existing at base and unrelated to this task's cluster (test_config_document_intelligence defaults-vs-env conflict + 3 test_inbound_calls copy mismatches); zero credit-PDF / CRE-extraction red. The two deleted test files are absent.",
+  "leak_checks": {
+    "git_history_len": 1,
+    "git_diff_empty": true,
+    "gold_tests_in_history": false,
+    "deleted_files_absent": true,
+    "defects_present_uncommitted_visible": false
+  },
+  "litmus_result": "Acceptable / no rewrite. Given only the instruction, a strong dev can grep the concrete example strings ('Past Due', '[Table 35]', 'As-Is Value') and reach the candidate files (junk_filter.py is the most exposed) within a few minutes, but cannot derive the seven line-level fixes, the router half of the interacting pair (the mis-routing symptom names no file and requires reading the tag/broadcast logic), or the permutation/distance coverage without reading and reasoning. Difficulty is carried by construction (breadth 15 f2p across 3 files, one interacting pair, two 2-hop distance defects) per rule 5, not by obscurity. Instruction leaks no file paths, module names, function names, thresholds, field contracts, defect counts, or defect shape.",
+  "fairness_audit": "No mocks anywhere in the gold suite: tests use real dataclass constructors (ParsedTradeline/ParsedBureauReport/ParsedCreditReport), the real ExtractionResult, and public functions (finalize_parsed_report, is_junk_creditor_name, extract_rent_roll_fields, extract_t12_fields, extract_structured_fields, build_report_from_facts) with explicit values, so no bare MagicMock can leak into logic. Every referenced name exists at base or in the restored pre-existing tests. Alternative-implementation audit: each f2p asserts observable behaviour (final per-bureau tradeline assignment, extractor return values, or report summary-card values), not the oracle's implementation, so any materially different correct fix passes; the junk assertions target is_junk_creditor_name, the documented junk predicate whose contract is already fixed by the pre-existing base test. No f2p depends on the task environment.",
+  "env": {
+    "DOCUMENT_INGESTION_ENABLED": "true",
+    "DOCUMENT_QA_ENABLED": "true",
+    "AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT": "https://test.invalid",
+    "AZURE_DOCUMENT_INTELLIGENCE_KEY": "test-key",
+    "QDRANT_URL": "http://localhost:6333",
+    "QDRANT_API_KEY": "test",
+    "EMBEDDING_DEPLOYMENT_NAME": "test-embed",
+    "LLM_API_KEY": "test-llm-key"
+  },
+  "notes": "Forge-style planted defects: 7 single-line, type-preserving defects across 3 source files (credit-PDF junk filter + bureau router, CRE cre_fields extractor). 15 hidden f2p span all 3 files; includes one interacting junk/router pair on a shared data path (half-fix verified reward 0) and two distance defects surfacing 2 hops downstream in the document-intelligence report. Defects planted via git apply then collapsed into a single 'import codebase' commit (rm -rf .git && git init); the two failing existing test files are removed in-image and restored verbatim by test_patch alongside the new hidden gold file. None of the 4 selected test files require the env block; it only trims unrelated pre-existing visible failures. All quality bars met: output wrong, types/signatures intact, no happy-path exceptions, no import/syntax breaks."
+}

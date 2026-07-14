@@ -1,0 +1,64 @@
+{
+  "task": "array-credit-report",
+  "fix_commit": "10042f322fb57d1859b776d870c448c7c78edede",
+  "base_commit": "894425990cd42bb4d37b813db52e14c43d8106a1",
+  "task_image": "silver-task-array",
+  "difficulty": "hard",
+  "solution_files": [
+    "loangen-agent/agent/array/client.py",
+    "loangen-agent/agent/array/schemas.py",
+    "loangen-agent/agent/array/service.py",
+    "loangen-agent/agent/services/smbinvites/router.py",
+    "loangen-agent/agent/services/smbinvites/schemas.py",
+    "loangen-agent/agent/services/smbinvites/service.py"
+  ],
+  "excluded_from_fix_commit": "loangen-app/** (Next.js frontend — not exercised by the backend verifier)",
+  "gold_test_files": [
+    "loangen-agent/tests/test_array_credit_verification.py",
+    "loangen-agent/tests/test_smb_invite_flow.py"
+  ],
+  "f2p_count": 10,
+  "fail_to_pass": [
+    "tests/test_array_credit_verification.py::ArrayClientTryRetrieveTests::test_try_retrieve_questions_returns_none_on_204",
+    "tests/test_array_credit_verification.py::CreateArrayUserRequestSsnTests::test_create_user_request_normalizes_dashed_ssn",
+    "tests/test_array_credit_verification.py::CreateArrayUserRequestSsnTests::test_create_user_request_rejects_short_ssn",
+    "tests/test_array_credit_verification.py::VerificationCascadeTests::test_cascade_skips_bureau_returning_204",
+    "tests/test_array_credit_verification.py::VerificationCascadeTests::test_cascade_all_bureaus_exhausted_raises_204",
+    "tests/test_array_credit_verification.py::VerificationCascadeTests::test_cascade_first_bureau_success_no_transition",
+    "tests/test_smb_invite_flow.py::InviteSchemaTests::test_invite_resolve_response_reports_existing_user",
+    "tests/test_smb_invite_flow.py::InviteAuthRouteTests::test_invite_auth_route_forwards_confirm_password",
+    "tests/test_smb_invite_flow.py::ConversationSkippedSourceTests::test_next_prompt_skips_skipped_source",
+    "tests/test_smb_invite_flow.py::ConversationSkippedSourceTests::test_build_tracking_excludes_skipped_source"
+  ],
+  "p2p_count": 9,
+  "pass_to_pass": [
+    "tests/test_array_credit_verification.py::ArrayServiceStableHelperTests::test_normalize_auth_method_lowercases",
+    "tests/test_array_credit_verification.py::ArrayServiceStableHelperTests::test_providers_for_step_returns_configured_bureaus",
+    "tests/test_smb_invite_flow.py::InviteSchemaTests::test_invite_auth_request_rejects_short_password",
+    "tests/test_smb_invite_flow.py::ConversationSkippedSourceTests::test_build_tracking_reports_unhandled_source_as_pending",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_appraisal_without_doc_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_pfs_and_credit",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_normalize_enum_style_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_project_score_not_inflated_without_budget",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget"
+  ],
+  "selected_test_files_to_run": [
+    "tests/test_array_credit_verification.py",
+    "tests/test_smb_invite_flow.py",
+    "tests/test_required_docs.py"
+  ],
+  "null_reward": 0,
+  "null_required_passed": "9/19",
+  "oracle_reward": 1,
+  "oracle_required_passed": "19/19",
+  "env": {
+    "BUREAU_TRANSUNION": "true",
+    "BUREAU_EQUIFAX": "true",
+    "BUREAU_EXPERIAN": "true",
+    "ARRAY_APP_KEY": "test-array-key"
+  },
+  "env_notes": "The image loangenus-repo:v1 already bakes in JWT_SECRET_KEY/LIVEKIT_*. All six target modules import cleanly at both base and fix with no extra env; the four vars above only open the bureau-config code paths. The Array HTTP client is mocked in every test, so the suite is fully offline (<2s).",
+  "cross_cutting": "10 f2p span both halves of the commit: array client (try_retrieve_questions), array schema (SSN 9-digit normalization), array service (OTP->KBA->SMFA cascade: skip-204, exhaustion, no-transition), invite schema (is_existing_user), invite router->service wiring (confirm_password forwarded), and invite conversation service (skipped_sources honored by _next_prompt and _build_tracking).",
+  "notes": "Fix commit touched NO test files — gold tests authored from scratch in the repo's unittest + AsyncMock/MagicMock style. All agent.* imports are inside test bodies so collection succeeds at base and every test fails individually (per-test FAILED lines, no collection ERROR). The commit's loangen-app/** frontend changes are excluded from the solution patch. The direct invite_auth() path builds beanie query expressions (SMBInviteRequest.token_hash == ...) that require an initialized beanie/motor client, so the confirm_password behavior is verified hermetically through the router->service forwarding test instead of calling invite_auth() directly.",
+  "concerns": "None blocking. The task is not grep-solvable: a correct fix requires implementing a named cascade helper with a specific (resp, failed_methods, is_transition) return shape across client+service, plus coordinated schema/router/service changes on the invite side. One minor real-world caveat inherited verbatim from the fix commit: _initiate_verification_with_cascade contains a slightly odd any(...) generator expression for the 'no bureau enabled' guard, but it evaluates correctly for all tested configurations."
+}

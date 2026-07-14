@@ -1,0 +1,35 @@
+# syntax=docker/dockerfile:1
+# Builds finscore-repo:v1 — the offline-capable base image the task Dockerfile
+# builds FROM. Reproducible from the raw finscore repo (Spring Boot 2.4.5 / Java
+# 8 / Maven). Build context = the finscore repo root (the dir containing pom.xml).
+#
+#   docker build -f Dockerfile.repo -t finscore-repo:v1 /path/to/finscore
+#
+# The task's environment/Dockerfile then does `FROM finscore-repo:v1`.
+FROM maven:3.9-eclipse-temurin-8
+
+# git: repo seal + git apply of the gold test patch at grade time.
+# python3: the verifier harness (test.sh heredocs + parser.py).
+RUN apt-get update && apt-get install -y --no-install-recommends git python3 \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY . /app/
+
+# Normalize the working tree to LF (the backup ships CRLF) so planted-defect and
+# gold-test patches apply cleanly. Java/Maven are indifferent to line endings.
+RUN find . -type f \( -name '*.java' -o -name '*.xml' -o -name '*.properties' \
+        -o -name '*.yml' -o -name '*.yaml' -o -name '.gitignore' \) \
+        -not -path './.git/*' -print0 | xargs -0 -r perl -i -pe 's/\r$//'
+
+# Warm the local Maven cache while the network is available at build time.
+RUN mvn -B -q -DskipTests dependency:go-offline || true
+RUN mvn -B -DskipTests package
+
+# Warm the Surefire junit-platform provider by running one throwaway JUnit-5
+# test online, so verify-time `mvn -o test` needs no network.
+RUN printf 'package com.finbit.finscore;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.assertEquals;\npublic class WarmProviderTest { @Test void ok(){ assertEquals(2,1+1); } }\n' \
+      > src/test/java/com/finbit/finscore/WarmProviderTest.java \
+ && mvn -B -Dtest=WarmProviderTest -DfailIfNoTests=false test \
+ && rm -f src/test/java/com/finbit/finscore/WarmProviderTest.java \
+ && rm -rf target/surefire-reports

@@ -1,0 +1,13 @@
+# Gate trial logs — heavy (~400MB), regenerable, not part of the deliverable.
+# Keep them local; the BANK.json ledger + banked/CHECKSUMS.json capture the results.
+jobs/
+
+# Recovered API keys / env — NEVER commit.
+.harbor_env
+.harbor_env3
+.harbor_env3b
+.openrouter_env
+*.env
+
+# OS noise
+.DS_Store

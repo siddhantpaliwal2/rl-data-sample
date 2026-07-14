@@ -1,0 +1,33 @@
+[16:04:08] parallel chain driver up: TASK_WORKERS=4, sonnet n=5, opus n=10
+[16:04:08] quickbooks-sync: claimed
+[16:04:08] quickbooks-sync/nop: reusing /Users/siddhantpaliwal/Desktop/boostmoney-audit/silver-tasks/jobs/quickbooks-sync--nop-c2 (0/1)
+[16:04:08] forge-lending-flow: claimed
+[16:04:08] forge-lending-flow/nop: harbor run -p forge-lending-flow -o jobs --job-name forge-lending-flow--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:04:08] quickbooks-sync/oracle: reusing /Users/siddhantpaliwal/Desktop/boostmoney-audit/silver-tasks/jobs/quickbooks-sync--oracle-c2 (1/1)
+[16:04:08] forge-credit-pdf: claimed
+[16:04:08] forge-credit-pdf/nop: harbor run -p forge-credit-pdf -o jobs --job-name forge-credit-pdf--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:04:08] array-v2: claimed
+[16:04:08] array-v2/nop: harbor run -p array-v2 -o jobs --job-name array-v2--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:04:08] quickbooks-sync/sonnet: harbor run -p quickbooks-sync -o jobs --job-name quickbooks-sync--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[16:05:04] forge-lending-flow/oracle: harbor run -p forge-lending-flow -o jobs --job-name forge-lending-flow--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:05:04] array-v2/oracle: harbor run -p array-v2 -o jobs --job-name array-v2--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:05:04] forge-credit-pdf/oracle: harbor run -p forge-credit-pdf -o jobs --job-name forge-credit-pdf--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:05:30] forge-credit-pdf/sonnet: harbor run -p forge-credit-pdf -o jobs --job-name forge-credit-pdf--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[16:05:30] array-v2/sonnet: harbor run -p array-v2 -o jobs --job-name array-v2--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[16:05:32] forge-lending-flow/sonnet: harbor run -p forge-lending-flow -o jobs --job-name forge-lending-flow--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[16:10:13] quickbooks-sync: VERDICT RERUN:sonnet_errors
+[16:10:38] quickbooks-sync: claimed
+[16:10:38] quickbooks-sync/opus: harbor run -p quickbooks-sync -o jobs --job-name quickbooks-sync--opus-c2 -k 10 -n 10 -q -y -a mini-swe-agent -m anthropic/claude-opus-4-8
+[16:14:27] forge-credit-pdf: VERDICT TOO_EASY:sonnet_4of5
+[16:14:38] forge-chat-pipeline: claimed
+[16:14:38] forge-chat-pipeline/nop: harbor run -p forge-chat-pipeline -o jobs --job-name forge-chat-pipeline--nop-c2 -k 1 -n 1 -q -y -a nop
+[16:15:03] forge-chat-pipeline/oracle: harbor run -p forge-chat-pipeline -o jobs --job-name forge-chat-pipeline--oracle-c2 -k 1 -n 1 -q -y -a oracle
+[16:15:35] forge-chat-pipeline/sonnet: harbor run -p forge-chat-pipeline -o jobs --job-name forge-chat-pipeline--sonnet-c2 -k 5 -n 5 -q -y -a mini-swe-agent -m anthropic/claude-sonnet-4-6
+[16:16:18] quickbooks-sync: VERDICT RERUN:sonnet_errors
+[16:16:38] quickbooks-sync: claimed
+[16:16:38] quickbooks-sync: VERDICT RERUN:sonnet_errors
+[16:17:06] forge-lending-flow: VERDICT TOO_EASY:sonnet_5of5
+[16:17:08] quickbooks-sync: claimed
+[16:17:08] quickbooks-sync: VERDICT TOO_EASY:opus_7of10
+[16:24:16] array-v2: VERDICT TOO_EASY:sonnet_2of5
+[16:28:01] forge-chat-pipeline: VERDICT TOO_EASY:sonnet_5of5

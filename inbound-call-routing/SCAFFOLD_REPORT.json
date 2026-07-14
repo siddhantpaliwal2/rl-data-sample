@@ -1,0 +1,81 @@
+{
+  "task": "inbound-call-routing",
+  "fix_commit": "768b4c873606a1ee8e6f9e192167359abc35b5ab",
+  "base_commit": "9c4590385df3bac827fc5b3082b25c70e274da39",
+  "difficulty": "medium",
+  "scope": "inbound-call routing / agent presence defect only (multi-defect commit)",
+  "solution_patch_files": [
+    "loangen-agent/agent/services/calls/inbound.py",
+    "loangen-agent/agent/services/calls/presence.py",
+    "loangen-agent/agent/services/calls/router.py",
+    "loangen-agent/agent/services/calls/schemas.py",
+    "loangen-agent/agent/services/calls/service.py"
+  ],
+  "excluded_from_scope": [
+    "loangen-agent/agent/chat_server.py",
+    "loangen-agent/agent/core/database.py",
+    "loangen-agent/agent/core/logging_setup.py",
+    "loangen-agent/agent/services/smbcontacts/service.py",
+    "loangen-app/** (frontend)"
+  ],
+  "gold_test_file": "loangen-agent/tests/test_inbound_calls.py",
+  "gold_tests_used_verbatim": true,
+  "test_expectations_corrected": "none — gold tests are byte-identical to the fix commit; the 3 BuildInboundTwimlTests that fail at 768b4c8 under a bare env were fixed by opening the real calling gate via environment (not by editing assertions)",
+  "f2p_count": 5,
+  "f2p": [
+    "tests/test_inbound_calls.py::ResolveInboundRouteTests::test_routes_to_last_dialer_lender",
+    "tests/test_inbound_calls.py::PickInboundTargetSessionTests::test_skips_sessions_without_voice_registration",
+    "tests/test_inbound_calls.py::PickInboundTargetSessionTests::test_prefers_last_outbound_dialer_session",
+    "tests/test_inbound_calls.py::BuildInboundTwimlTests::test_rings_last_dialer_not_other_lender",
+    "tests/test_inbound_calls.py::BuildInboundTwimlTests::test_last_dialer_offline_plays_unavailable"
+  ],
+  "p2p_count": 17,
+  "p2p": [
+    "tests/test_inbound_calls.py::InboundConfigTests::test_lender_client_identity",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_format_unavailable_message_with_business",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_disabled_without_flag",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_context_message_ai",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_context_message_direct",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_workspace_title_direct",
+    "tests/test_inbound_calls.py::BuildDialClientTwimlTests::test_includes_client_and_timeout",
+    "tests/test_inbound_calls.py::ResolveInboundRouteTests::test_no_outbound_history_raises",
+    "tests/test_inbound_calls.py::ResolveInboundRouteTests::test_stale_outbound_raises",
+    "tests/test_inbound_calls.py::BuildInboundTwimlTests::test_unknown_caller_plays_message",
+    "tests/test_inbound_calls.py::OnInboundDialCompleteTests::test_no_answer_plays_unavailable",
+    "tests/test_inbound_calls.py::MarkInboundAnsweredTests::test_marks_human_active_with_direct_context",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_appraisal_without_doc_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_pfs_and_credit",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_normalize_enum_style_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_project_score_not_inflated_without_budget",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget"
+  ],
+  "selected_test_files_to_run": [
+    "tests/test_inbound_calls.py",
+    "tests/test_required_docs.py"
+  ],
+  "env": {
+    "CALLS_INBOUND_ENABLED": "true",
+    "CALLS_DIRECT_ENABLED": "true",
+    "TWILIO_CALLS_ENABLED": "true",
+    "TWILIO_ACCOUNT_SID": "ACtest0000000000000000000000000000",
+    "TWILIO_AUTH_TOKEN": "test-auth-token",
+    "TWILIO_API_KEY_SID": "SKtest0000000000000000000000000000",
+    "TWILIO_API_KEY_SECRET": "test-api-secret",
+    "TWILIO_TWIML_APP_SID": "APtest0000000000000000000000000000",
+    "PUBLIC_API_BASE_URL": "https://api.test.invalid",
+    "TWILIO_OUTBOUND_CALLER_ID": "+15550001111"
+  },
+  "env_rationale": "inbound_calls_enabled() = calls_inbound_enabled and direct_call_configured(); build_inbound_twiml short-circuits to a generic message unless this gate is open. The tests patch agent.services.calls.inbound.inbound_calls_enabled but service.py binds the name in its own namespace, so the real gate must be opened via env (same class as the canonical task's Settings-target issue). All Twilio values are dummy stubs; the suite is fully mocked and offline.",
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "verification": {
+    "task_image": "silver-task-calls",
+    "null": "required passed: 17/22, reward 0, per-test FAILED line for all 5 f2p",
+    "oracle": "required passed: 22/22, reward 1",
+    "fix_commit_bare_env": "14/17 pass; 3 BuildInboundTwimlTests fail (gate closed)",
+    "fix_commit_gate_open": "17/17 pass",
+    "base_gate_open_with_test_patch": "5 failed (f2p) / 12 passed",
+    "runtime": "<1s, no network"
+  },
+  "notes": "Multi-defect commit scoped to the inbound routing/presence thread: adds a voice_registered signal to presence (schema -> router -> service.heartbeat -> presence.set_presence, preserving last value when omitted), makes pick_inbound_target_session require voice registration and prefer the last-outbound dialer's session, carries last_outbound_initiator_session_id on InboundRoute, and wires build_inbound_twiml to the preferred target. Not grep-solvable: five coordinated files across the read (routing) and write (heartbeat/presence) sides. test_required_docs.py is the stable cross-file p2p anchor (untouched by the commit, present at base)."
+}

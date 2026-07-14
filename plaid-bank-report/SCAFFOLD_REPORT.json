@@ -1,0 +1,31 @@
+{
+  "task": "plaid-bank-report",
+  "fix_commit": "e9774cc699d77f26e06400f670420f40aea92ded",
+  "base_commit": "e8e4a09379eeee13cc9ea058b87054b77b3b338d",
+  "source_files_in_patch": [
+    "loangen-agent/agent/plaid/report_service.py"
+  ],
+  "test_files_authored": [
+    "loangen-agent/tests/test_plaid_report_service.py"
+  ],
+  "f2p": [
+    "tests/test_plaid_report_service.py::BankReportFallbackTests::test_falls_back_to_data_document_when_no_normalized_transactions",
+    "tests/test_plaid_report_service.py::BankReportFallbackTests::test_fallback_filters_transactions_to_primary_account",
+    "tests/test_plaid_report_service.py::BankReportFallbackTests::test_fallback_selects_transactions_of_selected_primary_account",
+    "tests/test_plaid_report_service.py::BankReportFallbackTests::test_fallback_builds_report_when_raw_item_missing",
+    "tests/test_plaid_report_service.py::BankReportFallbackTests::test_fallback_passes_selected_account_id_to_preview_builder",
+    "tests/test_plaid_report_service.py::BankReportFallbackTests::test_fallback_forwards_business_and_user_name"
+  ],
+  "p2p": [
+    "tests/test_plaid_report_service.py::BankReportNoDataTests::test_raises_when_no_connected_accounts",
+    "tests/test_plaid_report_service.py::BankReportNoDataTests::test_raises_when_no_transactions_and_no_data_document",
+    "tests/test_plaid_report_service.py::BankReportNoDataTests::test_raises_when_data_document_has_no_matching_account"
+  ],
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "f2p_count": 6,
+  "p2p_count": 3,
+  "env": {},
+  "fairness_audit": "The gold-test DB seams keep patching the PlaidAccount/PlaidItem/PlaidTransaction query builders as module attributes (required because beanie query fields such as PlaidAccount.user_id raise AttributeError without init), but every value they RETURN is now a typed types.SimpleNamespace with explicit attributes rather than a bare MagicMock: the _account fake carries institution_name=None plus all other PlaidAccount fields (official_name, mask, type, subtype, iso_currency_code, balances, active, updated_at, ...), and _data_document is likewise a SimpleNamespace, so no MagicMock attribute can flow into a pydantic model. Alternative-implementation audit for test_fallback_builds_report_when_raw_item_missing: three materially different correct implementations that source institution_name from the raw item block (oracle), from the PlaidAccount collaborator, and from the PlaidItem record each pass all 9/9 tests (reward 1); the account- and item-sourced variants previously died with 'ValidationError: institution_name Input should be a valid string, input_value=<MagicMock ...>' when the raw item block was absent, and reproducing the exact probe pattern (raw item first, account last-resort) fails only that one test against the pre-fix file (1 failed / 8 passed) exactly as recorded in the failing-trial evidence. PlaidDataDocument.find_one and .smb_id remain patched on the defining class so the seam resolves at both base and fixed revisions.",
+  "notes": "Single-file fix (report_service.py, +89/-2): adds a PlaidDataDocument raw-JSON fallback to build_bank_report_view when no normalized PlaidTransaction rows exist. The fix commit touched no tests, and loangen-agent/tests/ does not exist at base, so the entire gold test file was authored from scratch and all 9 tests (both f2p and p2p) live in it. Tests drive the public entry point build_bank_report_view with the four DB seams mocked; compute_plaid_analytics is pure so the six success tests run the real preview-builder path and assert on actual filtered report content. No task-specific env vars are needed (import succeeds on the base image's baked-in credentials). NULL = 6 failed / 3 passed (reward 0, every f2p emits a per-test FAILED line); ORACLE = 9/9 passed (reward 1); runtime <1s, offline. VERIFIER-BUG FIX (2026-07-13): the original test_patch used bare MagicMock() fakes for _account/_data_document, which leaked a MagicMock into pydantic for any correct implementation that consulted a collaborator (PlaidAccount / PlaidItem record) for institution_name when the raw item block was absent, unfairly failing test_fallback_builds_report_when_raw_item_missing. Fix: converted the returned fakes to typed types.SimpleNamespace with explicit attributes (institution_name=None where absent); the query-builder class seams stay as MagicMocks because uninitialized beanie makes real-class-method patching impossible. Also hardened the Dockerfile to collapse git history to a single 'import codebase' commit (rm -rf .git && git init) so the base state cannot be mined via reflog / dangling objects. Difficulty: medium-leaning-easy for a frontier model — the symptom string ('No bank transactions found') maps directly to the single raise site, so localization is trivial. Anti-grep protection comes from behavior, not location: the success tests require correct primary-account resolution (selected flag drives which account, not accounts[0]), transaction filtering to that account with exact counts, carried-through institution/user/business names, and tolerance of a missing raw item block. A stub or presence-only fallback fails all six f2p. It is not a hard task, but it is not grep-solvable."
+}

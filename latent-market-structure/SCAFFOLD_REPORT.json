@@ -1,0 +1,130 @@
+{
+  "task": "latent-market-structure",
+  "pattern": "latent-bug",
+  "instance_id": "loangenus-latent-market-structure",
+  "repo": "boostmoney/loangenus",
+  "base_commit": "04b8abc5515c22bdb7a2da32bf2719c8ac702174",
+  "task_image": "silver-task-latent-market-structure",
+  "defect_count": 5,
+  "calibration_note": "Set to 5 defects — the frozen corridor. Live gate on this exact substrate: 4 defects = Opus 5/10 (one above the 1-4 corridor), 6 defects = Opus 0/10. Added a 5th to the 4-defect build. No clean NEW boundary-direction site remained in the three files (the other comparisons self-heal at their boundary: ltv `<= max_ltv`, dscr `>= min_dscr`, interest_expense/ads `> 0` are all guarded so both branches agree at the edge; `economic_occupancy == 1.0` is None-unsafe for any inequality; `total_w <= 0` risks ZeroDivision). Per team-lead guidance the 5th is therefore the twin `.strip()` empty-guard slip in _exit_strategy_score (single-token, None-safe, engine-reachable, boundary-adjacent) — its dedicated f2p was already authored and is reclassified p2p->f2p. Only format_application_loan_type remains un-planted (its `raw is None` had an obvious tell); its test stays p2p. Three of the five are pure boundary-direction slips (the discriminator Sonnet is 0-for-~25 on).",
+  "disjoint_from": "cre-scoring-latent-bugs (facts.py: resolve_appraisal_value/resolve_document_fico/resolve_tenant_concentration/resolve_construction_budget; scoring.py: weighted_score). This task uses only market.py, structure.py, lender_match.py — disjoint files AND disjoint functions; the two may ship together.",
+  "f2p": [
+    "tests/test_market_structure_boundaries.py::TestResolveStateLength::test_over_length_state_is_rejected",
+    "tests/test_market_structure_boundaries.py::TestResolveStateLength::test_invalid_business_code_falls_through_to_valid_owner",
+    "tests/test_market_structure_boundaries.py::TestInterestCoverageZeroNoi::test_zero_noi_has_no_coverage_via_interest_expense",
+    "tests/test_market_structure_boundaries.py::TestInterestCoverageZeroNoi::test_zero_noi_has_no_coverage_via_debt_service",
+    "tests/test_market_structure_boundaries.py::TestStructureBlankInputs::test_blank_purpose_and_type_yield_no_purpose_score",
+    "tests/test_market_structure_boundaries.py::TestStructureBlankInputs::test_blank_exit_picture_yields_no_exit_score",
+    "tests/test_market_structure_boundaries.py::TestLenderMatchLoanSizeCeiling::test_request_equal_to_max_amount_is_in_size"
+  ],
+  "p2p": [
+    "tests/test_market_structure_boundaries.py::TestFormatLoanTypeBlank::test_blank_loan_type_renders_placeholder",
+    "tests/test_market_structure_boundaries.py::TestResolveStateAdjacent::test_valid_two_letter_code_is_returned",
+    "tests/test_market_structure_boundaries.py::TestResolveStateAdjacent::test_no_state_yields_empty",
+    "tests/test_market_structure_boundaries.py::TestResolveStateAdjacent::test_market_intelligence_uses_valid_state",
+    "tests/test_market_structure_boundaries.py::TestInterestCoverageAdjacent::test_positive_noi_over_interest_expense",
+    "tests/test_market_structure_boundaries.py::TestInterestCoverageAdjacent::test_negative_noi_has_no_coverage",
+    "tests/test_market_structure_boundaries.py::TestInterestCoverageAdjacent::test_debt_service_proxy_coverage",
+    "tests/test_market_structure_boundaries.py::TestStructureAdjacent::test_permanent_purpose_scores_high",
+    "tests/test_market_structure_boundaries.py::TestStructureAdjacent::test_bridge_purpose_scores_mid",
+    "tests/test_market_structure_boundaries.py::TestStructureAdjacent::test_projected_stabilization_gives_exit_score",
+    "tests/test_market_structure_boundaries.py::TestStructureAdjacent::test_exit_keyword_gives_exit_score",
+    "tests/test_market_structure_boundaries.py::TestLenderMatchAdjacent::test_request_strictly_inside_band_is_in_size",
+    "tests/test_market_structure_boundaries.py::TestLenderMatchAdjacent::test_request_below_min_is_out_of_size",
+    "tests/test_market_structure_boundaries.py::TestFormatLoanTypeAdjacent::test_known_type_label",
+    "tests/test_market_structure_boundaries.py::TestFormatLoanTypeAdjacent::test_unknown_type_titlecased",
+    "tests/test_lender_product_match.py::TestLenderProductMatch::test_term_matches_business_term_loan_only",
+    "tests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_bridge_application_product_fit",
+    "tests/test_oak_hill_qualification.py::TestOakHillQualificationEngine::test_oak_hill_term_app_filters_non_matching_products",
+    "tests/test_cre_qualification.py::TestCreQualificationScoring::test_rich_cre_context_enables_deal_score_and_cross_checks",
+    "tests/test_qualification_recommendation.py::TestRecommendationBands::test_strong_proceed_at_80"
+  ],
+  "f2p_count": 7,
+  "p2p_count": 20,
+  "null_reward": 0,
+  "oracle_reward": 1,
+  "partial_reward": 0,
+  "new_visible_failures": 0,
+  "git_history_len": 1,
+  "litmus_result": "PASS: leak-check (history len 1, git diff empty, 5 defects present, format line at base); zero new visible failures (7 failed / 166 passed / 24 skipped identical clean vs planted); NULL reward 0 with all 7 f2p reporting per-test FAILED lines (no collection ERRORs) and 20/20 p2p passing (20/27); ORACLE reward 1 (27/27); PARTIAL (3 of 5 reversed: M1+S2+LM1) reward 0 (25/27, the 2 unfixed empty-guard defects' f2p stay red with assertion failures).",
+  "base_defects_visible_suite": "GREEN vs clean HEAD: full suite is 7 failed / 166 passed / 24 skipped at BOTH clean 04b8abc and base+5-defects — identical failure set (test_inbound_calls, test_document_ingestion_readiness, test_ingestion_stale_recovery, test_document_report are pre-existing rot, unrelated to this task). Zero new failures introduced by the defects.",
+  "env": {},
+  "env_note": "No task-specific env required. The CRE qualification suite is deterministic and offline; the JWT_SECRET_KEY baked into loangenus-repo:v1 is sufficient. No pydantic Settings ValidationError appears for the six run_script.sh files.",
+  "defects": [
+    {
+      "id": 1,
+      "file": "loangen-agent/agent/services/cre_qualification/market.py",
+      "function": "resolve_state",
+      "flavor": "boundary-direction",
+      "boundary_changed": "if len(st) == 2  ->  if len(st) >= 2",
+      "edge_input": "a state string whose length is not exactly two, e.g. resolve_state({\"state\": \"TEXAS\"}, {}) or a 3-char business code shadowing a valid owner code resolve_state({\"state\": \"TXX\"}, {\"state\": \"TX\"})",
+      "wrong_output": "returns the malformed value verbatim (\"TEXAS\" / \"TXX\") instead of skipping it (returning \"\" or falling through to the valid owner \"TX\"), so downstream market metrics are the default / wrong-state set",
+      "why_no_visible_test_catches": "Visible tests feed only valid 2-char states (MA / CA) or no state at all; == and >= agree for length 0 and 2, and no test feeds a code of length 1 or >2.",
+      "None_safe": "yes — len() of a str is always defined"
+    },
+    {
+      "id": 2,
+      "file": "loangen-agent/agent/services/cre_qualification/structure.py",
+      "function": "_purpose_score",
+      "flavor": "empty-guard",
+      "boundary_changed": "if not text.strip()  ->  if not text",
+      "edge_input": "a deal with both loan_purpose and loan_type blank, e.g. compute_structure_score(..., loan_purpose=\"\", loan_type=\"\", facts={}) -> components['loan_purpose']",
+      "wrong_output": "returns 75.0 (generic purpose score) instead of None; the composed text always contains a separating space so `not text` is never true",
+      "why_no_visible_test_catches": "Every visible test supplies a loan_type (and usually a purpose); the composed text is never blank, so text.strip() and text agree.",
+      "None_safe": "yes — text is always a str"
+    },
+    {
+      "id": 3,
+      "file": "loangen-agent/agent/services/cre_qualification/structure.py",
+      "function": "_exit_strategy_score",
+      "flavor": "empty-guard (twin of #2, opposite polarity, different function)",
+      "boundary_changed": "if text.strip()  ->  if text",
+      "edge_input": "a fully blank exit picture (no purpose, no exit_strategy, no projected_stabilization / economic_occupancy signal), e.g. compute_structure_score(..., loan_purpose=\"\", loan_type=\"\", facts={}) -> components['exit_strategy']",
+      "wrong_output": "returns 65.0 instead of None; `text` (containing a space) is always truthy",
+      "why_no_visible_test_catches": "Visible tests always supply a purpose or a stabilization signal / occupancy, so an earlier branch fires or text.strip() is non-empty.",
+      "None_safe": "yes — text is always a str"
+    },
+    {
+      "id": 4,
+      "file": "loangen-agent/agent/services/cre_qualification/structure.py",
+      "function": "compute_interest_coverage",
+      "flavor": "boundary-direction",
+      "boundary_changed": "if noi is None or noi <= 0  ->  if noi is None or noi < 0",
+      "edge_input": "a break-even property with NOI exactly 0, e.g. compute_interest_coverage(noi=0.0, interest_expense=50_000.0, annual_debt_service=None) or via the debt-service proxy path",
+      "wrong_output": "returns a coverage ratio of 0.0 instead of None (coverage undefined for zero NOI)",
+      "why_no_visible_test_catches": "Visible tests feed strictly positive NOI; the guard is None-safe because `noi is None` is checked first, so a break-even (0.0) is the only diverging input and no test supplies it.",
+      "None_safe": "yes — noi is None short-circuits before the comparison"
+    },
+    {
+      "id": 5,
+      "file": "loangen-agent/agent/services/cre_qualification/lender_match.py",
+      "function": "compute_lender_match_score",
+      "flavor": "boundary-direction",
+      "boundary_changed": "if product.min_amount <= loan_amount <= product.max_amount  ->  if product.min_amount <= loan_amount < product.max_amount",
+      "edge_input": "a loan request landing exactly on the product maximum, e.g. compute_lender_match_score(product(min=25_000, max=100_000, 'Conventional'), loan_amount=100_000, ...) == 73",
+      "wrong_output": "loan_size drops from 100 to 20 (request treated as out-of-range), lowering the match score to 47; only the request == max_amount case diverges (the min-side and self-healing ltv/dscr boundaries do not)",
+      "why_no_visible_test_catches": "Engine callers request amounts strictly inside the band (70k/80k/1.2M against 25k-5M products); none lands on exactly min or max.",
+      "None_safe": "yes — numeric comparison of provided floats"
+    }
+  ],
+  "not_planted": [
+    {
+      "file": "loangen-agent/agent/services/cre_qualification/lender_match.py",
+      "function": "format_application_loan_type",
+      "considered": "if not raw  ->  if raw is None",
+      "why_not_used": "most findable / least substantive (a cosmetic \"\" vs \"—\" display bug, with an obvious `raw is None` tell right after `raw = (...).strip()`). Its gold tests (test_blank_loan_type_renders_placeholder + the format adjacent tests) stay pass_to_pass — green at the planted state."
+    }
+  ],
+  "fairness_audit": "Gold tests use ZERO mocks: pure typed inputs (SimpleNamespace product + pydantic LoanProductCriteria with explicit field values, plain dicts) exactly as the existing test_lender_product_match / test_bridge_broadway suites do — no MagicMock can leak into pydantic or business logic, and a near-correct implementation reading legitimate attributes cannot crash. All five defected functions are live and reachable from run_qualification_engine, and each corrupt edge is engine-reachable via ordinary inputs (over-length state, blank purpose/type, break-even NOI, max-sized request); _in_list's empty-list branch was deliberately NOT used because its caller guards it with `if asset_classes:`, making that specific edge unreachable through the engine. Alternative-implementation audit: each f2p asserts observable behavior (reject over-length code / no-basis-is-None / zero-NOI-is-undefined / max-is-in-band), not the oracle's exact operator — e.g. `len(st) == 2`, `len(st) in (2,)`, or a two-letter regex all pass; `noi <= 0` or `not text.strip()` in any equivalent spelling all pass — so no test over-fits the oracle. The 14 gold pass_to_pass adjacent tests pin the value just off each edge, so an over-broad rewrite that discards the valid case cannot pass.",
+  "leak_checks": {
+    "git_history_len": 1,
+    "git_diff_empty": true,
+    "git_status_clean": true,
+    "defects_present_in_worktree": 5,
+    "format_line_at_base": true,
+    "gold_tests_absent_from_base_tree": true,
+    "gold_tests_enter_only_via_test_patch": true,
+    "instruction_leaks": "names loangen-agent/agent/services/cre_qualification/ and the three files market.py/structure.py/lender_match.py (calibrated file-level localization, matching cre-scoring-latent-bugs) — but no function names, thresholds, boundary directions, trigger values, or defect count"
+  },
+  "resistance_assessment": "Targeting Sonnet 0/5, Opus 1-4/10 at the frozen 5-defect corridor (4 measured 5/10, 6 measured 0/10 on this substrate). Five single-token slips across three thin, named files, with NO local failing test to point the way (the full existing suite is green at base+defects). Naming the files is the fairness lever, not an easiness giveaway: Sonnet scores 0/5 even with files named because the work is locating each `==`/`>=`, `<=`/`<`, and dropped-`.strip()` slip by reading the boundary math and realizing which untested edge each one bites — and Sonnet is 0-for-~25 lifetime on boundary-direction plants specifically (3 of the 5 here). Difficulty is construction, not obscurity: breadth (7 f2p across all 3 files; an agent that fixes only the literal reported example fails multiple hidden tests), distance (resolve_state and compute_interest_coverage surface >=2 call-hops downstream in market_score / structure_score / deal_score), and interaction (the two structure .strip() slips sit on the same compute_structure_score call for a sparse deal — fixing one leaves the other's failure mode). Each slip reads as plausible code with no dangling import, comment, or new name."
+}

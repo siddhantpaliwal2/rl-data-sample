@@ -1,0 +1,120 @@
+{
+  "task": "calls-v2",
+  "style": "commit-derived (multi-defect), hardened rebuild of inbound-call-routing",
+  "fix_commit": "768b4c873606a1ee8e6f9e192167359abc35b5ab",
+  "base_commit": "9c4590385df3bac827fc5b3082b25c70e274da39",
+  "difficulty": "hard",
+  "defect_areas": [
+    "inbound return-call routing (voice-registration eligibility + last-dialer preference + initiator carry)",
+    "voice-presence persistence (voice_registered on wire + presence record, preserved across flag-less updates)",
+    "user-facing error copy (AI non-US, direct-call not configured, voice-token outage)",
+    "API access-log noise suppression (QuietPollingAccessLogFilter over 3 polling paths, 2xx/3xx only)"
+  ],
+  "solution_patch_files": [
+    "loangen-agent/agent/chat_server.py",
+    "loangen-agent/agent/core/database.py",
+    "loangen-agent/agent/core/logging_setup.py",
+    "loangen-agent/agent/services/calls/inbound.py",
+    "loangen-agent/agent/services/calls/presence.py",
+    "loangen-agent/agent/services/calls/router.py",
+    "loangen-agent/agent/services/calls/schemas.py",
+    "loangen-agent/agent/services/calls/service.py",
+    "loangen-agent/agent/services/smbcontacts/service.py"
+  ],
+  "excluded_from_scope": [
+    "loangen-app/** (frontend TSX/TS changes in the same commit)"
+  ],
+  "gold_test_files": [
+    "loangen-agent/tests/test_inbound_calls.py (modified: +PickInboundTargetSessionTests, +BuildInboundTwimlRoutingTests, -2 InboundRoute-constructing tests)",
+    "loangen-agent/tests/test_presence.py (new)",
+    "loangen-agent/tests/test_call_messaging.py (new)",
+    "loangen-agent/tests/test_logging_setup.py (new; commit's own test with base-missing import moved into bodies)"
+  ],
+  "f2p_count": 14,
+  "f2p": [
+    "tests/test_inbound_calls.py::PickInboundTargetSessionTests::test_skips_sessions_that_cannot_receive_voice",
+    "tests/test_inbound_calls.py::PickInboundTargetSessionTests::test_no_target_when_no_session_can_receive_voice",
+    "tests/test_inbound_calls.py::BuildInboundTwimlRoutingTests::test_prefers_the_tab_that_placed_the_last_outbound_call",
+    "tests/test_inbound_calls.py::BuildInboundTwimlRoutingTests::test_skips_unregistered_dialer_and_rings_a_registered_tab",
+    "tests/test_inbound_calls.py::BuildInboundTwimlRoutingTests::test_plays_unavailable_when_no_tab_can_receive_voice",
+    "tests/test_presence.py::VoiceRegistrationPresenceTests::test_presence_records_voice_registration",
+    "tests/test_presence.py::VoiceRegistrationPresenceTests::test_status_only_update_preserves_voice_registration",
+    "tests/test_presence.py::VoiceRegistrationPresenceTests::test_explicit_deregistration_clears_voice_registration",
+    "tests/test_call_messaging.py::UserFacingCallErrorTests::test_ai_call_rejection_hides_internal_config",
+    "tests/test_call_messaging.py::UserFacingCallErrorTests::test_direct_call_rejection_hides_internal_config",
+    "tests/test_call_messaging.py::UserFacingCallErrorTests::test_voice_token_outage_message_is_user_facing",
+    "tests/test_logging_setup.py::QuietPollingFilterTests::test_suppresses_successful_polling",
+    "tests/test_logging_setup.py::QuietPollingFilterTests::test_keeps_polling_errors",
+    "tests/test_logging_setup.py::QuietPollingFilterTests::test_keeps_other_routes"
+  ],
+  "p2p_count": 18,
+  "p2p": [
+    "tests/test_inbound_calls.py::InboundConfigTests::test_lender_client_identity",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_format_unavailable_message_with_business",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_disabled_without_flag",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_context_message_ai",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_context_message_direct",
+    "tests/test_inbound_calls.py::InboundConfigTests::test_inbound_workspace_title_direct",
+    "tests/test_inbound_calls.py::BuildDialClientTwimlTests::test_includes_client_and_timeout",
+    "tests/test_inbound_calls.py::ResolveInboundRouteTests::test_no_outbound_history_raises",
+    "tests/test_inbound_calls.py::ResolveInboundRouteTests::test_stale_outbound_raises",
+    "tests/test_inbound_calls.py::ResolveInboundRouteTests::test_routes_to_last_dialer_lender",
+    "tests/test_inbound_calls.py::BuildInboundTwimlTests::test_unknown_caller_plays_message",
+    "tests/test_inbound_calls.py::OnInboundDialCompleteTests::test_no_answer_plays_unavailable",
+    "tests/test_inbound_calls.py::MarkInboundAnsweredTests::test_marks_human_active_with_direct_context",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_appraisal_without_doc_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_pfs_and_credit",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_normalize_enum_style_type",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_project_score_not_inflated_without_budget",
+    "tests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget"
+  ],
+  "selected_test_files_to_run": [
+    "tests/test_inbound_calls.py",
+    "tests/test_presence.py",
+    "tests/test_call_messaging.py",
+    "tests/test_logging_setup.py",
+    "tests/test_required_docs.py"
+  ],
+  "env": {
+    "CALLS_INBOUND_ENABLED": "true",
+    "CALLS_DIRECT_ENABLED": "true",
+    "TWILIO_CALLS_ENABLED": "true",
+    "TWILIO_ACCOUNT_SID": "ACtest0000000000000000000000000000",
+    "TWILIO_AUTH_TOKEN": "test-auth-token",
+    "TWILIO_API_KEY_SID": "SKtest0000000000000000000000000000",
+    "TWILIO_API_KEY_SECRET": "test-api-secret",
+    "TWILIO_TWIML_APP_SID": "APtest0000000000000000000000000000",
+    "PUBLIC_API_BASE_URL": "https://api.test.invalid",
+    "TWILIO_OUTBOUND_CALLER_ID": "+15550001111"
+  },
+  "env_rationale": "Reuses the round-1 10-var Twilio/CALLS_* dummy set. Opens the inbound/direct gates and satisfies pydantic Settings validation when the calls + smbcontacts services import. The routing tests additionally patch agent.services.calls.service.inbound_calls_enabled directly, so they are hermetic regardless of the gate. All credentials are dummy stubs; the suite never constructs a Twilio or Cartesia client.",
+  "null_reward": 0,
+  "null_required_passed": "18/32",
+  "oracle_reward": 1,
+  "oracle_required_passed": "32/32",
+  "partial_fix_reward": 0,
+  "partial_fix_required_passed": "20/32 (smbcontacts messaging area only)",
+  "alt_impl_reward": 1,
+  "git_history_len": 1,
+  "leak_checks": {
+    "git_history_len_in_image": 1,
+    "git_diff_empty_in_image": true,
+    "fix_commit_reachable_in_image": false,
+    "reflog_len_in_image": 1,
+    "visible_base_suite_green": "20 passed (test_inbound_calls.py + test_required_docs.py at base, no test_patch)",
+    "new_test_files_absent_pre_patch": true,
+    "base_inbound_py_has_voice_registered": false
+  },
+  "fairness_audit": "Every f2p asserts observable behavior, not the oracle's implementation. Collaborators are patched at their defining module (agent.services.calls.inbound._find_last_outbound_to_phone, presence.get_redis_client, smbcontacts.service._get_lender_contact/_normalize_contact_phone/direct_call_configured, service.direct_calls_enabled) or replaced with typed fakes (a real _FakeRedis with get/set/scan_iter; a MagicMock last-outbound call session with explicit string attributes). No `patch(consumer.Collaborator, MagicMock())` module-attr patching. The alternative-implementation audit was run in-image: a materially different oracle (InboundRoute field renamed `initiator_session` with a default, pick kwarg renamed `preferred` with a comprehension filter, preserve logic via `get_presence(...) or {}`, reworded user messages, and a string-parsing rather than regex log filter) scores reward 1 / 32-32. The only names the hidden suite pins are the two published contract names (`voice_registered` presence/heartbeat key and `agent.core.logging_setup.QuietPollingAccessLogFilter`), both underivable from the base codebase and both allowed under the rule-3 gold-test exception. The routing preference and initiator carry are validated only through emitted TwiML, so the internal field/kwarg names are free.",
+  "litmus_result": "PASS (with caveat). The instruction is a symptom report: no file paths, no function names, no defect count/shape, no fix mechanism, no threshold/routing tables. The only published identifiers are the wire field `voice_registered` and the test-imported filter class. A strong dev could locate the affected subsystem (the calls services) within a couple of minutes — unavoidable for a faithful report of real user-visible symptoms — but cannot reconstruct the fix without cross-file diagnosis: they must infer that a voice-registration signal has to be threaded wire -> heartbeat -> presence with preserve-on-omit, that routing must both filter on it and prefer the last dialer while carrying the initiator through the resolved route, and must find all three operator-facing messages themselves. This is a categorical improvement over round-1, whose instruction published the exact function signatures, eligibility rule, presence semantics, and dataclass field (the diff in prose).",
+  "verification": {
+    "task_image": "silver-task-calls-v2",
+    "null": "required passed: 18/32, reward 0, every f2p emits a per-test FAILED line (no collection ERRORs)",
+    "oracle": "required passed: 32/32, reward 1",
+    "partial_messaging_only": "required passed: 20/32, reward 0",
+    "alt_implementation": "required passed: 32/32, reward 1",
+    "visible_base_suite": "20 passed (agent-visible tests at base, test_patch not applied)",
+    "runtime": "<1s, no network"
+  },
+  "notes": "Hardened rebuild of inbound-call-routing (round-1: sonnet 5/5, TOO EASY because the instruction published a function-level contract). v2 widens to the commit's full backend defect surface (routing + presence + messaging + logging across 9 source files), tests at the observable-behavior level so the internal contract is no longer leaked, and rewrites the instruction as a symptoms-only support escalation. Git history is neutralized to a single import commit so the upstream fix is unrecoverable."
+}

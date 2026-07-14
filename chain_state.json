@@ -1,0 +1,149 @@
+{
+ "plaid-bank-report": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0,
+    "note": "orphan-polluted job dir purged; 5 real completions all reward 0.0 (see chain transcript); pristine rerun queued post-opus"
+   },
+   "opus": {
+    "solved": 10,
+    "total": 10,
+    "errors": 0
+   }
+  },
+  "finished_at": "2026-07-13T15:45:14.570238",
+  "verdict": "TOO_EASY:opus_10of10"
+ },
+ "ingestion-stale-v2": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 0,
+    "total": 10,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T16:07:37.324189"
+ },
+ "cre-scoring-latent-bugs": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 0,
+    "total": 10,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_HARD:opus_0of10",
+  "finished_at": "2026-07-13T16:00:55.675348"
+ },
+ "forge-contacts-invites": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 4,
+    "total": 5,
+    "errors": 1
+   }
+  },
+  "verdict": "TOO_EASY:sonnet_4of5",
+  "finished_at": "2026-07-13T15:54:45.888108"
+ },
+ "calls-v2": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 0,
+    "total": 5,
+    "errors": 0
+   },
+   "opus": {
+    "solved": 8,
+    "total": 10,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_EASY:opus_8of10",
+  "finished_at": "2026-07-13T16:05:04.021531"
+ },
+ "chat-context-builder": {
+  "stages": {
+   "nop": {
+    "solved": 0,
+    "total": 1,
+    "errors": 0
+   },
+   "oracle": {
+    "solved": 1,
+    "total": 1,
+    "errors": 0
+   },
+   "sonnet": {
+    "solved": 4,
+    "total": 5,
+    "errors": 0
+   }
+  },
+  "verdict": "TOO_EASY:sonnet_4of5",
+  "finished_at": "2026-07-13T16:07:16.001536"
+ }
+}
