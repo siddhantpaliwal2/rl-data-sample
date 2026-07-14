@@ -139,8 +139,9 @@ Everything below assumes Docker is running and you are at the repo root.
 `FROM <repo>-repo:v1` (e.g. `loangenus-repo:v1`) - a pre-built image of the
 underlying **private** codebase with dependencies installed. These images are
 not on a public registry and cannot be rebuilt from this repo alone; they are
-distributed out-of-band with this sample. If `docker images | grep
--- -repo:v1` comes back empty, request the image bundle from the maintainer
+distributed out-of-band with this sample. If
+`docker images --format '{{.Repository}}:{{.Tag}}' | grep repo:v1`
+comes back empty, request the image bundle from the maintainer
 before proceeding - `docker build` will otherwise fail at the `FROM` line with
 `pull access denied`.
 
