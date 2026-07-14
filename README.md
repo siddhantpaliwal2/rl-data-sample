@@ -9,7 +9,12 @@ injected only at grade time, so they can never be read or weakened.
 
 ## Task format
 
-Each directory under `tasks/` follows the [Harbor](https://github.com/harbor-framework/harbor) / SWE-bench-Pro task spec:
+Each directory under `tasks/` follows the
+[Harbor](https://github.com/harbor-framework/harbor) task spec (Harbor is the
+Terminal-Bench team's harness, and this layout is Terminal-Bench lineage); the
+grading config inside `tests/` follows SWE-bench-Pro conventions
+(`config.json`'s instance/commit/patch/test fields and the
+run_script + parser pattern):
 
 ```
 tasks/<name>/
