@@ -80,39 +80,6 @@ the 5 planted defects and consistently miss the same one or two - the reward
 signal concentrates exactly on the defects that require cross-code derivation
 rather than search.
 
-## Reproducing these numbers
-
-Everything below assumes Docker is running and you are at the repo root.
-
-**0. Base images (read this first).** Every task Dockerfile starts
-`FROM <repo>-repo:v1` (e.g. `loangenus-repo:v1`) - a pre-built image of the
-underlying **private** codebase with dependencies installed. These images are
-not on a public registry and cannot be rebuilt from this repo alone; they are
-distributed out-of-band with this sample. If `docker images | grep
--- -repo:v1` comes back empty, request the image bundle from the maintainer
-before proceeding - `docker build` will otherwise fail at the `FROM` line with
-`pull access denied`.
-
-**1. Get an Anthropic API key into your shell** (a probe attempt typically
-costs $0.40–1.60 and is hard-capped at $3):
-
-```sh
-export ANTHROPIC_API_KEY=sk-ant-...
-```
-
-**2. Build a task image:**
-
-```sh
-docker build -t latent-credit-normalize tasks/latent-credit-normalize/environment
-```
-
-**3. Install the agent harness:**
-
-```sh
-uv tool install mini-swe-agent
-uv pip install --python "$(uv tool dir)/mini-swe-agent/bin/python" fastapi orjson
-```
-
 ## How the harness works
 
 The probe harness is two pieces: **mini-swe-agent** (the solver) and
@@ -154,11 +121,43 @@ at once (see the concurrency caution below). The solve counts in the table are
 literally `grep -c '"reward": 1'` over those result files; the `.grade.log`
 files are what we used to see which planted defect stopped each failed run.
 
-**4. Run the harness.** `harness/run_attempt.py <task> <attempt-no> <out-dir>`
-is one complete probe attempt: it starts a fresh container from the task image,
-runs mini-swe-agent inside it, grades the result with the hidden verifier, and
-writes the result JSON + full trajectory + grade log to `<out-dir>`. One task's
-row in the table:
+## Reproducing these numbers
+
+Everything below assumes Docker is running and you are at the repo root.
+
+**0. Base images (read this first).** Every task Dockerfile starts
+`FROM <repo>-repo:v1` (e.g. `loangenus-repo:v1`) - a pre-built image of the
+underlying **private** codebase with dependencies installed. These images are
+not on a public registry and cannot be rebuilt from this repo alone; they are
+distributed out-of-band with this sample. If `docker images | grep
+-- -repo:v1` comes back empty, request the image bundle from the maintainer
+before proceeding - `docker build` will otherwise fail at the `FROM` line with
+`pull access denied`.
+
+**1. Get an Anthropic API key into your shell** (a probe attempt typically
+costs $0.40–1.60 and is hard-capped at $3):
+
+```sh
+export ANTHROPIC_API_KEY=sk-ant-...
+```
+
+**2. Build a task image:**
+
+```sh
+docker build -t latent-credit-normalize tasks/latent-credit-normalize/environment
+```
+
+**3. Install the agent harness:**
+
+```sh
+uv tool install mini-swe-agent
+uv pip install --python "$(uv tool dir)/mini-swe-agent/bin/python" fastapi orjson
+```
+
+**4. Run the harness.** One invocation of
+`harness/run_attempt.py <task> <attempt-no> <out-dir>` is one complete probe
+attempt (container, agent, hidden-verifier grading, artifacts - see "How the
+harness works" above). One task's row in the table:
 
 ```sh
 PY="$(uv tool dir)/mini-swe-agent/bin/python"
@@ -170,7 +169,7 @@ for i in $(seq 1 5); do PROBE_MODEL=anthropic/claude-sonnet-4-6 "$PY" harness/ru
 
 To reproduce the whole table, run both probes for every task directory (build
 each image first per step 2). Attempts are independent, so parallelize with
-`xargs -P` - just keep total concurrent attempts under ~15 machine-wide:
+`xargs -P`:
 
 ```sh
 PY="$(uv tool dir)/mini-swe-agent/bin/python"
