@@ -55,6 +55,13 @@
    "opus": "4/10",
    "sonnet": "1/5",
    "gate": "mini-swe clean 0 crashes (anthropic/claude-opus-4-8 + claude-sonnet-4-6 direct; OpenRouter credits exhausted mid-batch, key-equivalent model)"
+  },
+  {
+   "task": "xrepo-txenrich2-latent",
+   "repo": "transaction-enrichment-python",
+   "opus": "0/10",
+   "sonnet": "0/4 (job stopped once mathematically <=1/5)",
+   "gate": "mini-swe clean 0 crashes (anthropic direct); 0/10 too-hard ACCEPTED by user; fairness-audited: both universal-miss defects pinned by adjacent sibling eq(1) idiom and same-line NACH-SAL-CR-SAL- literal, gold tests assert domain-obvious behavior"
   }
  ],
  "regate_pending": [],
@@ -106,7 +113,8 @@
  "CRITICAL_FINDING": "All banks calibrated against mini-swe-agent (weak scaffold). User re-measured with strong Claude-Code+Opus scaffold: results BIMODAL \u2014 extractors 8/10, normalize 7/10, fintools 7/8, loangenai 7/7, market 6/6 (ALL too easy); correlation 0/8, phone 0/7, txenrich 0/1 (too hard). NOTHING in 1-4 band. Single-token latent recipe does not produce a middle band under a strong solver. Must retune to the strong scaffold.",
  "gate_decision": "mini-swe-agent (AfterQuery platform probe standard); re-gating at LOW concurrency to avoid crash-contamination",
  "new_candidates_to_gate": [
-  "xrepo-txenrich2-latent (sonnet formality running; opus 0/10 clean ACCEPTED by user as too-hard-ok after fairness audit)"
+  "xrepo-txenrich3-latent (buffer, being built by subagent - fresh bank pair)"
  ],
- "gate_of_record": "mini-swe-agent opus x10, band <=6/10 (Claude Code strong-scaffold run DISREGARDED per user)"
+ "gate_of_record": "mini-swe-agent opus x10, band <=6/10 (Claude Code strong-scaffold run DISREGARDED per user)",
+ "status": "COMPLETE: 10/10 banked (2026-07-13)"
 }

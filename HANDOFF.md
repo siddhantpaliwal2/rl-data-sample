@@ -60,7 +60,17 @@ harbor run -p <path-to-task> -o jobs --job-name <name>--sonnet-c2 \
 - Each repo needs its base image present (`docker images | grep repo:v1`): `loangenus-repo:v1`, `correlation-repo:v1`,
   `loangenai-repo:v1`, `txenrich-repo:v1`, `fiu-repo:v1`, `finscore-repo:v1` all exist. Task images (`*-task:v1`) exist too.
 
-## 4. Current state
+## 4. Current state — **PIPELINE COMPLETE: 10/10 BANKED (2026-07-13)**
+Tasks 9-10 gated on the Anthropic key directly (`.harbor_env`, `-m anthropic/claude-opus-4-8` /
+`claude-sonnet-4-6`) after OpenRouter credits ran out mid-batch (402s crashed a whole wave — top up at
+openrouter.ai/settings/credits before any AfterQuery-naming re-gate). Zero crashes in all final runs.
+- **#9 xrepo-fiu-latent** (fiu_adapter, Java): opus 4/10, sonnet 1/5 → banked.
+- **#10 xrepo-txenrich2-latent**: opus 0/10 clean, sonnet 0/4 → banked (user accepted too-hard;
+  fairness-audited — the two universal-miss defects are pinned by adjacent-sibling/same-line evidence).
+- Rejected this batch (all TOO EASY, single-file defect clusters — see BANK.json lessons):
+  latent-doc-qa 7/10, latent-doc-scoring ~80% partial, xrepo-loangenai2-latent 8/8.
+- Buffer: `xrepo-txenrich3-latent` being built (fresh bank pair) — gate before use.
+
 **8 BANKED** (in `approved/`, all mini-swe clean or crash-affected-but-≤6):
 | task | repo | opus |
 |---|---|---|

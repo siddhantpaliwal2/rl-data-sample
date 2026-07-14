@@ -8,5 +8,6 @@
  "xrepo-correlation-latent": "348c5c844e26e661e78f1d297571e5640ddd0f9085f301af0ae918126f80bef2",
  "xrepo-fiu-latent": "99c762e32ca2b53d6975648867cd9cfca57327ad1872b04166f72b51763c554d",
  "xrepo-loangenai-latent": "07c2439627e6597e1a13f291920f1e492831e6d933f59191e29e77d013b54289",
- "xrepo-txenrich-latent": "a84c3c7c4f2ed9b1ef79b5da5a555665daef26e2f1df72b1f0ebe2e2e4568763"
+ "xrepo-txenrich-latent": "a84c3c7c4f2ed9b1ef79b5da5a555665daef26e2f1df72b1f0ebe2e2e4568763",
+ "xrepo-txenrich2-latent": "5809d7d0fb7a05019d5553d66de4a81356109df88e22a1f1cbf151a26b7b0247"
 }

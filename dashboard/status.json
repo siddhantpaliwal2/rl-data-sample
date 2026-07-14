@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-07-13 20:35:15",
+ "generated_at": "2026-07-13 21:02:48",
  "jobs": [
   {
    "job": "array-difficulty",
@@ -7944,34 +7944,48 @@
    "trials": [
     {
      "name": "7e9kxnX",
-     "state": "running",
-     "reward": null,
-     "steps": 31,
-     "cost": 0.85
+     "state": "done",
+     "reward": 0,
+     "steps": 50,
+     "cost": 1.61
     },
     {
      "name": "9nACBkP",
-     "state": "running",
-     "reward": null,
-     "steps": 27,
-     "cost": 0.7
+     "state": "done",
+     "reward": 0,
+     "steps": 117,
+     "cost": 5.55
     },
     {
      "name": "DX5s6j3",
+     "state": "done",
+     "reward": 0,
+     "steps": 140,
+     "cost": 5.92
+    },
+    {
+     "name": "HQ35MpE",
      "state": "running",
      "reward": null,
-     "steps": 38,
-     "cost": 0.93
+     "steps": 45,
+     "cost": 1.16
+    },
+    {
+     "name": "xPUJNRq",
+     "state": "done",
+     "reward": 0,
+     "steps": 107,
+     "cost": 4.81
     }
    ],
    "solved": 0,
-   "done": 0,
+   "done": 4,
    "errors": 0,
-   "total": 3,
-   "cost": 2.48,
+   "total": 5,
+   "cost": 19.05,
    "finished": false,
    "void": false,
-   "mtime": 1783999853.4250045
+   "mtime": 1784001447.8293338
   }
  ],
  "tasks": [
@@ -8041,32 +8055,22 @@
    "spend": 0
   },
   {
-   "task": "xrepo-txenrich2-latent",
-   "state": "verified",
-   "f2p": 5,
-   "p2p": 14,
-   "null_reward": 0,
-   "oracle_reward": 1,
-   "ease_gate": {
-    "job": "xrepo-txenrich2-latent--sonnet-a1",
-    "solved": 0,
-    "total": 3,
-    "finished": false
-   },
-   "diff_gate": {
-    "job": "xrepo-txenrich2-latent--opus-c3",
-    "solved": 0,
-    "total": 8,
-    "finished": false
-   },
-   "verdict": "easiness probe running",
+   "task": "xrepo-txenrich3-latent",
+   "state": "scaffolded",
+   "f2p": null,
+   "p2p": null,
+   "null_reward": null,
+   "oracle_reward": null,
+   "ease_gate": null,
+   "diff_gate": null,
+   "verdict": "probes pending",
    "note": "",
-   "spend": 25.45
+   "spend": 0
   }
  ],
  "summary": {
-  "total_spend": 477.04,
-  "trials_running": 31,
+  "total_spend": 493.61,
+  "trials_running": 29,
   "candidates": 0,
   "too_easy": 0
  }
