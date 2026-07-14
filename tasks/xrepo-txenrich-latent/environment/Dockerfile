@@ -16,8 +16,9 @@ RUN git config --global --add safe.directory /app
 # Plant the subtle boundary / structural defects into the working tree. Byte
 # level replacement preserves the files' original CRLF endings, so only the five
 # changed lines differ. Every ordinary transaction still enriches correctly;
-# only untested exact-length, sentinel-amount, adjacency and fixed-layout inputs
-# come out wrong.
+# only untested exact-length, adjacency, account-type and fixed-layout string
+# inputs (a specific reference length, an offsetting row, a savings-salary path,
+# a capture-group / segment slice) come out wrong.
 RUN python3 - <<'PLANT_EOF'
 import sys
 BASE = "/app/categorizationapp/categorizationapp/BankScripts"
@@ -29,8 +30,8 @@ EDITS = [
            b'transactions.type.eq("CREDIT") & (accountType=="SAVINGS") , "SALARY"'),
     (HDFC, b'transactions.description.eq(transactions.description.shift(periods=1)) & transactions.description.str.contains("IMPS|NEFT|',
            b'transactions.description.eq(transactions.description.shift(periods=2)) & transactions.description.str.contains("IMPS|NEFT|'),
-    (ICICI, b'transactions.amount.isin([1,-1])',
-            b'transactions.amount.isin([1])'),
+    (ICICI, b'pat="TRFR (TO|FROM):(.*)", index=1',
+            b'pat="TRFR (TO|FROM):(.*)", index=0'),
     (ICICI, b'transactions.description.str.count("/").eq(3)  , sep_by_(transactions.description,3,4)',
             b'transactions.description.str.count("/").eq(3)  , sep_by_(transactions.description,2,3)'),
 ]

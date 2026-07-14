@@ -31,7 +31,10 @@ from minisweagent.models import get_model
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 TASKS = REPO_ROOT / "tasks"
-MODEL_NAME = "anthropic/claude-opus-4-8"  # difficulty probe; use claude-sonnet-4-6 for the easiness probe
+import os
+
+# difficulty probe by default; set PROBE_MODEL=anthropic/claude-sonnet-4-6 for the easiness probe
+MODEL_NAME = os.environ.get("PROBE_MODEL", "anthropic/claude-opus-4-8")
 
 task, attempt, out_dir = sys.argv[1], sys.argv[2], pathlib.Path(sys.argv[3])
 out_dir.mkdir(parents=True, exist_ok=True)

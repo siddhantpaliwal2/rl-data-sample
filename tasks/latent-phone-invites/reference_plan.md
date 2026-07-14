@@ -44,11 +44,26 @@ a direct call with **zero mocks**.
    strict normalizer. Edge: `normalize_phone_to_e164("00442079460958")` raises
    `ValueError` instead of returning `+442079460958`.
 
-4. `loan_types.py` `loan_type_label` — the humanization fallback `.title()`
-   changed to `.capitalize()`, so a multi-word legacy id gets only its first word
-   capitalized. Only reached for ids **not** in the current catalog; the 20 known
-   ids all return their exact label from the loop. Edge: `loan_type_label(
-   "hard_money")` returns `"Hard money"` instead of `"Hard Money"`.
+4. `loan_types.py` `loan_type_label` — the humanization fallback
+   `.replace("_", " ").title()` had its separator emptied to
+   `.replace("_", "").title()`, so a multi-word legacy id is rendered with its
+   words run together (the underscore is deleted rather than turned into a space).
+   Only reached for ids **not** in the current catalog; the 20 known ids all return
+   their exact label from the loop. The correct side is pinned by the repo-wide
+   humanization idiom `.replace("_", " ").title()` (~10 occurrences across
+   `array/`, `documents/report/`, `cre_qualification/`, `smbinvites/`), the
+   strongest pin class. Edge: `loan_type_label("hard_money")` returns `"Hardmoney"`
+   instead of `"Hard Money"`.
+
+   Round-2 softening note: the original shape here was `.title()` -> `.capitalize()`
+   ("Hard money"). Across 10 mini-swe-agent probes that defect was missed 9/10 —
+   not because it was underivable (the idiom pin above is strong) but because agents
+   read the line and dismissed the off-catalog label path as out of scope. The shape
+   was re-cast to the run-together form (a more jarring, unambiguous symptom that also
+   removes the `.title()`/`.capitalize()` correct-side ambiguity) and the instruction
+   now carries a concrete "Hardmoney -> Hard Money" observation, lifting this defect's
+   find-rate out of the outlier band. The intended fairness gate is now defect 2
+   (possible-match tiebreak, missed 7/10 across the same probes), left byte-identical.
 
 5. `loan_types.py` `resolve_loan_type` — the exact-id branch `return value.lower()`
    changed to `return value`, echoing the raw casing instead of the canonical
@@ -61,8 +76,10 @@ a direct call with **zero mocks**.
 ## Oracle fix
 
 `solution/solve.sh` reverse-applies the defect patch, restoring `if default:`,
-`possible_matches[0]`, `value[2:]`, `.title()`, and `return value.lower()`. That is
-the minimal correct fix; any equivalent edge correction also passes the gold tests.
+`possible_matches[0]`, `value[2:]`, `.replace("_", " ").title()`, and
+`return value.lower()`. That is the minimal correct fix; any equivalent edge
+correction also passes the gold tests (e.g. a manual word-by-word title-caser for
+`loan_type_label`).
 
 ## Verifier design
 

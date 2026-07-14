@@ -18,7 +18,7 @@ throwaway JUnit-5 run). Because the siblings are installed, verify-time
 and rebuilds only the graded module.
 
 The environment `Dockerfile` plants a small **defect patch** (five single-token
-edits across four files) into the working tree, deletes **all** shipped test
+edits across five files) into the working tree, deletes **all** shipped test
 sources (`webservice/src/test`, `jws-signature/src/test`) plus the stale warm
 test class, then collapses history
 (`rm -rf .git && git init && commit "import codebase"`). The shipped tests are
@@ -30,13 +30,19 @@ The gold tests (`FiuBoundaryTest.java`, JUnit 5) are injected only at grade time
 from `config.json`'s `test_patch`. They feed the exact edge inputs the defects
 corrupt and assert the correct outputs.
 
-## Defects planted (5 — 2 EASY + 3 MEDIUM, five distinct shapes)
+## Defects planted (5 — 1 EASY + 4 MEDIUM, five distinct shapes)
 
-1. **[EASY] Calendar field mapping** — `utils/DateTimeUtil.getAddedDate`
-   `c.add(Calendar.DATE, days)` → `c.add(Calendar.MONTH, days)`. Adding N *days*
-   shifts the month instead. Pinned on-line: the argument is `days` and the very
-   next line is `c.add(Calendar.MONTH, month)`, so `days` must map to the day
-   field. Live: consent-expiry and FI-data-range derivation call this.
+1. **[MEDIUM] Base64 alphabet (URL-safe vs standard)** — `utils/Base64Decoder.getDecodedObject`
+   `Base64.getUrlDecoder()` → `Base64.getDecoder()`. The helper decodes JWS/JWT
+   compact payloads (its sole caller passes `signedConsent.split("\.")[1]`),
+   which are base64url per RFC 7515; the standard decoder rejects the URL-safe
+   characters `-`/`_`, so any signed-consent payload whose encoding contains them
+   throws instead of decoding. Pinned by the sole caller
+   (`ConsentArtifactServiceImpl`), which decodes the *same* `split("\.")[1]`
+   payload with `getUrlDecoder()` one line earlier, and by the base64url nature
+   of JWS. Fires only on payloads containing `-`/`_`; plain `[A-Za-z0-9]`
+   encodings decode identically under both alphabets. Live: consent-artifact
+   detached-payload decode / signature verification.
 
 2. **[MEDIUM] Token index** — `service/consentinit/ConsentInitServiceImpl.validateCustomerId`
    `customerId.trim().split("@")[1]` → `[0]`. A `user@aa-handle` virtual address
@@ -66,17 +72,19 @@ corrupt and assert the correct outputs.
    downstream (`DateTime.parse(...)`), which a 12-hour render breaks. Live: used
    for every outgoing timestamp (consent/FI notifications, error responses).
 
-Distinct shapes (calendar-field, token-index, regex-quantifier,
+Distinct shapes (base64-alphabet, token-index, regex-quantifier,
 trim-normalization, hour-format) with no grep-able twin, no syntax breaks, no
-crashes. Interaction: defects 1 and 5 both sit on `getAddedDate`'s output path
-(it calls `getISOTimeStamp`), so a partial fix of one still leaves the timestamp
-wrong — the day-field f2p is asserted date-only to stay isolated.
+crashes. The five sites now sit in five distinct files (Base64Decoder,
+ConsentInitServiceImpl, GeneralConstants, DateTimeUtil, NullEmptyUtils), so no
+two defects are co-located or co-discovered. `getAddedDate` is left fully
+correct and is exercised only by pass_to_pass tests (zero-delta, month-add and
+day-add), which also pin that the day-field path is undisturbed.
 
 ## Oracle fix
 
 `solution/solve.sh` reverse-applies the defect patch (temp-file form), restoring
-`Calendar.DATE`, `split("@")[1]`, `{12}`, `val.trim().isEmpty()`, and `HH`. Any
-equivalent boundary correction also passes the gold tests.
+`Base64.getUrlDecoder()`, `split("@")[1]`, `{12}`, `val.trim().isEmpty()`, and
+`HH`. Any equivalent boundary correction also passes the gold tests.
 
 ## Verifier design (multi-module Maven adaptation)
 
@@ -92,21 +100,23 @@ equivalent boundary correction also passes the gold tests.
   `{"tests":[{"name","status"}]}` with `FiuBoundaryTest::<method>` ids.
 - `fail_to_pass` = 5 gold boundary tests (one per defect; fail at base+defects,
   pass once corrected).
-- `pass_to_pass` = 12 gold tests pinning unchanged behavior on the same helpers
-  (null/empty-string/literal-"null"/list emptiness, malformed and wrong-version
-  UUID rejection, zero-delta and month-add dates, the date/minute/second of a
-  timestamp, null-VUA handling, and the leading `@` prepend).
+- `pass_to_pass` = 14 gold tests pinning unchanged behavior on the same helpers
+  (plain-alphabet base64 decode, null/empty-string/literal-"null"/list emptiness,
+  malformed and wrong-version UUID rejection, zero-delta / month-add / day-add
+  dates, the date/minute/second of a timestamp, null-VUA handling, and the
+  leading `@` prepend).
 
 ## Verification ladder (all offline, `--network none`) — RESULTS
 
 - In-image leak check: `git log --oneline | wc -l` == 1, `git diff` empty, no
-  `src/test/*.java` present, defects live in the tree but absent from history
-  (`git log -p | grep Calendar.DATE` == 0). PASS.
+  `src/test/*.java` present, defects live in the tree but the oracle values are
+  absent from history (`git log -p | grep 'getUrlDecoder().decode(body'` == 0,
+  `grep 'split("@")[1]'` == 0, `grep '{12}'` == 0). PASS.
 - NULL run (planted image): reward 0; all 5 f2p FAILED with per-test lines (no
-  collection errors); all 12 p2p passed (12/17). PASS.
-- ORACLE run (`solve.sh`): reward 1, 17/17 pass. PASS.
-- PARTIAL run (fix 2 of 5 — the calendar-field and trim defects): reward 0
-  (14/17; the other 3 f2p still fail). PASS.
+  collection errors); all 14 p2p passed (14/19). PASS.
+- ORACLE run (`solve.sh`): reward 1, 19/19 pass. PASS.
+- PARTIAL run (fix 2 of 5 — the base64 and trim defects): reward 0 (16/19; the
+  other 3 f2p still fail). PASS.
 
 ## Fairness
 
@@ -115,13 +125,16 @@ equivalent boundary correction also passes the gold tests.
   `new ConsentInitServiceImpl()` whose tested method touches no injected field —
   no mocks, no Spring context, no reflection, no private-name coupling — so no
   test encodes the oracle's implementation. Each oracle value is derivable from
-  the code itself (an adjacent `days`/`month` pairing, a `size()>1` guard plus
+  the code itself (the sole caller decoding the same `split("\.")[1]` payload with
+  `getUrlDecoder()` plus the base64url nature of JWS, a `size()>1` guard plus
   `"@"` re-prepend, the canonical UUID layout, a lenient sibling emptiness
   clause, a UTC ISO-8601 literal + repo-wide `HH`), never from convention alone;
   any equivalent boundary fix passes.
-- Cross-defect isolation: the day-field f2p asserts only the date prefix so the
-  co-located hour defect can't perturb it; each f2p fails solely on its own
-  asserted behaviour (NULL run: exactly 5 failures, 0 errors).
+- Cross-defect isolation: the five sites are in five distinct files with no
+  shared output path, so each f2p fails solely on its own asserted behaviour
+  (NULL run: exactly 5 failures, 0 errors). The base64 f2p only fires on a
+  payload whose base64url contains `-`/`_`; a plain-alphabet p2p pins that
+  ordinary payloads are unaffected.
 - The instruction is a report-level symptom writeup with two highlighted
   examples (valid ids rejected; afternoon timestamps read as morning) and names
   no file, method, line, edit direction, trigger value, or defect count. An

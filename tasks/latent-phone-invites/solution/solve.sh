@@ -44,7 +44,7 @@ index 580cae7..548b6ef 100644
          if choice["id"] == loan_type_id:
              return choice["label"]
 -    return loan_type_id.replace("_", " ").title()
-+    return loan_type_id.replace("_", " ").capitalize()
++    return loan_type_id.replace("_", "").title()
 
 
  def resolve_loan_type(raw: str) -> Optional[str]:
@@ -98,7 +98,7 @@ index 580cae7..548b6ef 100644
          if choice["id"] == loan_type_id:
              return choice["label"]
 -    return loan_type_id.replace("_", " ").title()
-+    return loan_type_id.replace("_", " ").capitalize()
++    return loan_type_id.replace("_", "").title()
 
 
  def resolve_loan_type(raw: str) -> Optional[str]:

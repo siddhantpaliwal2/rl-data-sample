@@ -17,9 +17,9 @@ WORKDIR /app
 
 # Plant the subtle boundary defects into the working tree. Every kept path still
 # behaves correctly with these applied; only untested exact-edge inputs (a
-# days-vs-months calendar field, the token after '@' vs before it, the final
-# UUID group length, a whitespace-only string, and a 24- vs 12-hour clock) are
-# wrong.
+# standard vs URL-safe base64 alphabet, the token after '@' vs before it, the
+# final UUID group length, a whitespace-only string, and a 24- vs 12-hour clock)
+# are wrong.
 RUN cat > /tmp/defects.patch <<'PATCH_EOF'
 diff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java
 index 41a3098..6925b08 100644
@@ -47,19 +47,23 @@ index e6e340f..961a7e8 100644
                  }else{
                      log.error("Invalid Customer ID : " + customerId);
                      throw new DataException(HttpStatus.BAD_REQUEST.getReasonPhrase(), "Invalid Customer ID",
+diff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java
+index 7b4c171..7458c4a 100644
+--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java
++++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java
+@@ -16,7 +16,7 @@ public class Base64Decoder {
+
+     public static Object getDecodedObject( String body, Class<?> type ) throws JWSSignatureException
+     {
+-        return JsonUtil.convertJsonToObject(new String(Base64.getUrlDecoder().decode(body), StandardCharsets.UTF_8),
++        return JsonUtil.convertJsonToObject(new String(Base64.getDecoder().decode(body), StandardCharsets.UTF_8),
+                 type);
+
+     }
 diff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java
-index b0dd085..00c2a9a 100644
+index b0dd085..97b6a24 100644
 --- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java
 +++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java
-@@ -28,7 +28,7 @@ public class DateTimeUtil {
-         DateTime date = new DateTime(currentMilliSecond, DateTimeZone.UTC);
-         Calendar c = Calendar.getInstance();
-         c.setTime(date.toDate());
--        c.add(Calendar.DATE, days);
-+        c.add(Calendar.MONTH, days);
-         c.add(Calendar.MONTH, month);
-         return getISOTimeStamp(new DateTime(c.getTimeInMillis(), DateTimeZone.UTC).getMillis());
-     }
 @@ -45,7 +45,7 @@ public class DateTimeUtil {
 
      public static String getISOTimeStamp( Long milliSecond )

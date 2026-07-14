@@ -32,16 +32,20 @@ bar — the grader's edge tests are.
    AUTO_PAYMENT_BOUNCE sibling that keeps `shift(periods=1)`. A genuine offsetting
    credit is misfiled as AUTO_PAYMENT_BOUNCE.
 
-4. `ICICI.py` account-verification — `amount.isin([1,-1])` narrowed to `isin([1])`.
-   Pinned by the pervasive `isin([1,-1])` sentinel idiom (31 occurrences). A -1
-   verification debit stops being ACCOUNT_VERIFICATION.
+4. `ICICI.py` direction-prefixed transfer payee — `py_extract(description,
+   pat="TRFR (TO|FROM):(.*)", index=1)` slipped to `index=0`. The pattern has two
+   capture groups; the payee is the second (the `(.*)` after the colon, 0-based
+   column index 1). `index=0` grabs the `(TO|FROM)` direction keyword instead, so
+   the counterparty name comes out as the bare direction word (e.g. "From") or, when
+   that word is one or two letters ("To"), is blanked to "" by a later short-token
+   cleanup. Pinned by the same-line pattern structure (name = the second group).
 
 5. `ICICI.py` BIL/INFT payee extraction — `sep_by_(description,3,4)` shifted to
    `(2,3)`. Pinned by the same-line `count("/").eq(3)` guard (four segments, payee
    last). The payee comes out as the numeric reference instead of the name.
 
-Five distinct slip shapes (length-eq, string-casing, shift-adjacency, list-
-membership, slice-index) — no grep-able twins.
+Five distinct slip shapes (length-eq, string-casing, shift-adjacency, capture-group
+index, slice-index) — no grep-able twins.
 
 ## Oracle fix
 
@@ -76,6 +80,7 @@ structural correction also passes the gold tests, which assert observable output
   observable category/subcategory/payee output, so alternative correct fixes pass.
 - All five defected branches are reachable from `Controller.categorize` (live
   code). Deterministic, offline, no secrets.
-- Instruction is an abstract symptom report naming the BankScripts directory and
-  the two affected bank scripts, but no function names, line numbers, boundary
-  directions, trigger values, or defect count.
+- Instruction is a support-forum thread digest: three anonymized user posts plus a
+  maintainer note describing only the observable symptoms (wrong category / sub-tag
+  / payee on specific edge rows). It names no bank, file, function, line number,
+  boundary direction, or defect count — symptoms only.

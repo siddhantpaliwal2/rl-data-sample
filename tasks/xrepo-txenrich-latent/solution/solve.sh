@@ -18,8 +18,8 @@ FIXES = [
            b'transactions.type.eq("CREDIT") & (accountType=="SAVING") , "SALARY"'),
     (HDFC, b'transactions.description.eq(transactions.description.shift(periods=2)) & transactions.description.str.contains("IMPS|NEFT|',
            b'transactions.description.eq(transactions.description.shift(periods=1)) & transactions.description.str.contains("IMPS|NEFT|'),
-    (ICICI, b'transactions.amount.isin([1])',
-            b'transactions.amount.isin([1,-1])'),
+    (ICICI, b'pat="TRFR (TO|FROM):(.*)", index=0',
+            b'pat="TRFR (TO|FROM):(.*)", index=1'),
     (ICICI, b'transactions.description.str.count("/").eq(3)  , sep_by_(transactions.description,2,3)',
             b'transactions.description.str.count("/").eq(3)  , sep_by_(transactions.description,3,4)'),
 ]
