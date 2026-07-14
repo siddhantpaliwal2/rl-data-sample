@@ -100,7 +100,7 @@
   {
    "task": "xrepo-loangenai2-latent",
    "verdict": "TOO_EASY opus 8/8 (killed early, cap 6 already exceeded)",
-   "lesson": "sibling of 6/10 loangenai; single-file loan_offer_generator_v1.py cluster - \u0430\u0433ents grep the named workflow file; single-file clusters too easy even in big repos"
+   "lesson": "sibling of 6/10 loangenai; single-file loan_offer_generator_v1.py cluster - agents grep the named workflow file; single-file clusters too easy even in big repos"
   }
  ],
  "CRITICAL_FINDING": "All banks calibrated against mini-swe-agent (weak scaffold). User re-measured with strong Claude-Code+Opus scaffold: results BIMODAL \u2014 extractors 8/10, normalize 7/10, fintools 7/8, loangenai 7/7, market 6/6 (ALL too easy); correlation 0/8, phone 0/7, txenrich 0/1 (too hard). NOTHING in 1-4 band. Single-token latent recipe does not produce a middle band under a strong solver. Must retune to the strong scaffold.",
