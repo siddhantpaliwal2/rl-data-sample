@@ -4,59 +4,50 @@
   {
    "task": "latent-phone-invites",
    "repo": "loangenus",
-   "sonnet": "0/5",
    "opus": "1/10",
-   "strict_corridor": true
-  },
-  {
-   "task": "latent-market-structure",
-   "repo": "loangenus",
-   "sonnet": "1/5 (1 errored trial)",
-   "opus": "6/10",
-   "strict_corridor": false
-  },
-  {
-   "task": "latent-financial-tools",
-   "repo": "loangenus",
-   "sonnet": "0/4",
-   "opus": "4/10",
-   "strict_corridor": true
-  },
-  {
-   "task": "xrepo-correlation-latent",
-   "repo": "correlation-core",
-   "sonnet": "0/5",
-   "opus": "1/10",
-   "strict_corridor": true
-  },
-  {
-   "task": "xrepo-loangenai-latent",
-   "repo": "loan-genai-backend",
-   "sonnet": "0/5",
-   "opus": "6/10",
-   "strict_corridor": false
-  },
-  {
-   "task": "latent-credit-normalize",
-   "repo": "loangenus",
-   "sonnet": "0/5",
-   "opus": "3/10",
-   "strict_corridor": true,
-   "note": "re-gated on restored build (fresh evidence)"
+   "gate": "mini-swe clean"
   },
   {
    "task": "xrepo-txenrich-latent",
    "repo": "transaction-enrichment-python",
-   "sonnet": "0/5",
    "opus": "1/10",
-   "strict_corridor": true
+   "gate": "mini-swe clean"
   },
   {
    "task": "latent-doc-extractors",
    "repo": "loangenus",
-   "sonnet": "0/5",
    "opus": "1/10",
-   "strict_corridor": true
+   "gate": "mini-swe clean"
+  },
+  {
+   "task": "latent-credit-normalize",
+   "repo": "loangenus",
+   "opus": "3/10",
+   "gate": "mini-swe clean"
+  },
+  {
+   "task": "latent-financial-tools",
+   "repo": "loangenus",
+   "opus": "4/10",
+   "gate": "mini-swe (6 crashes in run)"
+  },
+  {
+   "task": "latent-market-structure",
+   "repo": "loangenus",
+   "opus": "6/10",
+   "gate": "mini-swe (7 crashes in run)"
+  },
+  {
+   "task": "xrepo-correlation-latent",
+   "repo": "correlation-core",
+   "opus": "1/10",
+   "gate": "mini-swe (8 crashes in run)"
+  },
+  {
+   "task": "xrepo-loangenai-latent",
+   "repo": "loan-genai-backend",
+   "opus": "6/10",
+   "gate": "mini-swe (4 crashes in run)"
   }
  ],
  "regate_pending": [],
@@ -89,5 +80,15 @@
    "verdict": "TOO_EASY sonnet 2/3 opus 9/10",
    "lesson": "205 LOC across 2 named files \u2014 4th small-repo confirmation"
   }
- ]
+ ],
+ "CRITICAL_FINDING": "All banks calibrated against mini-swe-agent (weak scaffold). User re-measured with strong Claude-Code+Opus scaffold: results BIMODAL \u2014 extractors 8/10, normalize 7/10, fintools 7/8, loangenai 7/7, market 6/6 (ALL too easy); correlation 0/8, phone 0/7, txenrich 0/1 (too hard). NOTHING in 1-4 band. Single-token latent recipe does not produce a middle band under a strong solver. Must retune to the strong scaffold.",
+ "gate_decision": "mini-swe-agent (AfterQuery platform probe standard); re-gating at LOW concurrency to avoid crash-contamination",
+ "new_candidates_to_gate": [
+  "xrepo-txenrich2-latent",
+  "xrepo-fiu-latent",
+  "xrepo-loangenai2-latent",
+  "latent-doc-qa",
+  "latent-doc-scoring"
+ ],
+ "gate_of_record": "mini-swe-agent opus x10, band <=6/10 (Claude Code strong-scaffold run DISREGARDED per user)"
 }
