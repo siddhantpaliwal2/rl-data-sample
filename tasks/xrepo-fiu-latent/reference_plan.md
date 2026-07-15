@@ -143,8 +143,15 @@ day-add), which also pin that the day-field path is undisturbed.
   was solved 2/3 by the Sonnet screen; the pared-back version passed 0/4
   (every trial fully graded, 19 verdicts each). The old misdirection (implying
   the date-shift helper was also wrong, when `getAddedDate` is correct and
-  p2p-only) has been removed. The Opus ×10 difficulty row still needs a re-run
-  against this instruction.
+  p2p-only) has been removed. Final gate: Sonnet 0/4, Opus 0/10 — clean, zero
+  crashes, all 10 Opus trials fully graded. Failure spread (fairness evidence):
+  base64-alphabet 10/10 and handle-index 10/10 missed (the two families the
+  instruction names only at noun level; both pinned by same-file evidence —
+  the sole caller decodes the identical payload with `getUrlDecoder()` one
+  line earlier, and the `"@" +` re-prepend / size guard sit beside the split),
+  UUID-regex precision 4/10 (over-widened fixes), whitespace-emptiness 3/10.
+  The concretely-ticketed symptoms (UUID acceptance, hour format) were fixed
+  in every trial.
 - Daytona gating note: sandboxes must be created from a snapshot pushed with
   `--cpu 2 --memory 4 --disk 10`. The default 1-GB snapshot OOM-kills the
   grade-time `mvn test` (reward 0 with zero verdicts — vacuous); an entire

@@ -90,16 +90,18 @@ first).
 | latent-doc-extractors * | loangenus | Python | 4/10 | 0/5 |
 | latent-financial-tools | loangenus | Python | 0/10 | 0/5 |
 | latent-phone-invites | loangenus | Python | 1/10 | 0/5 |
-| xrepo-fiu-latent * | fiu_adapter (264 files) | Java | see note | 0/4 |
+| xrepo-fiu-latent * | fiu_adapter (264 files) | Java | 0/10 | 0/4 |
 | xrepo-txenrich-latent | transaction-enrichment | Python | 1/10 | 0/5 |
 | xrepo-txenrich3-latent | transaction-enrichment | Python | 4/10 | 0/5 |
 | xrepo-txenrich4-latent | transaction-enrichment | Python | 0/10 | 0/5 |
 
-`xrepo-fiu-latent` note: the current instruction passed the Sonnet screen 0/4
-(all trials fully graded); its 10-attempt Opus measurement has not yet been
-re-run against the rewritten instruction. The task's mechanics (defects, gold
-tests, null/oracle) are unchanged from the version that measured Opus 1/10;
-re-run the Opus row before quoting a difficulty number for it.
+`xrepo-fiu-latent` note: the Sonnet screen is reported over 4 trials (a fifth
+was lost to a transient infra failure, not counted either way); the gate is
+decided regardless, since even a solve on a fifth trial would still pass the
+≤ 1/5 bar. Its 0/10 carries the required fairness audit: misses spread across
+distinct defects (base64 alphabet 10/10, handle-index 10/10, UUID-regex
+precision 4/10, whitespace-emptiness 3/10), each pinned by visible same-file
+evidence, and all 10 trials produced full per-test verdicts.
 
 
 
