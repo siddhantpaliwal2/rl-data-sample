@@ -129,11 +129,16 @@ data and trajectories: `sample-run/`.
 Model selection (July 2026): each lab's latest frontier coding model available
 by API — GPT-5.6 Sol (Terminal-Bench 2.1 leader) plus GPT-5.5, Gemini 3.5
 Flash (Google's strongest agentic/coding model), GLM-5.2, DeepSeek V4 Pro,
-Muse Spark 1.1, Claude Opus 4.8, and both accessible Amazon Novas. Amazon's
-Nova 2 Pro is preview-gated (not on OpenRouter or generally on Bedrock) and
-could not be included.
+Claude Opus 4.8, and both accessible Amazon Novas. Two configurations were
+run but excluded from the matrix after trace review showed their attempts
+never actually exercised the model: Meta's Muse Spark 1.1 (a key-forwarding
+fault on our side meant its agent errored on auth before doing any work) and
+aider + Opus 4.8 (aider sends a `temperature` parameter the Opus 4.8 API
+rejects, so every attempt died on the first call). Neither zero is a model
+result, so neither is reported as one. Amazon's Nova 2 Pro is preview-gated
+(not on OpenRouter or generally on Bedrock) and could not be included.
 
-### OpenCode harness — 9 models, n≈10 attempts per cell (c/n)
+### OpenCode harness — 8 models, n≈10 attempts per cell (c/n)
 
 | Model | credit-norm | doc-extract | fin-tools | phone-inv | fiu | txenr | txenr3 | txenr4 | mean pass@1 | mean pass@10 |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -143,7 +148,6 @@ could not be included.
 | glm-5.2 | 0/8 | 5/10 | 0/9 | 1/10 | 0/10 | 1/10 | 0/10 | 1/13 | 0.097 | 0.471 |
 | gemini-3.5-flash | 0/10 | 0/10 | 2/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0.025 | 0.125 |
 | deepseek-v4-pro | 0/10 | 0/10 | 0/10 | 1/10 | 0/10 | 0/14 | 0/10 | 0/10 | 0.013 | 0.125 |
-| muse-spark-1.1 | 0/10 | 0/12 | 0/10 | 0/10 | 0/10 | 0/11 | 0/10 | 0/10 | 0.000 | 0.000 |
 | nova-2-lite | 0/10 | 0/10 | 0/9 | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0.000 | 0.000 |
 | nova-premier | 0/11 | 0/10 | 0/10 | 0/9 | 0/9 | 0/10 | 0/11 | 0/10 | 0.000 | 0.000 |
 
@@ -155,7 +159,6 @@ could not be included.
 | claude-code + claude-opus-4.8 | 0/3 | 3/3 | 0/3 | 0/3 | 0/2 | 2/3 | 1/2 | 0/3 | 0.271 | 0.375 |
 | terminus-2 + gpt-5.6-sol | 0/3 | 2/3 | 0/3 | 1/4 | 0/3 | 0/3 | 1/3 | 0/3 | 0.156 | 0.344 |
 | terminus-2 + claude-opus-4.8 | 0/3 | 0/3 | 0/3 | 0/2 | 0/1 | 1/3 | 1/3 | 0/3 | 0.083 | 0.250 |
-| aider + claude-opus-4.8 | 0/3 | 0/3 | 0/2 | 0/3 | 0/3 | 0/3 | 0/2 | 0/3 | 0.000 | 0.000 |
 
 The mini-swe-agent gate table above is the third harness reference point:
 Opus 4.8 at n=10 per task scores mean pass@1 0.075 there, versus 0.100 on

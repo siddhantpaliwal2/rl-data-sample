@@ -27,13 +27,6 @@
   "pass@10": 0.0,
   "pass@3": 0.0
  },
- "opencode|muse-spark-1.1|latent-phone-invites": {
-  "n": 10,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
- },
  "opencode|nova-2-lite|xrepo-txenrich-latent": {
   "n": 10,
   "c": 0,
@@ -47,13 +40,6 @@
   "pass@1": 0.1,
   "pass@10": 1.0,
   "pass@3": 0.3
- },
- "opencode|muse-spark-1.1|xrepo-txenrich3-latent": {
-  "n": 10,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
  },
  "terminus-2|gpt-5.6-sol|xrepo-txenrich4-latent": {
   "n": 3,
@@ -153,13 +139,6 @@
   "pass@10": 1.0,
   "pass@3": 0.3
  },
- "aider|claude-opus-4.8|xrepo-txenrich3-latent": {
-  "n": 2,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
-  "pass@3": 0.0
- },
  "terminus-2|claude-opus-4.8|xrepo-txenrich4-latent": {
   "n": 3,
   "c": 0,
@@ -251,13 +230,6 @@
   "pass@10": 0.0,
   "pass@3": 0.0
  },
- "opencode|muse-spark-1.1|xrepo-txenrich4-latent": {
-  "n": 10,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
- },
  "opencode|nova-premier|xrepo-txenrich3-latent": {
   "n": 11,
   "c": 0,
@@ -293,20 +265,6 @@
   "pass@10": 0.0,
   "pass@3": 0.0
  },
- "opencode|muse-spark-1.1|latent-doc-extractors": {
-  "n": 12,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
- },
- "opencode|muse-spark-1.1|latent-credit-normalize": {
-  "n": 10,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
- },
  "opencode|nova-premier|xrepo-txenrich-latent": {
   "n": 10,
   "c": 0,
@@ -319,13 +277,6 @@
   "c": 0,
   "pass@1": 0.0,
   "pass@10": 0.0,
-  "pass@3": 0.0
- },
- "aider|claude-opus-4.8|latent-phone-invites": {
-  "n": 3,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
   "pass@3": 0.0
  },
  "codex|gpt-5.6-sol|xrepo-fiu-latent": {
@@ -377,13 +328,6 @@
   "pass@10": 0.0,
   "pass@3": 0.0
  },
- "opencode|muse-spark-1.1|xrepo-txenrich-latent": {
-  "n": 11,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
- },
  "opencode|gemini-3.5-flash|latent-financial-tools": {
   "n": 10,
   "c": 2,
@@ -412,13 +356,6 @@
   "pass@10": 0.0,
   "pass@3": 0.0
  },
- "aider|claude-opus-4.8|latent-doc-extractors": {
-  "n": 3,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
-  "pass@3": 0.0
- },
  "opencode|nova-premier|latent-credit-normalize": {
   "n": 11,
   "c": 0,
@@ -431,13 +368,6 @@
   "c": 0,
   "pass@1": 0.0,
   "pass@10": 0.0,
-  "pass@3": 0.0
- },
- "aider|claude-opus-4.8|xrepo-txenrich-latent": {
-  "n": 3,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
   "pass@3": 0.0
  },
  "terminus-2|gpt-5.6-sol|latent-doc-extractors": {
@@ -455,20 +385,6 @@
   "pass@3": 1.0
  },
  "opencode|claude-opus-4.8|xrepo-txenrich4-latent": {
-  "n": 10,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
- },
- "opencode|muse-spark-1.1|latent-financial-tools": {
-  "n": 10,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": 0.0,
-  "pass@3": 0.0
- },
- "opencode|muse-spark-1.1|xrepo-fiu-latent": {
   "n": 10,
   "c": 0,
   "pass@1": 0.0,
@@ -545,13 +461,6 @@
   "pass@10": 1.0,
   "pass@3": 0.9167
  },
- "aider|claude-opus-4.8|xrepo-txenrich4-latent": {
-  "n": 3,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
-  "pass@3": 0.0
- },
  "codex|gpt-5.6-sol|latent-doc-extractors": {
   "n": 3,
   "c": 3,
@@ -587,25 +496,11 @@
   "pass@10": 0.7692,
   "pass@3": 0.2308
  },
- "aider|claude-opus-4.8|latent-credit-normalize": {
-  "n": 3,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
-  "pass@3": 0.0
- },
  "opencode|nova-premier|latent-phone-invites": {
   "n": 9,
   "c": 0,
   "pass@1": 0.0,
   "pass@10": 0.0,
-  "pass@3": 0.0
- },
- "aider|claude-opus-4.8|xrepo-fiu-latent": {
-  "n": 3,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
   "pass@3": 0.0
  },
  "terminus-2|gpt-5.6-sol|xrepo-txenrich3-latent": {
@@ -655,13 +550,6 @@
   "c": 0,
   "pass@1": 0.0,
   "pass@10": 0.0,
-  "pass@3": 0.0
- },
- "aider|claude-opus-4.8|latent-financial-tools": {
-  "n": 2,
-  "c": 0,
-  "pass@1": 0.0,
-  "pass@10": null,
   "pass@3": 0.0
  },
  "opencode|glm-5.2|xrepo-txenrich3-latent": {

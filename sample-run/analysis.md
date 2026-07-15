@@ -144,7 +144,7 @@ and Opus failed.
 
 ---
 
-# Addendum: 14-way frontier matrix (9 models × 5 harnesses, ~880 trials)
+# Addendum: 14-way frontier matrix (8 models × 4 harnesses, ~780 valid trials)
 
 The two-model comparison above was extended to every major lab's latest
 API-available frontier coding model (July 2026) and across five agent
@@ -157,9 +157,9 @@ solving one where any exists) in `trajectories-matrix/`.
 
 **1. The bank ranks the frontier cleanly.** GPT-5.6 Sol (mean pass@1 0.200,
 pass@10 0.750) > Opus 4.8 / GPT-5.5 / GLM-5.2 (≈0.10) > Gemini 3.5 Flash >
-DeepSeek V4 Pro > Muse Spark 1.1 = Nova 2 Lite = Nova Premier (0.000 over
-~240 combined trials). The ordering is stable across tasks, not driven by a
-single outlier cell.
+DeepSeek V4 Pro > Nova 2 Lite = Nova Premier (0.000 over ~160 combined
+trials). The ordering is stable across tasks, not driven by a single outlier
+cell.
 
 **2. Harness choice is worth as much as a model generation.** The same
 Opus 4.8 scores 0.075 (mini-swe), 0.100 (OpenCode), 0.271 (claude-code);
@@ -184,14 +184,14 @@ Cross-model coverage beats any single-model probe for verifiability
 evidence: the two hardest tasks were each validated by a *different*
 unexpected model.
 
-**5. Zero-rows fail for different reasons (trajectory evidence).** Muse
-Spark 1.1 explores reasonably but edits timidly — it repeatedly patches one
-or two defects, reruns the visible suite, and submits. The Novas edit
-plausible-but-wrong code and validate against the green visible suite (see
-the original two-model analysis). Gemini 3.5 Flash and DeepSeek V4 Pro
-localize partially but rarely complete all five fixes within their attempt
-budgets. Same zero, three distinct failure taxonomies — all visible in
-`trajectories-matrix/`.
+**5. Zero- and low-rows fail for different reasons (trajectory evidence).**
+The Novas edit plausible-but-wrong code and validate against the green
+visible suite (see the original two-model analysis). Gemini 3.5 Flash and
+DeepSeek V4 Pro localize partially but rarely complete all five fixes within
+their attempt budgets. Distinct failure taxonomies, all visible in
+`trajectories-matrix/`. (Muse Spark 1.1 and aider+Opus were excluded after
+trace review: their attempts died on provider auth / parameter errors before
+any model work — infrastructure faults, not model results.)
 
 **6. Task difficulty spread maps the frontier.** doc-extract is farmable by
 strong pairs (codex+Sol 3/3, claude-code+Opus 3/3), while fin-tools and
