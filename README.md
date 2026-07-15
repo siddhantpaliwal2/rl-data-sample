@@ -37,7 +37,11 @@ passes - partial fixes score 0.
 
 For convenience, `instructions/` holds a readable copy of every task's
 `instruction.md` (one file per task) so the eight agent-facing prompts can be
-skimmed side by side; the files under `tasks/` are canonical.
+skimmed side by side, and `gold-tests/` holds the extracted source of every
+task's hidden gold test suite (the exact code the verifier runs). The canonical
+copies remain `tasks/<name>/instruction.md` and the `test_patch` field inside
+`tasks/<name>/tests/config.json`; the gold tests never exist anywhere the agent
+can see them at solve time.
 
 One calibration note: `latent-doc-extractors` reward-gates four of its five
 planted defects. The fifth (a personal-financial-statement scan floor) is
