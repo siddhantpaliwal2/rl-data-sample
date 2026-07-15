@@ -35,6 +35,10 @@ tasks/<name>/
 A task rewards 1 only when **every** `fail_to_pass` and `pass_to_pass` test
 passes - partial fixes score 0.
 
+For convenience, `instructions/` holds a readable copy of every task's
+`instruction.md` (one file per task) so the eight agent-facing prompts can be
+skimmed side by side; the files under `tasks/` are canonical.
+
 One calibration note: `latent-doc-extractors` reward-gates four of its five
 planted defects. The fifth (a personal-financial-statement scan floor) is
 planted and reversed by the oracle, but no graded test distinguishes it - an
