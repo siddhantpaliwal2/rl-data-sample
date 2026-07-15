@@ -1,0 +1,1443 @@
+{
+  "schema_version": "ATIF-v1.7",
+  "session_id": "ses_09b9f1789ffe5eMcZhig0201X0",
+  "agent": {
+    "name": "opencode",
+    "version": "1.18.1",
+    "model_name": "openrouter/google/gemini-3.5-flash"
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "source": "user",
+      "message": "<uploaded_files>/app</uploaded_files>\n\n# Data-integrity audit memo: parsed credit reports vs. source PDFs\n\n**Scope:** quarterly sample audit, 40 borrower files. For each file we compared\nthe tradelines, inquiries and bureau sections produced by the credit-report PDF\nparser against a human reading of the same source PDF.\n**Result:** 34 of 40 files reconcile exactly. The remaining six show the\ndiscrepancy classes below. Every discrepancy reproduces on re-parse, so none of\nthis is OCR noise or a transient.\n\n## Findings\n\n**A.** A row whose creditor is one of the recognised filler tokens survives\ninto the report as if it were a real account - but only when the token's\nletter-case differs from its usual form. The usual form is still filtered\ncorrectly, so the screen exists; it just doesn't catch every spelling the\nbureaus emit.\n\n**B.** The same account appears twice. Two rows that are genuinely one\ntradeline - same account, creditor spelled with different capitalisation - are\nboth kept, inflating the account count. Exact-duplicate rows do collapse\ncorrectly.\n\n**C.** A genuine creditor line vanishes because it merely *begins* the way a\ndifferent kind of line begins. Lines of the other kind are rightly discarded;\nthe discard is grabbing real creditor lines along with them.\n\n**D.** A tradeline tagged for a bureau lands in no bureau section at all. The\ntag is one of the accepted spelling variants of that bureau's abbreviation;\nthe other variants we sampled attribute correctly, and untagged rows still\nbroadcast to all scored bureaus as designed.\n\n## Note for engineering\n\nThe affected stage is the deterministic line-classification and text\nnormalization logic under `loangen-agent/agent/documents/credit_pdf/` - the\ncreditor-line, bureau-tag and address/contact helpers in `normalize.py`, and\nthe artifact-rejection and de-duplication helpers in `junk_filter.py`. Same\nPDF in, same rows out, so each finding above replays from a single line of\ninput. The existing test suite is green and none of these cases move it, which\nis presumably how they shipped. Fix the classification so the findings above\nreconcile, without disturbing any file that already parses correctly.\n\nDo not modify anything under `loangen-agent/tests/`.\n\nVerify with:\n\n    cd /app/loangen-agent && python -m pytest tests -v\n"
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-07-15T06:05:03.677000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Analyzing Audit Findings**\n\nI'm currently reviewing the 40 borrower file data-integrity audit findings identified in the last quarterly sample. My focus is on understanding the scope of these issues before any remediation efforts begin, while also noting the explicit instruction not to alter any files within the `loangen-agent/tests/` directory.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_glob_JIiu0Ori2WpOGL4dDKBE",
+          "function_name": "glob",
+          "arguments": {
+            "pattern": "agent/documents/credit_pdf/*.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_glob_JIiu0Ori2WpOGL4dDKBE",
+            "content": "/app/loangen-agent/agent/documents/credit_pdf/__init__.py\n/app/loangen-agent/agent/documents/credit_pdf/validation.py\n/app/loangen-agent/agent/documents/credit_pdf/segment.py\n/app/loangen-agent/agent/documents/credit_pdf/rules_parser.py\n/app/loangen-agent/agent/documents/credit_pdf/reconcile.py\n/app/loangen-agent/agent/documents/credit_pdf/parser.py\n/app/loangen-agent/agent/documents/credit_pdf/normalize.py\n/app/loangen-agent/agent/documents/credit_pdf/models.py\n/app/loangen-agent/agent/documents/credit_pdf/mismo_builder.py\n/app/loangen-agent/agent/documents/credit_pdf/llm_fallback.py\n/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py\n/app/loangen-agent/agent/documents/credit_pdf/extract.py\n/app/loangen-agent/agent/documents/credit_pdf/detect.py\n/app/loangen-agent/agent/documents/credit_pdf/bureau_router.py"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 8540,
+        "completion_tokens": 22,
+        "cost_usd": 0.014403,
+        "extra": {
+          "reasoning_tokens": 155
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-07-15T06:05:06.624000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_Bt2rA1lIMO2K8XhN2Lm4",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Run existing tests to verify baseline status",
+                "priority": "high",
+                "status": "pending"
+              },
+              {
+                "priority": "high",
+                "status": "pending",
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D"
+              },
+              {
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)",
+                "priority": "high",
+                "status": "pending"
+              },
+              {
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Run tests to ensure everything is green and no regressions were introduced"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_Bt2rA1lIMO2K8XhN2Lm4",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 9010,
+        "completion_tokens": 228,
+        "cached_tokens": 7702,
+        "cost_usd": 0.0056193,
+        "extra": {
+          "reasoning_tokens": 50
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-07-15T06:05:08.586000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_PgWhyoA31CXVxKPp5IHX",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Run existing tests to verify baseline status",
+                "status": "in_progress",
+                "priority": "high"
+              },
+              {
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "priority": "high",
+                "status": "pending",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)"
+              },
+              {
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "priority": "high",
+                "status": "pending",
+                "content": "Run tests to ensure everything is green and no regressions were introduced"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_PgWhyoA31CXVxKPp5IHX",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 9338,
+        "completion_tokens": 230,
+        "cost_usd": 0.016221,
+        "extra": {
+          "reasoning_tokens": 16
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-07-15T06:05:09.767000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Establishing Baseline**\n\nI'm now running the existing tests to establish our baseline. This is a crucial step to understand our current performance before making any changes.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_bash_hp0yFIxgG49yxdIbqqc6",
+          "function_name": "bash",
+          "arguments": {
+            "command": "python -m pytest tests -v",
+            "workdir": "/app/loangen-agent"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_bash_hp0yFIxgG49yxdIbqqc6",
+            "content": "/usr/local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:208: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-8.3.4, pluggy-1.6.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/loangen-agent\nplugins: anyio-4.14.2, asyncio-0.24.0\nasyncio: mode=Mode.STRICT, default_loop_scope=None\ncollecting ... collected 197 items\n\ntests/test_bridge_broadway_extraction.py::TestBridgeBroadwayExtraction::test_bridge_appraisal SKIPPED [  0%]\ntests/test_bridge_broadway_extraction.py::TestBridgeBroadwayExtraction::test_broadway_appraisal SKIPPED [  1%]\ntests/test_bridge_broadway_extraction.py::TestBridgeBroadwayExtraction::test_credit_report_bureau_scores SKIPPED [  1%]\ntests/test_bridge_broadway_extraction.py::TestBridgeBroadwayExtraction::test_pfs_totals SKIPPED [  2%]\ntests/test_bridge_broadway_extraction.py::TestBridgeBroadwayExtraction::test_pl_2025_multi_column SKIPPED [  2%]\ntests/test_bridge_broadway_extraction.py::TestBridgeBroadwayExtraction::test_pl_2026_ytd SKIPPED [  3%]\ntests/test_bridge_broadway_extraction.py::TestBridgeBroadwayExtraction::test_portfolio_appraisal_merge SKIPPED [  3%]\ntests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_bridge_application_product_fit PASSED [  4%]\ntests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_liquid_assets_rejects_total_assets_mistake PASSED [  4%]\ntests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_term_construction_does_not_require_ctc_docs PASSED [  5%]\ntests/test_bridge_broadway_qualification.py::TestBridgeBroadwayQualification::test_term_construction_matches_only_term_product PASSED [  5%]\ntests/test_call_session_cleanup.py::OnAiLegEndedTests::test_ends_ai_active_session PASSED [  6%]\ntests/test_call_session_cleanup.py::OnAiLegEndedTests::test_skips_handoff_ringing_session PASSED [  6%]\ntests/test_call_session_cleanup.py::AssertNoActiveContactCallTests::test_reconciles_before_lookup PASSED [  7%]\ntests/test_cartesia_twilio_sync.py::CartesiaTwilioSyncTests::test_ensure_twilio_outbound_imports_number PASSED [  7%]\ntests/test_cartesia_twilio_sync.py::CartesiaTwilioSyncTests::test_get_effective_from_number_id_prefers_synced PASSED [  8%]\ntests/test_cartesia_twilio_sync.py::CartesiaTwilioSyncTests::test_get_effective_from_number_id_uses_config_when_not_synced PASSED [  8%]\ntests/test_config_document_intelligence.py::DocumentIntelligenceSettingsTests::test_chunk_overlap_must_be_less_than_chunk_size PASSED [  9%]\ntests/test_config_document_intelligence.py::DocumentIntelligenceSettingsTests::test_defaults_disable_ingestion_and_qa PASSED [  9%]\ntests/test_config_document_intelligence.py::DocumentIntelligenceSettingsTests::test_effective_embedding_api_version_fallback PASSED [ 10%]\ntests/test_config_document_intelligence.py::DocumentIntelligenceSettingsTests::test_ingestion_enabled_full_minimal_config PASSED [ 10%]\ntests/test_config_document_intelligence.py::DocumentIntelligenceSettingsTests::test_ingestion_enabled_requires_azure_di PASSED [ 11%]\ntests/test_config_document_intelligence.py::DocumentIntelligenceSettingsTests::test_qa_requires_ingestion PASSED [ 11%]\ntests/test_cre_field_extraction.py::TestCreFieldExtraction::test_appraisal_extracts_as_is_value PASSED [ 12%]\ntests/test_cre_field_extraction.py::TestCreFieldExtraction::test_hud_loan_amount PASSED [ 12%]\ntests/test_cre_field_extraction.py::TestCreFieldExtraction::test_rent_roll_occupancy PASSED [ 13%]\ntests/test_cre_field_extraction.py::TestCreFieldExtraction::test_t12_noi PASSED [ 13%]\ntests/test_cre_qualification.py::TestCreQualificationScoring::test_application_scoped_documents_only_in_readiness PASSED [ 14%]\ntests/test_cre_qualification.py::TestCreQualificationScoring::test_liquidity_ratio_when_pfs_and_loan PASSED [ 14%]\ntests/test_cre_qualification.py::TestCreQualificationScoring::test_minimal_context_returns_response PASSED [ 15%]\ntests/test_cre_qualification.py::TestCreQualificationScoring::test_rich_cre_context_enables_deal_score_and_cross_checks PASSED [ 15%]\ntests/test_cre_qualification.py::TestCreQualificationScoring::test_weighted_score_renormalizes_missing_components PASSED [ 16%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_accepts_real_creditor PASSED [ 16%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_one_dollar_artifact_tradeline PASSED [ 17%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_past_due_label PASSED [ 17%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_table_artifact_creditor PASSED [ 18%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_assigns_tagged_tradeline_to_one_bureau PASSED [ 18%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_broadcasts_untagged_tradelines_to_all_scored_bureaus PASSED [ 19%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_filters_junk_before_assignment PASSED [ 19%]\ntests/test_credit_pdf_upload.py::CreditReportSourceTests::test_legacy_row_without_source_is_array PASSED [ 20%]\ntests/test_credit_pdf_upload.py::CreditReportSourceTests::test_pdf_upload_row_is_not_array PASSED [ 20%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_closed_account_and_single_high_credit SKIPPED [ 21%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_credit_summary_metrics SKIPPED [ 21%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_current_accounts_capital_one SKIPPED [ 22%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_detect_xactus_format SKIPPED [ 22%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_end_to_end_mismo_and_analytics SKIPPED [ 23%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_parse_borrower_name SKIPPED [ 23%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_parse_inquiries SKIPPED [ 24%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_parse_three_bureau_scores SKIPPED [ 24%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_parse_tradelines SKIPPED [ 25%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_score_factors_exclude_range_artifacts SKIPPED [ 25%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_tradeline_creditors_not_addresses SKIPPED [ 26%]\ntests/test_credit_pdf_upload.py::XactusSamplePdfTests::test_validation_passes SKIPPED [ 26%]\ntests/test_direct_call_dtmf.py::ValidateDtmfDigitsTests::test_accepts_valid_digits PASSED [ 27%]\ntests/test_direct_call_dtmf.py::ValidateDtmfDigitsTests::test_rejects_invalid_digits PASSED [ 27%]\ntests/test_direct_call_dtmf.py::SendDirectCallDigitsTests::test_maps_twilio_failure PASSED [ 28%]\ntests/test_direct_call_dtmf.py::SendDirectCallDigitsTests::test_rejects_before_contact_answers PASSED [ 28%]\ntests/test_direct_call_dtmf.py::SendDirectCallDigitsTests::test_rejects_non_direct_call PASSED [ 29%]\ntests/test_direct_call_dtmf.py::SendDirectCallDigitsTests::test_rejects_when_keypad_disabled PASSED [ 29%]\ntests/test_direct_call_dtmf.py::SendDirectCallDigitsTests::test_sends_digits_on_live_direct_call PASSED [ 30%]\ntests/test_direct_calls.py::BuildAiOnlyMetadataTests::test_no_handoff_fields PASSED [ 30%]\ntests/test_direct_calls.py::OnDirectSmbStatusTests::test_ignores_ai_sessions PASSED [ 31%]\ntests/test_direct_calls.py::OnDirectSmbStatusTests::test_no_answer_ends_ringing_session PASSED [ 31%]\ntests/test_direct_recording.py::BuildConferenceTwimlRecordingTests::test_with_recording_includes_callback PASSED [ 32%]\ntests/test_direct_recording.py::BuildConferenceTwimlRecordingTests::test_without_recording_omits_record_attrs PASSED [ 32%]\ntests/test_direct_recording.py::DirectRecordingEnabledTests::test_disabled_by_default PASSED [ 33%]\ntests/test_direct_recording.py::DirectRecordingEnabledTests::test_enabled_when_configured PASSED [ 34%]\ntests/test_direct_recording.py::DirectRecordingEnabledTests::test_recording_callback_url_includes_session PASSED [ 34%]\ntests/test_direct_recording.py::OnDirectRecordingStatusTests::test_ignores_ai_sessions PASSED [ 35%]\ntests/test_direct_recording.py::OnDirectRecordingStatusTests::test_ignores_in_progress_status PASSED [ 35%]\ntests/test_direct_recording.py::OnDirectRecordingStatusTests::test_saves_completed_recording PASSED [ 36%]\ntests/test_direct_recording.py::OnConferenceStartedTests::test_does_not_start_before_human_bridge PASSED [ 36%]\ntests/test_direct_recording.py::OnConferenceStartedTests::test_join_event_skips_when_recording_already_exists PASSED [ 37%]\ntests/test_direct_recording.py::OnConferenceStartedTests::test_join_event_starts_recording_fallback PASSED [ 37%]\ntests/test_direct_recording.py::OnConferenceStartedTests::test_skips_second_attempt_after_first_failure PASSED [ 38%]\ntests/test_direct_recording.py::OnConferenceStartedTests::test_starts_recording_when_enabled PASSED [ 38%]\ntests/test_direct_recording.py::OnConferenceStartedTests::test_stores_conference_sid PASSED [ 39%]\ntests/test_direct_recording.py::StartConferenceRecordingTests::test_creates_recording_via_rest PASSED [ 39%]\ntests/test_direct_recording.py::StartConferenceRecordingTests::test_falls_back_to_http_when_sdk_has_no_create PASSED [ 40%]\ntests/test_direct_recording.py::StartConferenceRecordingTests::test_returns_none_when_disabled PASSED [ 40%]\ntests/test_document_ingestion_production.py::TestInviteDocumentLabelMatching::test_crm_labels_normalize_to_doc_step_keys PASSED [ 41%]\ntests/test_document_ingestion_production.py::TestInviteDocumentLabelMatching::test_doc_key_matches_uploaded_payload PASSED [ 41%]\ntests/test_document_ingestion_production.py::TestDeferIngestionWithoutApplication::test_maybe_enqueue_runs_when_application_id_present PASSED [ 42%]\ntests/test_document_ingestion_production.py::TestDeferIngestionWithoutApplication::test_maybe_enqueue_skips_without_application_id PASSED [ 42%]\ntests/test_document_ingestion_production.py::TestMergeUploadedDocumentIds::test_appends_unique_ids_preserving_order PASSED [ 43%]\ntests/test_document_ingestion_production.py::TestMergeUploadedDocumentIds::test_no_op_on_empty_payload PASSED [ 43%]\ntests/test_document_ingestion_readiness.py::GetApplicationDocumentIdsTests::test_excludes_deleted_ids_from_application_document_ids PASSED [ 44%]\ntests/test_document_ingestion_readiness.py::GetApplicationDocumentIdsTests::test_includes_linked_documents_not_in_application_document_ids PASSED [ 44%]\ntests/test_document_ingestion_readiness.py::PruneStaleApplicationDocumentIdsTests::test_prune_removes_deleted_document_ids PASSED [ 45%]\ntests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_deleted_document_ids_do_not_show_as_missing FAILED [ 45%]\ntests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_failed_documents_do_not_block_when_non_blocking_enabled FAILED [ 46%]\ntests/test_document_intelligence.py::TestPIIRedaction::test_redacts_ssn_email_phone PASSED [ 46%]\ntests/test_document_intelligence.py::TestChunking::test_chunk_text_splits_long_content PASSED [ 47%]\ntests/test_document_intelligence.py::TestStructuredExtractors::test_credit_report_fico PASSED [ 47%]\ntests/test_document_layout_extraction.py::TestTableSerialization::test_extract_gross_profit_from_rows PASSED [ 48%]\ntests/test_document_layout_extraction.py::TestTableSerialization::test_last_amount_picks_rightmost_value PASSED [ 48%]\ntests/test_document_layout_extraction.py::TestTableSerialization::test_schedule_c_row_preserves_label_and_amount PASSED [ 49%]\ntests/test_document_layout_extraction.py::TestStructuredFieldsFromLayout::test_tax_facts_merged_from_structured_fields PASSED [ 49%]\ntests/test_document_layout_extraction.py::TestLayoutRouting::test_appraisal_stays_off_layout_list_by_default PASSED [ 50%]\ntests/test_document_layout_extraction.py::TestLayoutRouting::test_personal_tax_uses_layout_when_configured PASSED [ 50%]\ntests/test_document_qa_hybrid.py::TestSearchTermExtraction::test_extracts_capitalized_phrase PASSED [ 51%]\ntests/test_document_qa_hybrid.py::TestSearchTermExtraction::test_infers_pfs_document_type PASSED [ 51%]\ntests/test_document_qa_hybrid.py::TestChunkScoring::test_phrase_match_scores_higher_than_single_term PASSED [ 52%]\ntests/test_document_qa_hybrid.py::TestHybridMerge::test_merge_promotes_keyword_hit_missing_from_vector_top PASSED [ 52%]\ntests/test_document_qa_hybrid.py::TestPFSExtraction::test_labeled_amounts_from_pfs_text PASSED [ 53%]\ntests/test_document_qa_hybrid.py::TestPFSExtraction::test_structured_pfs_fields PASSED [ 53%]\ntests/test_document_qa_hybrid.py::TestAdvisorKeywordDetection::test_pfs_phrase_in_keyword_list PASSED [ 54%]\ntests/test_document_report.py::TestReportSupport::test_credit_and_bank_excluded FAILED [ 54%]\ntests/test_document_report.py::TestReportSupport::test_report_available_when_ready PASSED [ 55%]\ntests/test_document_report.py::TestTaxReportBuilder::test_builds_gross_profit_card PASSED [ 55%]\ntests/test_document_report.py::TestTaxReportBuilder::test_no_document_excerpt_section PASSED [ 56%]\ntests/test_document_report.py::TestPlLlmReportCoercion::test_coerces_llm_payload PASSED [ 56%]\ntests/test_document_report.py::TestPlLlmReportCoercion::test_skips_document_excerpt_from_llm PASSED [ 57%]\ntests/test_document_report.py::TestCleanDisplayLabel::test_strips_form_and_schedule_references PASSED [ 57%]\ntests/test_document_report.py::TestLlmReportConfig::test_uses_llm_for_tax_when_types_empty PASSED [ 58%]\ntests/test_document_report.py::TestLlmReportConfig::test_uses_llm_only_for_listed_types PASSED [ 58%]\ntests/test_inbound_calls.py::InboundConfigTests::test_format_unavailable_message_with_business PASSED [ 59%]\ntests/test_inbound_calls.py::InboundConfigTests::test_inbound_context_message_ai PASSED [ 59%]\ntests/test_inbound_calls.py::InboundConfigTests::test_inbound_context_message_direct PASSED [ 60%]\ntests/test_inbound_calls.py::InboundConfigTests::test_inbound_disabled_without_flag PASSED [ 60%]\ntests/test_inbound_calls.py::InboundConfigTests::test_inbound_workspace_title_direct PASSED [ 61%]\ntests/test_inbound_calls.py::InboundConfigTests::test_lender_client_identity PASSED [ 61%]\ntests/test_inbound_calls.py::BuildDialClientTwimlTests::test_includes_client_and_timeout PASSED [ 62%]\ntests/test_inbound_calls.py::ResolveInboundRouteTests::test_no_outbound_history_raises PASSED [ 62%]\ntests/test_inbound_calls.py::ResolveInboundRouteTests::test_routes_to_last_dialer_lender PASSED [ 63%]\ntests/test_inbound_calls.py::ResolveInboundRouteTests::test_stale_outbound_raises PASSED [ 63%]\ntests/test_inbound_calls.py::PickInboundTargetSessionTests::test_prefers_last_outbound_dialer_session PASSED [ 64%]\ntests/test_inbound_calls.py::PickInboundTargetSessionTests::test_skips_sessions_without_voice_registration PASSED [ 64%]\ntests/test_inbound_calls.py::BuildInboundTwimlTests::test_last_dialer_offline_plays_unavailable FAILED [ 65%]\ntests/test_inbound_calls.py::BuildInboundTwimlTests::test_rings_last_dialer_not_other_lender FAILED [ 65%]\ntests/test_inbound_calls.py::BuildInboundTwimlTests::test_unknown_caller_plays_message FAILED [ 66%]\ntests/test_inbound_calls.py::OnInboundDialCompleteTests::test_no_answer_plays_unavailable PASSED [ 67%]\ntests/test_inbound_calls.py::MarkInboundAnsweredTests::test_marks_human_active_with_direct_context PASSED [ 67%]\ntests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_normalize_string_status PASSED [ 68%]\ntests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_queued_old_is_stale PASSED [ 68%]\ntests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_queued_recently_is_not_stale PASSED [ 69%]\ntests/test_ingestion_stale_recovery.py::StaleIngestionDetectionTests::test_ready_is_never_stale PASSED [ 69%]\ntests/test_ingestion_stale_recovery.py::RecoverStaleDocumentsTests::test_recovers_stale_queued_document_for_application FAILED [ 70%]\ntests/test_lender_product_match.py::TestLenderProductMatch::test_cre_deal_matches_real_estate_product PASSED [ 70%]\ntests/test_lender_product_match.py::TestLenderProductMatch::test_format_term_loan_type PASSED [ 71%]\ntests/test_lender_product_match.py::TestLenderProductMatch::test_term_matches_business_term_loan_only PASSED [ 71%]\ntests/test_lender_product_match.py::TestLenderProductMatch::test_term_still_matches_when_cre_collateral_present PASSED [ 72%]\ntests/test_logging_setup.py::test_quiet_filter_suppresses_successful_polling PASSED [ 72%]\ntests/test_logging_setup.py::test_quiet_filter_keeps_polling_errors PASSED [ 73%]\ntests/test_logging_setup.py::test_quiet_filter_keeps_other_routes PASSED [ 73%]\ntests/test_oak_hill_extraction.py::TestOakHillExtraction::test_appraisal_oak_hill_values SKIPPED [ 74%]\ntests/test_oak_hill_extraction.py::TestOakHillExtraction::test_cost_to_complete_xlsx_text SKIPPED [ 74%]\ntests/test_oak_hill_extraction.py::TestOakHillExtraction::test_qualification_engine_with_oak_hill_facts PASSED [ 75%]\ntests/test_oak_hill_extraction.py::TestOakHillExtraction::test_rehab_completed_xlsx_text SKIPPED [ 75%]\ntests/test_oak_hill_qualification.py::TestOakHillQualificationEngine::test_construction_budget_is_spent_plus_remaining PASSED [ 76%]\ntests/test_oak_hill_qualification.py::TestOakHillQualificationEngine::test_oak_hill_term_app_filters_non_matching_products PASSED [ 76%]\ntests/test_pstn_inbound_queue.py::PstnInboundQueueTests::test_in_process_fifo_when_redis_unavailable PASSED [ 77%]\ntests/test_qualification_recommendation.py::TestRecommendationBands::test_insufficient_when_score_unavailable PASSED [ 77%]\ntests/test_qualification_recommendation.py::TestRecommendationBands::test_manual_uw_band PASSED [ 78%]\ntests/test_qualification_recommendation.py::TestRecommendationBands::test_proceed_band PASSED [ 78%]\ntests/test_qualification_recommendation.py::TestRecommendationBands::test_review_band PASSED [ 79%]\ntests/test_qualification_recommendation.py::TestRecommendationBands::test_schema_backfills_from_cached_payload_without_recommendation PASSED [ 79%]\ntests/test_qualification_recommendation.py::TestRecommendationBands::test_strong_proceed_at_80 PASSED [ 80%]\ntests/test_qualification_report_pdf.py::TestQualificationReportPdf::test_generates_non_empty_pdf_from_engine_output PASSED [ 80%]\ntests/test_qualification_report_pdf.py::TestQualificationReportPdf::test_handles_minimal_insufficient_data_analysis PASSED [ 81%]\ntests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_appraisal_without_doc_type PASSED [ 81%]\ntests/test_required_docs.py::TestRequiredDocuments::test_facts_satisfy_pfs_and_credit PASSED [ 82%]\ntests/test_required_docs.py::TestRequiredDocuments::test_normalize_enum_style_type PASSED [ 82%]\ntests/test_required_docs.py::TestRequiredDocuments::test_project_score_not_inflated_without_budget PASSED [ 83%]\ntests/test_required_docs.py::TestRequiredDocuments::test_rehab_budget_satisfies_construction_budget PASSED [ 83%]\ntests/test_smb_contacts_csv_and_update.py::LoanTypeResolverTests::test_resolves_alias PASSED [ 84%]\ntests/test_smb_contacts_csv_and_update.py::LoanTypeResolverTests::test_resolves_canonical_id PASSED [ 84%]\ntests/test_smb_contacts_csv_and_update.py::LoanTypeResolverTests::test_resolves_label PASSED [ 85%]\ntests/test_smb_contacts_csv_and_update.py::LoanTypeResolverTests::test_unknown_returns_none PASSED [ 85%]\ntests/test_smb_contacts_csv_and_update.py::PhoneNormalizationTests::test_normalize_us_number PASSED [ 86%]\ntests/test_smb_contacts_csv_and_update.py::PhoneNormalizationTests::test_try_normalize_explicit_international PASSED [ 86%]\ntests/test_smb_contacts_csv_and_update.py::PhoneNormalizationTests::test_try_normalize_indian_number_without_country_code PASSED [ 87%]\ntests/test_smb_contacts_csv_and_update.py::PhoneNormalizationTests::test_try_normalize_invalid_returns_none PASSED [ 87%]\ntests/test_smb_contacts_csv_and_update.py::ImportContactsCsvTests::test_imports_row_with_optional_last_name_and_warnings PASSED [ 88%]\ntests/test_smb_contacts_csv_and_update.py::ImportContactsCsvTests::test_skips_row_missing_email PASSED [ 88%]\ntests/test_smb_contacts_csv_and_update.py::ImportContactsCsvTests::test_updates_existing_contact_mobile_on_duplicate_email PASSED [ 89%]\ntests/test_smb_contacts_csv_and_update.py::UpdateContactIdentityLockTests::test_allows_non_identity_updates_when_locked PASSED [ 89%]\ntests/test_smb_contacts_csv_and_update.py::UpdateContactIdentityLockTests::test_blocks_identity_field_when_locked PASSED [ 90%]\ntests/test_smb_contacts_csv_and_update.py::UpdateContactIdentityLockTests::test_updates_loan_amount_and_comment PASSED [ 90%]\ntests/test_smb_contacts_csv_and_update.py::UpdateContactIdentityLockTests::test_updates_mobile_with_international_number PASSED [ 91%]\ntests/test_smb_contacts_csv_and_update.py::CreateContactTests::test_creates_contact_with_required_fields PASSED [ 91%]\ntests/test_smb_invite_conversation.py::SMBInviteConversationTests::test_next_prompt_skips_time_in_business_and_monthly_revenue PASSED [ 92%]\ntests/test_smb_invite_conversation.py::SMBInviteConversationTests::test_seed_crm_hints_applies_revenue_and_tenure_silently PASSED [ 92%]\ntests/test_smb_invite_production.py::ComputeAccountActionTests::test_existing_prod PASSED [ 93%]\ntests/test_smb_invite_production.py::ComputeAccountActionTests::test_existing_uat_production_without_prod_record PASSED [ 93%]\ntests/test_smb_invite_production.py::ComputeAccountActionTests::test_existing_uat_trial PASSED [ 94%]\ntests/test_smb_invite_production.py::ComputeAccountActionTests::test_new_smb PASSED [ 94%]\ntests/test_smb_invite_production.py::InvitePasswordPolicyTests::test_accepts_strong_password PASSED [ 95%]\ntests/test_smb_invite_production.py::InvitePasswordPolicyTests::test_rejects_weak_password PASSED [ 95%]\ntests/test_smb_invite_production.py::InviteInternalLookupTests::test_invite_uat_lookup_requires_email SKIPPED [ 96%]\ntests/test_smb_invite_production.py::InviteProdAccountCheckTests::test_prod_account_check_requires_email SKIPPED [ 96%]\ntests/test_smb_invite_schemas.py::CreateInviteRequestTests::test_accepts_valid_loan_type_id PASSED [ 97%]\ntests/test_smb_invite_schemas.py::CreateInviteRequestTests::test_omitted_loan_type_id_is_none PASSED [ 97%]\ntests/test_smb_invite_schemas.py::CreateInviteRequestTests::test_rejects_unknown_loan_type_id PASSED [ 98%]\ntests/test_voice_llm_azure_config.py::VoiceLlmAzureConfigTests::test_azure_model_uses_llm_base_url PASSED [ 98%]\ntests/test_voice_llm_azure_config.py::VoiceLlmAzureConfigTests::test_non_azure_model_has_no_extra PASSED [ 99%]\ntests/test_voice_llm_azure_config.py::VoiceLlmAzureConfigTests::test_validate_requires_api_base_for_azure PASSED [100%]\n\n=================================== FAILURES ===================================\n_ BuildApplicationIngestionStatusTests.test_deleted_document_ids_do_not_show_as_missing _\n\nself = <test_document_ingestion_readiness.BuildApplicationIngestionStatusTests testMethod=test_deleted_document_ids_do_not_show_as_missing>\n\n    async def test_deleted_document_ids_do_not_show_as_missing(self) -> None:\n        app = MagicMock()\n        app.id = \"app-1\"\n        app.user_id = \"user-1\"\n        app.document_ids = [\"active-doc\", \"deleted-doc\"]\n        app.save = AsyncMock()\n    \n        active_doc = MagicMock()\n        active_doc.is_deleted = False\n        active_doc.original_filename = \"tax-return.pdf\"\n        active_doc.document_type = MagicMock(value=\"tax_return\")\n        active_doc.ingestion_status = \"ready\"\n    \n        deleted_doc = MagicMock(is_deleted=True)\n    \n        async def fake_get(doc_id: str):\n            if doc_id == \"app-1\":\n                return app\n            if doc_id == \"active-doc\":\n                return active_doc\n            if doc_id == \"deleted-doc\":\n                return deleted_doc\n            return None\n    \n        with patch(\"agent.core.config.settings\") as mock_settings:\n            mock_settings.document_ingestion_enabled = True\n            mock_settings.document_qa_enabled = True\n            mock_settings.document_qa_block_until_ready = True\n            with patch(\n                \"agent.documents.ingestion.readiness.SMBApplication.get\",\n                new=AsyncMock(side_effect=fake_get),\n            ):\n                with patch(\n                    \"agent.documents.ingestion.readiness.UserDocument.get\",\n                    new=AsyncMock(side_effect=fake_get),\n                ):\n                    with patch(\n                        \"agent.documents.ingestion.readiness.UserDocument.find\",\n                        return_value=MagicMock(to_list=AsyncMock(return_value=[])),\n                    ):\n                        with patch(\n                            \"agent.documents.ingestion.stale_recovery.recover_stale_documents_for_application\",\n                            new=AsyncMock(return_value=0),\n                        ):\n                            status = await build_application_ingestion_status(\"app-1\")\n    \n        self.assertTrue(status[\"all_ready\"])\n>       self.assertEqual(status[\"total_document_count\"], 1)\nE       AssertionError: 0 != 1\n\ntests/test_document_ingestion_readiness.py:147: AssertionError\n_ BuildApplicationIngestionStatusTests.test_failed_documents_do_not_block_when_non_blocking_enabled _\n\nself = <test_document_ingestion_readiness.BuildApplicationIngestionStatusTests testMethod=test_failed_documents_do_not_block_when_non_blocking_enabled>\n\n    async def test_failed_documents_do_not_block_when_non_blocking_enabled(self) -> None:\n        app = MagicMock()\n        app.id = \"app-1\"\n        app.user_id = \"user-1\"\n        app.document_ids = [\"ready-doc\", \"failed-doc\"]\n        app.save = AsyncMock()\n    \n        ready_doc = MagicMock()\n        ready_doc.is_deleted = False\n        ready_doc.original_filename = \"tax-return.pdf\"\n        ready_doc.document_type = MagicMock(value=\"tax_return\")\n        ready_doc.ingestion_status = IngestionStatus.READY\n        ready_doc.ingestion_updated_at = datetime.now(timezone.utc)\n    \n        failed_doc = MagicMock()\n        failed_doc.is_deleted = False\n        failed_doc.original_filename = \"hud.pdf\"\n        failed_doc.document_type = MagicMock(value=\"hud\")\n        failed_doc.ingestion_status = IngestionStatus.FAILED\n        failed_doc.ingestion_error = \"No text could be extracted\"\n        failed_doc.ingestion_updated_at = datetime.now(timezone.utc)\n    \n        async def fake_get(doc_id: str):\n            if doc_id == \"app-1\":\n                return app\n            if doc_id == \"ready-doc\":\n                return ready_doc\n            if doc_id == \"failed-doc\":\n                return failed_doc\n            return None\n    \n        with patch(\"agent.core.config.settings\") as mock_settings:\n            mock_settings.document_ingestion_enabled = True\n            mock_settings.document_qa_enabled = True\n            mock_settings.document_qa_block_until_ready = True\n            mock_settings.document_qa_failed_docs_non_blocking = True\n            with patch(\n                \"agent.documents.ingestion.readiness.SMBApplication.get\",\n                new=AsyncMock(side_effect=fake_get),\n            ):\n                with patch(\n                    \"agent.documents.ingestion.readiness.UserDocument.get\",\n                    new=AsyncMock(side_effect=fake_get),\n                ):\n                    with patch(\n                        \"agent.documents.ingestion.readiness.UserDocument.find\",\n                        return_value=MagicMock(to_list=AsyncMock(return_value=[])),\n                    ):\n                        with patch(\n                            \"agent.documents.ingestion.stale_recovery.recover_stale_documents_for_application\",\n                            new=AsyncMock(return_value=0),\n                        ):\n                            status = await build_application_ingestion_status(\"app-1\")\n    \n        self.assertTrue(status[\"all_ready\"])\n>       self.assertTrue(status[\"has_failures\"])\nE       AssertionError: False is not true\n\ntests/test_document_ingestion_readiness.py:206: AssertionError\n_______________ TestReportSupport.test_credit_and_bank_excluded ________________\n\nself = <test_document_report.TestReportSupport testMethod=test_credit_and_bank_excluded>\n\n    def test_credit_and_bank_excluded(self) -> None:\n        self.assertIn(DocumentType.CREDIT_REPORT, REPORT_EXCLUDED_DOCUMENT_TYPES)\n        self.assertIn(DocumentType.BANK_STATEMENT, REPORT_EXCLUDED_DOCUMENT_TYPES)\n        self.assertFalse(is_report_supported(DocumentType.CREDIT_REPORT))\n>       self.assertTrue(is_report_supported(DocumentType.PERSONAL_TAX_RETURN))\nE       AssertionError: False is not true\n\ntests/test_document_report.py:22: AssertionError\n______ BuildInboundTwimlTests.test_last_dialer_offline_plays_unavailable _______\n\nself = <test_inbound_calls.BuildInboundTwimlTests testMethod=test_last_dialer_offline_plays_unavailable>\n\n    async def test_last_dialer_offline_plays_unavailable(self) -> None:\n        route = InboundRoute(\n            lender_id=\"lender_a\",\n            lender_business_name=\"Lender A\",\n            contact_id=\"c1\",\n            smb_first_name=\"Jane\",\n            smb_last_name=\"Doe\",\n            smb_business_name=\"SMB\",\n            smb_phone_e164=\"+15551234567\",\n            last_outbound_call_type=\"ai\",\n            last_outbound_call_session_id=\"sess_out\",\n            last_outbound_at=datetime.now(timezone.utc),\n            last_outbound_initiator_session_id=\"browser_sess_a\",\n        )\n        with patch(\"agent.services.calls.inbound.inbound_calls_enabled\", return_value=True), patch(\n            \"agent.services.calls.service.normalize_phone_to_e164\",\n            return_value=\"+15551234567\",\n        ), patch(\n            \"agent.services.calls.service.resolve_inbound_route\",\n            new_callable=AsyncMock,\n            return_value=route,\n        ), patch(\n            \"agent.services.calls.service.pick_inbound_target_session\",\n            new_callable=AsyncMock,\n            return_value=None,\n        ), patch(\n            \"agent.services.calls.service.format_unavailable_message\",\n            return_value=\"Lender A is unavailable.\",\n        ):\n            twiml = await call_service.build_inbound_twiml(\n                caller_raw=\"+15551234567\",\n                twilio_call_sid=\"CA123\",\n            )\n    \n>       self.assertIn(\"Lender A is unavailable.\", twiml)\nE       AssertionError: 'Lender A is unavailable.' not found in '<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>This number is not accepting calls right now. Please try again later.</Say><Hangup/></Response>'\n\ntests/test_inbound_calls.py:285: AssertionError\n________ BuildInboundTwimlTests.test_rings_last_dialer_not_other_lender ________\n\nself = <test_inbound_calls.BuildInboundTwimlTests testMethod=test_rings_last_dialer_not_other_lender>\n\n    async def test_rings_last_dialer_not_other_lender(self) -> None:\n        route = InboundRoute(\n            lender_id=\"lender_a\",\n            lender_business_name=\"Lender A\",\n            contact_id=\"c1\",\n            smb_first_name=\"Jane\",\n            smb_last_name=\"Doe\",\n            smb_business_name=\"SMB\",\n            smb_phone_e164=\"+15551234567\",\n            last_outbound_call_type=\"direct\",\n            last_outbound_call_session_id=\"sess_out\",\n            last_outbound_at=datetime.now(timezone.utc),\n            last_outbound_initiator_session_id=\"browser_sess_a\",\n        )\n        created_sessions: list[MagicMock] = []\n    \n        def make_call_session(**kwargs: object) -> MagicMock:\n            session = MagicMock()\n            for key, value in kwargs.items():\n                setattr(session, key, value)\n            session.insert = AsyncMock()\n            created_sessions.append(session)\n            return session\n    \n        with patch(\"agent.services.calls.inbound.inbound_calls_enabled\", return_value=True), patch(\n            \"agent.services.calls.service.normalize_phone_to_e164\",\n            return_value=\"+15551234567\",\n        ), patch(\n            \"agent.services.calls.service.resolve_inbound_route\",\n            new_callable=AsyncMock,\n            return_value=route,\n        ), patch(\n            \"agent.services.calls.service.pick_inbound_target_session\",\n            new_callable=AsyncMock,\n            return_value=\"browser_sess_a\",\n        ), patch(\n            \"agent.services.calls.service.CallSession\",\n            side_effect=make_call_session,\n        ), patch.object(\n            call_service, \"_record_event\", new_callable=AsyncMock\n        ), patch(\"agent.services.calls.service.settings\") as mock_settings:\n            mock_settings.twilio_inbound_ring_timeout_seconds = 30\n            mock_settings.cartesia_default_phone_region = \"US\"\n            twiml = await call_service.build_inbound_twiml(\n                caller_raw=\"+15551234567\",\n                twilio_call_sid=\"CA123\",\n            )\n    \n>       self.assertIn(\"<Client>lender:lender_a:browser_sess_a</Client>\", twiml)\nE       AssertionError: '<Client>lender:lender_a:browser_sess_a</Client>' not found in '<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>This number is not accepting calls right now. Please try again later.</Say><Hangup/></Response>'\n\ntests/test_inbound_calls.py:245: AssertionError\n___________ BuildInboundTwimlTests.test_unknown_caller_plays_message ___________\n\nself = <test_inbound_calls.BuildInboundTwimlTests testMethod=test_unknown_caller_plays_message>\n\n    async def test_unknown_caller_plays_message(self) -> None:\n        with patch(\"agent.services.calls.inbound.inbound_calls_enabled\", return_value=True), patch(\n            \"agent.services.calls.service.normalize_phone_to_e164\",\n            return_value=\"+15551234567\",\n        ), patch(\n            \"agent.services.calls.service.resolve_inbound_route\",\n            new_callable=AsyncMock,\n            side_effect=InboundRouteError(\n                \"no_outbound_history\",\n                twilio_message=\"We cannot connect your call.\",\n            ),\n        ):\n            twiml = await call_service.build_inbound_twiml(\n                caller_raw=\"+15551234567\",\n                twilio_call_sid=\"CA123\",\n            )\n        self.assertIn(\"<Say>\", twiml)\n>       self.assertIn(\"We cannot connect your call.\", twiml)\nE       AssertionError: 'We cannot connect your call.' not found in '<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Say>This number is not accepting calls right now. Please try again later.</Say><Hangup/></Response>'\n\ntests/test_inbound_calls.py:195: AssertionError\n_ RecoverStaleDocumentsTests.test_recovers_stale_queued_document_for_application _\n\nself = <test_ingestion_stale_recovery.RecoverStaleDocumentsTests testMethod=test_recovers_stale_queued_document_for_application>\n\n    async def test_recovers_stale_queued_document_for_application(self) -> None:\n        from agent.documents.ingestion.stale_recovery import recover_stale_documents_for_application\n    \n        app = MagicMock()\n        app.user_id = \"user-1\"\n    \n        stale_doc = MagicMock()\n        stale_doc.id = \"doc-stale\"\n        stale_doc.is_deleted = False\n        stale_doc.ingestion_status = IngestionStatus.QUEUED\n        stale_doc.ingestion_updated_at = datetime.now(timezone.utc) - timedelta(minutes=30)\n    \n        async def fake_get(doc_id: str):\n            if doc_id == \"app-1\":\n                return app\n            if doc_id == \"doc-stale\":\n                return stale_doc\n            return None\n    \n        mock_svc = MagicMock()\n        mock_svc.re_enqueue_stale_document = AsyncMock(return_value=True)\n    \n        with patch(\"agent.core.config.settings\") as mock_settings:\n            mock_settings.document_ingestion_enabled = True\n            mock_settings.ingestion_stale_job_minutes = 15\n            with patch(\n                \"agent.services.smbapplications.models.SMBApplication.get\",\n                new=AsyncMock(side_effect=fake_get),\n            ):\n                with patch(\n                    \"agent.documents.ingestion.stale_recovery.UserDocument.get\",\n                    new=AsyncMock(side_effect=fake_get),\n                ):\n                    with patch(\n                        \"agent.documents.ingestion.readiness.get_application_document_ids\",\n                        new=AsyncMock(return_value=[\"doc-stale\"]),\n                    ):\n                        recovered = await recover_stale_documents_for_application(\n                            \"app-1\",\n                            service=mock_svc,\n                        )\n    \n>       self.assertEqual(recovered, 1)\nE       AssertionError: 0 != 1\n\ntests/test_ingestion_stale_recovery.py:90: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_deleted_document_ids_do_not_show_as_missing\nFAILED tests/test_document_ingestion_readiness.py::BuildApplicationIngestionStatusTests::test_failed_documents_do_not_block_when_non_blocking_enabled\nFAILED tests/test_document_report.py::TestReportSupport::test_credit_and_bank_excluded\nFAILED tests/test_inbound_calls.py::BuildInboundTwimlTests::test_last_dialer_offline_plays_unavailable\nFAILED tests/test_inbound_calls.py::BuildInboundTwimlTests::test_rings_last_dialer_not_other_lender\nFAILED tests/test_inbound_calls.py::BuildInboundTwimlTests::test_unknown_caller_plays_message\nFAILED tests/test_ingestion_stale_recovery.py::RecoverStaleDocumentsTests::test_recovers_stale_queued_document_for_application\n================== 7 failed, 166 passed, 24 skipped in 2.34s ===================\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 9636,
+        "completion_tokens": 33,
+        "cached_tokens": 7460,
+        "cost_usd": 0.005814,
+        "extra": {
+          "reasoning_tokens": 126
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-07-15T06:05:16.069000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Investigating Test Failures**\n\nI'm currently scrutinizing why seven tests have unexpectedly failed. Given the prior state, I'm exploring environmental or configuration influences as potential culprits for this divergence from the expected green status.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_bash_78HKU0HvUDgKlF71ttpj",
+          "function_name": "bash",
+          "arguments": {
+            "workdir": "/app/loangen-agent",
+            "command": "python -m pytest tests/test_credit_pdf_pipeline.py -v"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_bash_78HKU0HvUDgKlF71ttpj",
+            "content": "/usr/local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:208: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-8.3.4, pluggy-1.6.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/loangen-agent\nplugins: anyio-4.14.2, asyncio-0.24.0\nasyncio: mode=Mode.STRICT, default_loop_scope=None\ncollecting ... collected 7 items\n\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_accepts_real_creditor PASSED [ 14%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_one_dollar_artifact_tradeline PASSED [ 28%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_past_due_label PASSED [ 42%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_table_artifact_creditor PASSED [ 57%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_assigns_tagged_tradeline_to_one_bureau PASSED [ 71%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_broadcasts_untagged_tradelines_to_all_scored_bureaus PASSED [ 85%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_filters_junk_before_assignment PASSED [100%]\n\n============================== 7 passed in 0.12s ===============================\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 21520,
+        "completion_tokens": 43,
+        "cached_tokens": 7838,
+        "cost_usd": 0.0245607,
+        "extra": {
+          "reasoning_tokens": 275
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-07-15T06:05:19.339000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_bash_nAacFy2WCOOvJN0yLtCm",
+          "function_name": "bash",
+          "arguments": {
+            "workdir": "/app/loangen-agent",
+            "command": "git status"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_bash_nAacFy2WCOOvJN0yLtCm",
+            "content": "On branch main\nnothing to commit, working tree clean\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 22376,
+        "completion_tokens": 28,
+        "cached_tokens": 9803,
+        "cost_usd": 0.02149095,
+        "extra": {
+          "reasoning_tokens": 101
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-07-15T06:05:21.009000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Confirming Repository State**\n\nThe working tree is now clean. I'm proceeding under the assumption that the reported failures are either pre-existing, environment-related, or expected, as per the instructions to avoid touching already-parsing files.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_3sYxSjbGAXQEuE95Jkp8",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Run existing tests to verify baseline status"
+              },
+              {
+                "priority": "high",
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D",
+                "status": "in_progress"
+              },
+              {
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "priority": "high",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)",
+                "status": "pending"
+              },
+              {
+                "priority": "high",
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)",
+                "status": "pending"
+              },
+              {
+                "priority": "high",
+                "status": "pending",
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)"
+              },
+              {
+                "content": "Run tests to ensure everything is green and no regressions were introduced",
+                "status": "pending",
+                "priority": "high"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_3sYxSjbGAXQEuE95Jkp8",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 22511,
+        "completion_tokens": 230,
+        "cached_tokens": 21548,
+        "cost_usd": 0.0095997,
+        "extra": {
+          "reasoning_tokens": 317
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 9,
+      "timestamp": "2026-07-15T06:05:24.205000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_read_rgK8O3G7hTcpiJG9jwJb",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/loangen-agent/agent/documents/credit_pdf/normalize.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_read_rgK8O3G7hTcpiJG9jwJb",
+            "content": "<path>/app/loangen-agent/agent/documents/credit_pdf/normalize.py</path>\n<type>file</type>\n<content>\n1: \"\"\"Normalization helpers for credit PDF parsing.\"\"\"\n2: \n3: from __future__ import annotations\n4: \n5: import re\n6: from datetime import datetime\n7: from typing import List, Optional, Set\n8: \n9: _BUREAU_TAG_MAP = {\n10:     \"TUC\": \"transunion\",\n11:     \"TU\": \"transunion\",\n12:     \"TRANSUNION\": \"transunion\",\n13:     \"EXP\": \"experian\",\n14:     \"EXPERIAN\": \"experian\",\n15:     \"EQX\": \"equifax\",\n16:     \"EFX\": \"equifax\",\n17:     \"EQUIFAX\": \"equifax\",\n18: }\n19: \n20: _MONEY_RE = re.compile(r\"\\$?\\s*([\\d,]+(?:\\.\\d{2})?)\")\n21: _DATE_MDY = re.compile(r\"\\b(\\d{1,2}/\\d{1,2}/\\d{2,4})\\b\")\n22: _PAGE_BREAK = re.compile(r\"--\\s*\\d+\\s+of\\s+\\d+\\s*--\", re.IGNORECASE)\n23: \n24: _SKIP_CREDITOR_LINES = re.compile(\n25:     r\"^(account number|ecoa|opened|credit history|current accounts|derogatory|disputed|\"\n26:     r\"page \\d|report id|order verifications|borrower|credit summary|file summary|\"\n27:     r\"past due payment|account type|months reviewed|comment|summary)$\",\n28:     re.IGNORECASE,\n29: )\n30: \n31: \n32: def strip_page_breaks(text: str) -> str:\n33:     return _PAGE_BREAK.sub(\"\\n\", text or \"\")\n34: \n35: \n36: def parse_money(value: str) -> Optional[float]:\n37:     if not value:\n38:         return None\n39:     match = _MONEY_RE.search(value)\n40:     if not match:\n41:         return None\n42:     try:\n43:         return float(match.group(1).replace(\",\", \"\"))\n44:     except ValueError:\n45:         return None\n46: \n47: \n48: def parse_money_all(value: str) -> List[float]:\n49:     return [v for v in (_parse_money_token(m) for m in _MONEY_RE.findall(value or \"\")) if v is not None]\n50: \n51: \n52: def _parse_money_token(token: str) -> Optional[float]:\n53:     try:\n54:         return float(token.replace(\",\", \"\"))\n55:     except ValueError:\n56:         return None\n57: \n58: \n59: def normalize_date(value: str) -> str:\n60:     \"\"\"Return YYYY-MM-DD when possible.\"\"\"\n61:     raw = (value or \"\").strip()\n62:     if not raw:\n63:         return \"\"\n64:     for fmt in (\"%m/%d/%Y\", \"%m/%d/%y\", \"%Y-%m-%d\", \"%m/%Y\"):\n65:         try:\n66:             return datetime.strptime(raw[:10], fmt).strftime(\"%Y-%m-%d\")\n67:         except ValueError:\n68:             continue\n69:     return raw\n70: \n71: \n72: def split_borrower_name(full_name: str) -> tuple[str, str]:\n73:     parts = [p for p in full_name.strip().split() if p]\n74:     if not parts:\n75:         return \"\", \"\"\n76:     if len(parts) == 1:\n77:         return parts[0], \"\"\n78:     return parts[0], \" \".join(parts[1:])\n79: \n80: \n81: def bureau_tags_from_text(text: str) -> Set[str]:\n82:     \"\"\"Map TUC-B1 / EXP-B1 / EQX-B1 (and comma-separated) to bureau keys.\"\"\"\n83:     found: Set[str] = set()\n84:     upper = (text or \"\").upper()\n85:     for token in re.findall(r\"\\b(TUC|EXP|EQX|TU)-B\\d*\\b\", upper):\n86:         prefix = token.split(\"-\")[0]\n87:         bureau = _BUREAU_TAG_MAP.get(prefix)\n88:         if bureau:\n89:             found.add(bureau)\n90:     if \"TRANSUNION\" in upper or \"TRANS UNION\" in upper:\n91:         found.add(\"transunion\")\n92:     if \"EXPERIAN\" in upper:\n93:         found.add(\"experian\")\n94:     if \"EQUIFAX\" in upper:\n95:         found.add(\"equifax\")\n96:     return found\n97: \n98: \n99: def filter_for_bureau(items: List, bureau: str, attr: str = \"reported_bureaus\") -> List:\n100:     out = []\n101:     for item in items:\n102:         tags = set(getattr(item, attr, None) or [])\n103:         if not tags or bureau in tags:\n104:             out.append(item)\n105:     return out\n106: \n107: \n108: def is_plausible_creditor_line(line: str) -> bool:\n109:     line = line.strip()\n110:     if len(line) < 2 or len(line) > 80:\n111:         return False\n112:     if _SKIP_CREDITOR_LINES.match(line):\n113:         return False\n114:     if is_city_state_line(line):\n115:         return False\n116:     if re.match(r\"^\\d{3}[-\\s]?\\d{2}[-\\s]?\\d{4}$\", line):\n117:         return False\n118:     if re.match(r\"^[\\d\\$\\.,\\s%]+\", line):\n119:         return False\n120:     if line.lower().startswith(\"http\"):\n121:         return False\n122:     return bool(re.search(r\"[A-Za-z]\", line))\n123: \n124: \n125: _CITY_STATE_RE = re.compile(\n126:     r\"^[A-Za-z][A-Za-z\\s\\.\\'-]+,\\s*[A-Z]{2}(?:\\s+\\d{5}(?:-\\d{4})?)?$\"\n127: )\n128: _ZIP_ONLY_RE = re.compile(r\"^\\d{5}(?:-\\d{4})?$\")\n129: _PHONE_RE = re.compile(r\"^\\d{3}[-.\\s]?\\d{3}[-.\\s]?\\d{4}$\")\n130: \n131: \n132: def is_city_state_line(line: str) -> bool:\n133:     return bool(_CITY_STATE_RE.match((line or \"\").strip()))\n134: \n135: \n136: def is_address_or_contact_line(line: str) -> bool:\n137:     text = (line or \"\").strip()\n138:     if not text:\n139:         return True\n140:     if is_city_state_line(text):\n141:         return True\n142:     if _ZIP_ONLY_RE.match(text):\n143:         return True\n144:     if _PHONE_RE.match(text):\n145:         return True\n146:     if re.match(r\"^PO Box\\b\", text, re.I):\n147:         return True\n148:     if re.match(r\"^P\\.?\\s*O\\.?\\s*Box\", text, re.I):\n149:         return True\n150:     if re.match(r\"^\\d+\\s+\\w\", text):  # street address\n151:         return True\n152:     if re.match(\n153:         r\"^(blvd|st|street|ave|avenue|dr|drive|rd|road|way|lane|ln|ct|court|ste|suite)\\.?\",\n154:         text,\n155:         re.I,\n156:     ):\n157:         return True\n158:     return False\n159: \n160: \n161: _CREDITOR_STOP_LINE_RE = re.compile(\n162:     r\"^(credit dispute|research team|comment|past due|payment|balance|released:|loan number:|\\$\\d)\",\n163:     re.I,\n164: )\n165: \n166: \n167: def is_creditor_boilerplate_line(line: str) -> bool:\n168:     return bool(_CREDITOR_STOP_LINE_RE.match((line or \"\").strip()))\n\n(End of file - total 168 lines)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 23110,
+        "completion_tokens": 32,
+        "cached_tokens": 21408,
+        "cost_usd": 0.0070602,
+        "extra": {
+          "reasoning_tokens": 112
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 10,
+      "timestamp": "2026-07-15T06:05:25.750000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_read_lRMcWWLEjmbwtTeVbV06",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_read_lRMcWWLEjmbwtTeVbV06",
+            "content": "<path>/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py</path>\n<type>file</type>\n<content>\n1: \"\"\"Reject tradelines/inquiries that are OCR or table-extraction artifacts.\"\"\"\n2: \n3: from __future__ import annotations\n4: \n5: import re\n6: from typing import List\n7: \n8: from agent.documents.credit_pdf.models import ParsedInquiry, ParsedTradeline\n9: from agent.documents.credit_pdf.normalize import is_city_state_line, is_plausible_creditor_line\n10: \n11: _JUNK_CREDITOR_PATTERNS = (\n12:     re.compile(r\"^\\[Table\\s+\\d+\", re.I),\n13:     re.compile(r\"^past\\s+due\\b\", re.I),\n14:     re.compile(r\"days\\s+late\", re.I),\n15:     re.compile(r\"months\\s+reviewed\", re.I),\n16:     re.compile(r\"^account\\s+number\\b\", re.I),\n17:     re.compile(r\"^ecoa\\b\", re.I),\n18:     re.compile(r\"^credit\\s+limit\\b\", re.I),\n19:     re.compile(r\"^payment\\s+history\\b\", re.I),\n20:     re.compile(r\"^comment\\b\", re.I),\n21:     re.compile(r\"^subscriber\\b\", re.I),\n22:     re.compile(r\"^reported\\s+on\\b\", re.I),\n23:     re.compile(r\"^page\\s+\\d+\", re.I),\n24:     re.compile(r\"^manner of payment\\b\", re.I),\n25:     re.compile(r\"^maximum\\b\", re.I),\n26:     re.compile(r\"^collateral\\b\", re.I),\n27:     re.compile(r\"^terms\\b\", re.I),\n28: )\n29: \n30: _UNKNOWN_CREDITOR = frozenset({\"unknown\", \"unknown creditor\", \"n/a\", \"na\"})\n31: \n32: \n33: def is_junk_creditor_name(creditor: str) -> bool:\n34:     name = (creditor or \"\").strip()\n35:     if not name:\n36:         return True\n37:     if not is_plausible_creditor_line(name):\n38:         return True\n39:     if name in _UNKNOWN_CREDITOR:\n40:         return True\n41:     for pattern in _JUNK_CREDITOR_PATTERNS:\n42:         if pattern.search(name):\n43:             return True\n44:     if is_city_state_line(name):\n45:         return True\n46:     if re.match(r\"^PO\\s+Box\\s+\\d+$\", name, re.I):\n47:         return True\n48:     return False\n49: \n50: \n51: def is_junk_tradeline(tradeline: ParsedTradeline) -> bool:\n52:     if is_junk_creditor_name(tradeline.creditor):\n53:         return True\n54:     balance = tradeline.balance\n55:     if balance == 1.0 and not tradeline.credit_limit and not tradeline.high_credit:\n56:         return True\n57:     return False\n58: \n59: \n60: def filter_tradelines(tradelines: List[ParsedTradeline]) -> List[ParsedTradeline]:\n61:     return [tl for tl in tradelines if not is_junk_tradeline(tl)]\n62: \n63: \n64: def dedupe_tradelines(tradelines: List[ParsedTradeline]) -> List[ParsedTradeline]:\n65:     seen: set[str] = set()\n66:     out: List[ParsedTradeline] = []\n67:     for tl in tradelines:\n68:         key = f\"{(tl.creditor or '')}|{tl.account_number or ''}\"\n69:         if key in seen:\n70:             continue\n71:         seen.add(key)\n72:         out.append(tl)\n73:     return out\n74: \n75: \n76: def dedupe_inquiries(inquiries: List[ParsedInquiry]) -> List[ParsedInquiry]:\n77:     seen: set[str] = set()\n78:     out: List[ParsedInquiry] = []\n79:     for inq in inquiries:\n80:         key = f\"{(inq.name or '').lower()}|{inq.date or ''}\"\n81:         if key in seen:\n82:             continue\n83:         seen.add(key)\n84:         out.append(inq)\n85:     return out\n\n(End of file - total 85 lines)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 25623,
+        "completion_tokens": 34,
+        "cached_tokens": 19541,
+        "cost_usd": 0.01260315,
+        "extra": {
+          "reasoning_tokens": 27
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 11,
+      "timestamp": "2026-07-15T06:05:28.062000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Analyzing the findings**\n\nI'm currently dissecting a peculiar anomaly where rows with recognized filler tokens, differing in case from their standard form, persist in reports as if they were legitimate accounts, even though the standard case correctly filters them out.\n\n**Investigating the discrepancy**\n\nI've identified the root cause of the filtering issue. It seems the junk filter's `_UNKNOWN_CREDITOR` set contains only lowercase entries. When bureau reports present these tokens with different casing, like \"Unknown\" or \"N/A\", they aren't matched, bypassing the intended filtering mechanism.\n\n**Refining the filtering logic**\n\nI'm now implementing the fix by changing the `_UNKNOWN_CREDITOR` check to be case-insensitive. I'm also cross-referencing other filters and filler token uses to ensure this change doesn't introduce unintended side effects, particularly within `junk_filter.py` and `normalize.py`.\n\n**Addressing Case Sensitivity**\n\nI've confirmed that the regex patterns in other filters are case-insensitive, matching my proposed solution for the unknown creditor issue. This solidifies my approach to resolve the capitalization discrepancies and ensure accurate account filtering.\n\n**Normalizing Account Identifiers**\n\nI've realized that simply addressing case sensitivity in the junk filter isn't enough. The core deduplication process itself needs refinement. Specifically, I'm contemplating how to normalize creditor names when constructing deduplication keys, considering variations like \"Capital One\" versus \"CAPITAL ONE\". My current thought is to apply a `.lower()` transformation to the creditor name for consistency. I'm also questioning whether account numbers themselves should be lowercased or handled as-is within this key construction.\n\n**Standardizing Keys**\n\nI've confirmed that the `dedupe_inquiries` function already standardizes creditor names to lowercase for deduplication. This confirms my approach for `dedupe_tradelines` to also convert both creditor name and account number to lowercase when generating the deduplication key, ensuring consistency and preventing duplicate entries due to capitalization differences.\n\n**Investigating Filtering Logic**\n\nI'm now examining why genuine creditor lines are being discarded. It appears a classification function is inadvertently removing legitimate entries due to overlapping initial patterns with lines that should be filtered out. I'm delving into `credit_pdf` to pinpoint the exact logic causing this collateral removal.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_grep_YvLrKosIX4ExsL35SI78",
+          "function_name": "grep",
+          "arguments": {
+            "path": "/app/loangen-agent/agent/documents/credit_pdf",
+            "pattern": "is_plausible_creditor_line"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_grep_YvLrKosIX4ExsL35SI78",
+            "content": "Found 5 matches\n/app/loangen-agent/agent/documents/credit_pdf/normalize.py:\n  Line 108: def is_plausible_creditor_line(line: str) -> bool:\n\n\n/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py:\n  Line 9: from agent.documents.credit_pdf.normalize import is_city_state_line, is_plausible_creditor_line\n\n  Line 37:     if not is_plausible_creditor_line(name):\n\n\n/app/loangen-agent/agent/documents/credit_pdf/adapters/xactus.py:\n  Line 21:     is_plausible_creditor_line,\n\n  Line 514:         if not is_plausible_creditor_line(line):\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 26925,
+        "completion_tokens": 42,
+        "cached_tokens": 7827,
+        "cost_usd": 0.04709205,
+        "extra": {
+          "reasoning_tokens": 1877
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 12,
+      "timestamp": "2026-07-15T06:05:38.618000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Discovering Unseen Files**\n\nI've just spotted a file, `/app/loangen-agent/agent/documents/credit_pdf/adapters/xactus.py`, that was previously missed in the glob. I'm now going to investigate this directory further, potentially by listing its contents recursively or performing a broader search.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_grep_I1ont4HoJtCbJOA8rtDq",
+          "function_name": "grep",
+          "arguments": {
+            "path": "/app/loangen-agent/agent/documents/credit_pdf",
+            "pattern": "is_creditor_boilerplate_line|is_address_or_contact_line"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_grep_I1ont4HoJtCbJOA8rtDq",
+            "content": "Found 7 matches\n/app/loangen-agent/agent/documents/credit_pdf/normalize.py:\n  Line 136: def is_address_or_contact_line(line: str) -> bool:\n\n  Line 167: def is_creditor_boilerplate_line(line: str) -> bool:\n\n\n/app/loangen-agent/agent/documents/credit_pdf/adapters/xactus.py:\n  Line 19:     is_address_or_contact_line,\n\n  Line 20:     is_creditor_boilerplate_line,\n\n  Line 495:         if is_address_or_contact_line(line):\n\n  Line 509:         if is_creditor_boilerplate_line(line):\n\n  Line 512:         if is_address_or_contact_line(line):\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 29034,
+        "completion_tokens": 51,
+        "cached_tokens": 25500,
+        "cost_usd": 0.010584,
+        "extra": {
+          "reasoning_tokens": 111
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 13,
+      "timestamp": "2026-07-15T06:05:40.443000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_glob_EUsTtv6lqb4GW0yZZF4T",
+          "function_name": "glob",
+          "arguments": {
+            "pattern": "agent/documents/credit_pdf/**/*.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_glob_EUsTtv6lqb4GW0yZZF4T",
+            "content": "/app/loangen-agent/agent/documents/credit_pdf/validation.py\n/app/loangen-agent/agent/documents/credit_pdf/segment.py\n/app/loangen-agent/agent/documents/credit_pdf/rules_parser.py\n/app/loangen-agent/agent/documents/credit_pdf/reconcile.py\n/app/loangen-agent/agent/documents/credit_pdf/parser.py\n/app/loangen-agent/agent/documents/credit_pdf/normalize.py\n/app/loangen-agent/agent/documents/credit_pdf/models.py\n/app/loangen-agent/agent/documents/credit_pdf/mismo_builder.py\n/app/loangen-agent/agent/documents/credit_pdf/llm_fallback.py\n/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py\n/app/loangen-agent/agent/documents/credit_pdf/extract.py\n/app/loangen-agent/agent/documents/credit_pdf/detect.py\n/app/loangen-agent/agent/documents/credit_pdf/bureau_router.py\n/app/loangen-agent/agent/documents/credit_pdf/adapters/xactus.py\n/app/loangen-agent/agent/documents/credit_pdf/adapters/generic.py\n/app/loangen-agent/agent/documents/credit_pdf/adapters/__init__.py\n/app/loangen-agent/agent/documents/credit_pdf/__init__.py"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 29391,
+        "completion_tokens": 22,
+        "cached_tokens": 27453,
+        "cost_usd": 0.00801495,
+        "extra": {
+          "reasoning_tokens": 88
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 14,
+      "timestamp": "2026-07-15T06:05:42.192000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_read_3YTKmeDcdT2COHd85Hvg",
+          "function_name": "read",
+          "arguments": {
+            "limit": 60,
+            "filePath": "/app/loangen-agent/agent/documents/credit_pdf/adapters/xactus.py",
+            "offset": 480
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_read_3YTKmeDcdT2COHd85Hvg",
+            "content": "<path>/app/loangen-agent/agent/documents/credit_pdf/adapters/xactus.py</path>\n<type>file</type>\n<content>\n480:         tradelines.append(block)\n481: \n482:     return tradelines\n483: \n484: \n485: def _creditor_from_before(before: str) -> str:\n486:     lines = [ln.strip() for ln in before.splitlines() if ln.strip()]\n487:     relevant = lines[-25:]\n488: \n489:     idx = len(relevant) - 1\n490:     while idx >= 0:\n491:         line = relevant[idx]\n492:         if line.lower() == \"account number\":\n493:             idx -= 1\n494:             continue\n495:         if is_address_or_contact_line(line):\n496:             idx -= 1\n497:             continue\n498:         break\n499: \n500:     name_parts: List[str] = []\n501:     while idx >= 0:\n502:         line = relevant[idx]\n503:         if line.lower() == \"account number\":\n504:             break\n505:         if re.match(r\"^(Current Accounts|Credit History|\\d+ Times)\", line, re.I):\n506:             break\n507:         if re.match(r\"^(Past Due|Payment|Balance|\\$)\", line, re.I):\n508:             break\n509:         if is_creditor_boilerplate_line(line):\n510:             idx -= 1\n511:             continue\n512:         if is_address_or_contact_line(line):\n513:             break\n514:         if not is_plausible_creditor_line(line):\n515:             break\n516:         if is_junk_creditor_name(line):\n517:             break\n518:         name_parts.append(line)\n519:         idx -= 1\n520:         if len(name_parts) >= 3:\n521:             break\n522: \n523:     if not name_parts:\n524:         return \"Unknown Creditor\"\n525:     creditor = \" \".join(reversed(name_parts))\n526:     creditor = re.sub(r\"\\s+P\\.?\\s*O\\.?\\s*Box.*$\", \"\", creditor, flags=re.I).strip()\n527:     return creditor or \"Unknown Creditor\"\n528: \n529: \n530: def _account_block_text(after: str) -> str:\n531:     block_text = after\n532:     for pattern in (\n533:         r\"\\nAccount Number\\s*\\n\",\n534:         r\"\\nCurrent Accounts\\s*\\n\",\n535:         r\"\\nCredit History \\(continued\\)\\s*\\n\",\n536:         r\"\\nPUBLIC RECORDS:\",\n537:     ):\n538:         match = re.search(pattern, block_text, re.I)\n539:         if match:\n\n(Showing lines 480-539 of 854. Use offset=540 to continue.)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 29861,
+        "completion_tokens": 46,
+        "cached_tokens": 27452,
+        "cost_usd": 0.0087033,
+        "extra": {
+          "reasoning_tokens": 62
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 15,
+      "timestamp": "2026-07-15T06:05:44.178000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Analyzing Finding C**\n\nI'm re-examining Finding C closely. It appears a genuine creditor line is being inadvertently discarded because its initial stages resemble a different, ignorable line type, leading to the erroneous removal of valid entries.\n\n**Refining Classification Logic**\n\nI'm digging into `normalize.py`, specifically the line classification helpers and regular expressions. It seems the logic for identifying and filtering creditor lines needs refinement, as some legitimate entries are being excluded due to initial pattern matching that's too broad.\n\n**Investigating Exclusion Criteria**\n\nI'm scrutinizing the functions responsible for excluding lines, particularly `is_address_or_contact_line`, to pinpoint how genuine creditor entries are being misidentified. It appears the issue lies in how initial line patterns are being interpreted, leading to the unintended discard of valid data.\n\n**Adjusting Regex Patterns**\n\nI'm revising the regular expressions in `normalize.py`. It turns out that common street abbreviations within the `r\"^(blvd|st|street|ave|avenue|dr|drive|rd|road|way|lane|ln|ct|court|ste|suite)\\.?\"` pattern are causing legitimate creditor names, such as \"State Employees Credit Union\" or \"DriveTime\", to be incorrectly flagged and excluded due to a premature match at the beginning of the line.\n\n**Fixing Regex Matching**\n\nI've identified a critical flaw: the absence of word boundaries (`\\b`) in my regex patterns allows prefixes to incorrectly match entire words. This is causing legitimate entries like \"State Street Bank\" to be discarded because \"St\" is misinterpreted. I'm rectifying this immediately.\n\n**Confirming Root Cause**\n\nI've confirmed the hypothesis: a lack of word boundaries in my regex for address-like patterns is causing genuine creditor lines starting with common abbreviations like \"St\" or \"Dr\" to be incorrectly classified as addresses and discarded. This perfectly aligns with Finding C's description.\n\n**Testing Regex Adjustments**\n\nI'm now testing the implementation of word boundaries within the address detection regex. The goal is to ensure that common street abbreviations only trigger exclusion when they appear as distinct words, preventing the misclassification of legitimate creditor names that begin with similar letter sequences but are not abbreviations in context.\n\n**Refining Regex with Boundaries**\n\nI'm evaluating the precise placement of word boundaries (`\\b`) and optional periods within the address detection regex to ensure accuracy. My latest tests indicate that a pattern like `r\"^(blvd|st|street|ave|avenue|dr|drive|rd|road|way|lane|ln|ct|court|ste|suite)\\b\\.?\"` is proving effective in differentiating abbreviations from genuine creditor names.\n\n**Revising Stop Line Regex**\n\nI'm reviewing the `_CREDITOR_STOP_LINE_RE` and `_SKIP_CREDITOR_LINES` regex patterns. It appears the issue with incorrectly excluding legitimate creditor lines might stem from these specific stop and skip lists, which are too broadly anchored or contain terms that could overlap with actual creditor names.\n\n**Examining Regex Patterns**\n\nI'm scrutinizing the `is_address_or_contact_line` function. It appears my previous adjustments to the address detection regex, specifically the use of `\\b\\.?` after street abbreviations, might be too restrictive or placed incorrectly, potentially causing issues with certain valid creditor entries.\n\n**Correcting Address Classification**\n\nI've identified a critical flaw in how I'm classifying lines beginning with abbreviations like \"St.\". My current regex, intended to prevent misidentification of creditor lines, is now incorrectly flagging genuine creditor entries like \"St. Jude Credit Union\" as addresses due to the presence of the period and word boundary. I need to refine this logic.\n\n**Revising Address Matching Logic**\n\nI'm reassessing how lines starting with abbreviations are classified. Previously, my attempts to prevent misidentification led to issues where genuine creditor names like \"St. Jude Credit Union\" were incorrectly flagged as addresses because the regex was too aggressive in matching abbreviations like \"St.\" followed by a period. I need a more nuanced approach.\n\n**Identifying Prefix Mismatch**\n\nI've pinpointed the exact issue described in \"C\": genuine creditor lines like \"State Street Bank\" are being discarded because their beginnings (\"State\") are being confused with address abbreviations (\"St.\"). The current logic incorrectly discards valid creditor entries due to this prefix-based misidentification.\n\n**Refining Address Regex**\n\nI'm carefully re-evaluating the address detection regex, particularly how it handles abbreviations. My latest focus is on ensuring word boundaries are correctly applied to prevent legitimate creditor lines like \"State Street Bank\" from being discarded simply because they start with a sequence of letters that also appears in address abbreviations.\n\n**Testing Regex Variations**\n\nI'm experimenting with different regex structures for address detection. My current focus is on the interplay of word boundaries (`\\b`) and optional periods (`\\.?`) to accurately distinguish abbreviations from genuine creditor names, while also considering variations in address formatting like `\"Avenue of the Stars\"`.\n\n**Revising Address Matching Logic**\n\nI'm reassessing how lines starting with abbreviations are classified. Previously, my attempts to prevent misidentification led to issues where genuine creditor names like \"St. Jude Credit Union\" were incorrectly flagged as addresses because the regex was too aggressive in matching abbreviations like \"St.\" followed by a period. I need a more nuanced approach.\n\n**Revising Regex Logic**\n\nMy previous attempts to use word boundaries in address regex were flawed. `\"DriveTime\"` unexpectedly survived, and `\"Avenue Financial\"` was incorrectly identified as an address, which is problematic as it could be a valid creditor. I'm reassessing the effectiveness of `\\b` and exploring alternative matching strategies for abbreviations and address indicators.\n\n**Refining Regex for Ambiguity**\n\nI'm now focusing on clarifying the distinction between genuine creditor names and lines that merely begin like address abbreviations. My latest insights confirm that adding word boundaries to address-related regex patterns effectively resolves the issue of misclassifying creditor entries like \"State Street Bank.\"\n\n**Clarifying Stop Line Logic**\n\nI'm reviewing the `_CREDITOR_STOP_LINE_RE` pattern and its usage. It appears that while it uses anchored matching and full phrases, it doesn't exhibit the prefix-matching issues seen with address abbreviations. I'm also examining `_JUNK_CREDITOR_PATTERNS` for similar potential issues, though the current focus remains on address-related misclassifications.\n\n**Confirming Location of Issue**\n\nI've isolated the problem to the `is_address_or_contact_line` function. My analysis of the `_CREDITOR_STOP_LINE_RE` and related patterns confirms they are not exhibiting the prefix-matching misclassifications observed with creditor names; the issue solely lies within the address detection regex.\n\n**Validating Regex Behavior**\n\nI'm meticulously testing the newly refined regex patterns with word boundaries and optional periods. It appears that combinations like `\\b\\.?` following street abbreviations are highly effective in distinguishing between genuine creditor names and address-like prefixes, successfully resolving the misclassification issues.\n\n**Refining Address Logic**\n\nI'm focusing on the `is_address_or_contact_line` function, specifically how abbreviations are handled. My earlier regex adjustments with word boundaries (`\\b`) and optional periods (`\\.?`) appear to correctly distinguish between address prefixes and legitimate creditor names, resolving the misclassification issues I encountered previously.\n\n**Updating Bureau Tagging**\n\nI'm investigating Finding D, where bureau tags are being missed. It seems the `_BUREAU_TAG_MAP` in `normalize.py` is the culprit; specifically, the `TU` tag for TransUnion is causing correctly tagged rows to be ignored, while other variants work as expected. I'm reviewing the logic for handling these accepted spelling variants.\n\n**Fixing Bureau Tagging**\n\nI've identified the root cause for missed bureau tags in Finding D. The regex used to extract them doesn't include \"EFX,\" which is present in the `_BUREAU_TAG_MAP`. This prevents \"EFX-B\" or similar patterns from being recognized, leading to incorrectly ignored rows.\n\n**Fixing Bureau Tagging**\n\nI've identified the problem: the regex for extracting bureau tags doesn't account for the abbreviation \"EFX\" in the `_BUREAU_TAG_MAP`, causing correctly tagged rows with this variant to be ignored. I am now updating the regex to include \"EFX\" and ensure all accepted variants are correctly processed.\n\n**Updating Bureau Tag Regex**\n\nI'm refining the regex for bureau tags to include the missing \"EFX\" prefix. This should resolve Finding D by ensuring that rows tagged with \"EFX-B\" or similar variants are correctly identified and processed, allowing all accepted spelling variations to be captured accurately.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_grep_cAbyCXtXfxw0EudSfVuB",
+          "function_name": "grep",
+          "arguments": {
+            "path": "/app/loangen-agent",
+            "pattern": "_BUREAU_TAG_MAP"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_grep_cAbyCXtXfxw0EudSfVuB",
+            "content": "Found 2 matches\n/app/loangen-agent/agent/documents/credit_pdf/normalize.py:\n  Line 9: _BUREAU_TAG_MAP = {\n\n  Line 87:         bureau = _BUREAU_TAG_MAP.get(prefix)\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 30815,
+        "completion_tokens": 33,
+        "cached_tokens": 29427,
+        "cost_usd": 0.08270805,
+        "extra": {
+          "reasoning_tokens": 8435
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 16,
+      "timestamp": "2026-07-15T06:06:35.209000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_read_E1NarZqyUxQPJadFc3x9",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/loangen-agent/tests/test_credit_pdf_pipeline.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_read_E1NarZqyUxQPJadFc3x9",
+            "content": "<path>/app/loangen-agent/tests/test_credit_pdf_pipeline.py</path>\n<type>file</type>\n<content>\n1: \"\"\"Tests for credit PDF junk filter, bureau router, and extract helpers.\"\"\"\n2: \n3: from __future__ import annotations\n4: \n5: import unittest\n6: \n7: from agent.documents.credit_pdf.bureau_router import finalize_parsed_report\n8: from agent.documents.credit_pdf.junk_filter import is_junk_creditor_name, is_junk_tradeline\n9: from agent.documents.credit_pdf.models import (\n10:     ParsedBureauReport,\n11:     ParsedCreditReport,\n12:     ParsedInquiry,\n13:     ParsedTradeline,\n14: )\n15: \n16: \n17: class JunkFilterTests(unittest.TestCase):\n18:     def test_rejects_table_artifact_creditor(self) -> None:\n19:         self.assertTrue(is_junk_creditor_name(\"[Table 35]\"))\n20: \n21:     def test_rejects_past_due_label(self) -> None:\n22:         self.assertTrue(is_junk_creditor_name(\"Past Due\"))\n23: \n24:     def test_accepts_real_creditor(self) -> None:\n25:         self.assertFalse(is_junk_creditor_name(\"JPMCB CARD SERVICES\"))\n26: \n27:     def test_rejects_one_dollar_artifact_tradeline(self) -> None:\n28:         tl = ParsedTradeline(creditor=\"Past Due\", balance=1.0)\n29:         self.assertTrue(is_junk_tradeline(tl))\n30: \n31: \n32: class BureauRouterTests(unittest.TestCase):\n33:     def test_broadcasts_untagged_tradelines_to_all_scored_bureaus(self) -> None:\n34:         tl = ParsedTradeline(creditor=\"CHASE\", balance=500.0, reported_bureaus=[])\n35:         parsed = ParsedCreditReport(\n36:             format_id=\"test\",\n37:             bureaus={\n38:                 \"transunion\": ParsedBureauReport(bureau=\"transunion\", score=662, tradelines=[tl]),\n39:                 \"experian\": ParsedBureauReport(bureau=\"experian\", score=665, tradelines=[tl]),\n40:                 \"equifax\": ParsedBureauReport(bureau=\"equifax\", score=675, tradelines=[tl]),\n41:             },\n42:         )\n43:         result = finalize_parsed_report(parsed)\n44:         self.assertEqual(len(result.bureaus[\"transunion\"].tradelines), 1)\n45:         self.assertEqual(len(result.bureaus[\"experian\"].tradelines), 1)\n46: \n47:     def test_assigns_tagged_tradeline_to_one_bureau(self) -> None:\n48:         tl = ParsedTradeline(\n49:             creditor=\"BEST EGG\",\n50:             balance=1000.0,\n51:             reported_bureaus=[\"experian\"],\n52:         )\n53:         parsed = ParsedCreditReport(\n54:             format_id=\"test\",\n55:             bureaus={\n56:                 \"transunion\": ParsedBureauReport(bureau=\"transunion\", score=662, tradelines=[tl]),\n57:                 \"experian\": ParsedBureauReport(bureau=\"experian\", score=665, tradelines=[tl]),\n58:                 \"equifax\": ParsedBureauReport(bureau=\"equifax\", score=675, tradelines=[tl]),\n59:             },\n60:         )\n61:         result = finalize_parsed_report(parsed)\n62:         self.assertEqual(len(result.bureaus[\"experian\"].tradelines), 1)\n63:         self.assertEqual(len(result.bureaus[\"transunion\"].tradelines), 0)\n64: \n65:     def test_filters_junk_before_assignment(self) -> None:\n66:         junk = ParsedTradeline(creditor=\"[Table 35]\", balance=1.0)\n67:         good = ParsedTradeline(creditor=\"CAPITAL ONE\", balance=200.0)\n68:         parsed = ParsedCreditReport(\n69:             format_id=\"test\",\n70:             bureaus={\n71:                 \"experian\": ParsedBureauReport(\n72:                     bureau=\"experian\",\n73:                     score=665,\n74:                     tradelines=[junk, good],\n75:                 ),\n76:             },\n77:         )\n78:         result = finalize_parsed_report(parsed)\n79:         self.assertEqual(len(result.bureaus[\"experian\"].tradelines), 1)\n80:         self.assertEqual(result.bureaus[\"experian\"].tradelines[0].creditor, \"CAPITAL ONE\")\n81: \n82: \n83: if __name__ == \"__main__\":\n84:     unittest.main()\n\n(End of file - total 84 lines)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 39343,
+        "completion_tokens": 32,
+        "cost_usd": 0.0600405,
+        "extra": {
+          "reasoning_tokens": 82
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 17,
+      "timestamp": "2026-07-15T06:06:37.561000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Developing Test Cases**\n\nI\u2019m currently focused on building robust test cases for Findings A through D to rigorously validate our proposed solutions. My immediate goal is to experiment with generating a custom test file, executing it, and confirming that all tests pass successfully.\n\n**Refining Test Strategies**\n\nMy latest thoughts are honing in on the permissible use of temporary files for testing, specifically within directories like `/tmp/` or the agent's own test directory, provided they are cleaned up. This aligns with the directive to prioritize in-place edits while enabling thorough verification of findings A through D. I'm also re-examining `normalize.py` for any missed nuances in implementing the case-insensitive check for filler tokens.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_grep_j7Sv791stJcOM2uMD63N",
+          "function_name": "grep",
+          "arguments": {
+            "path": "/app/loangen-agent",
+            "pattern": "dedupe_tradelines"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_grep_j7Sv791stJcOM2uMD63N",
+            "content": "Found 3 matches\n/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py:\n  Line 64: def dedupe_tradelines(tradelines: List[ParsedTradeline]) -> List[ParsedTradeline]:\n\n\n/app/loangen-agent/agent/documents/credit_pdf/bureau_router.py:\n  Line 9:     dedupe_tradelines,\n\n  Line 68:     return dedupe_tradelines(assigned)\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 40759,
+        "completion_tokens": 30,
+        "cost_usd": 0.0676995,
+        "extra": {
+          "reasoning_tokens": 699
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 18,
+      "timestamp": "2026-07-15T06:06:44.439000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Refining Filter Logic**\n\nI'm currently focused on refining the filtering logic, specifically within `junk_filter.py` and `bureau_router.py`. My latest efforts are in `normalize.py`, investigating how to prevent false positives from discarding creditor lines that share similarities with discarded lines.\n\n**Adjusting Address Matching**\n\nI'm refining the `or_contact_line` function, specifically addressing potential false positives with street abbreviations. My current focus is ensuring that road indicators like \"st\" or \"ave\" don't incorrectly lead to discarding valid creditor lines.\n\n**Enhancing Word Boundary Matching**\n\nI'm addressing a subtle edge case where abbreviations like \"st\" could incorrectly match parts of longer words such as \"State.\" My current focus is ensuring the word boundary assertion `\\b` is correctly placed after abbreviations, like `st\\b`, to avoid false positives while still accommodating trailing punctuation.\n\n**Adding EFX Bureau**\n\nI've identified a crucial omission in the bureau tag parsing. Specifically, the regex in `normalize.py` was missing `EFX`, which is a valid alias for Equifax. I've corrected this to ensure all relevant bureau aliases are captured accurately.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_1K4otbloPcTRuItcxO0S",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "priority": "high",
+                "content": "Run existing tests to verify baseline status",
+                "status": "completed"
+              },
+              {
+                "status": "completed",
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D",
+                "priority": "high"
+              },
+              {
+                "status": "in_progress",
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)",
+                "priority": "high"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)"
+              },
+              {
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)",
+                "priority": "high",
+                "status": "pending"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Run tests to ensure everything is green and no regressions were introduced"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_1K4otbloPcTRuItcxO0S",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 41594,
+        "completion_tokens": 230,
+        "cached_tokens": 39601,
+        "cost_usd": 0.02225865,
+        "extra": {
+          "reasoning_tokens": 1251
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 19,
+      "timestamp": "2026-07-15T06:06:53.091000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Applying Edits Now**\n\nI'm currently integrating the changes for both Finding A and B directly within `junk_filter.py`. My immediate focus is on modifying the `is_junk_creditor_name` function, which resides on line 33 of that file.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_edit_k2zIQK8YZlxEd1b1UC3t",
+          "function_name": "edit",
+          "arguments": {
+            "oldString": "def is_junk_creditor_name(creditor: str) -> bool:\n    name = (creditor or \"\").strip()\n    if not name:\n        return True\n    if not is_plausible_creditor_line(name):\n        return True\n    if name in _UNKNOWN_CREDITOR:\n        return True",
+            "filePath": "/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py",
+            "newString": "def is_junk_creditor_name(creditor: str) -> bool:\n    name = (creditor or \"\").strip()\n    if not name:\n        return True\n    if not is_plausible_creditor_line(name):\n        return True\n    if name.lower() in _UNKNOWN_CREDITOR:\n        return True"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_edit_k2zIQK8YZlxEd1b1UC3t",
+            "content": "Edit applied successfully."
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 43127,
+        "completion_tokens": 197,
+        "cost_usd": 0.0693525,
+        "extra": {
+          "reasoning_tokens": 321
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 20,
+      "timestamp": "2026-07-15T06:06:56.704000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_YicBhHFuWIBrOz4R7xkV",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Run existing tests to verify baseline status",
+                "priority": "high",
+                "status": "completed"
+              },
+              {
+                "status": "completed",
+                "priority": "high",
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D"
+              },
+              {
+                "priority": "high",
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)",
+                "status": "completed"
+              },
+              {
+                "status": "in_progress",
+                "priority": "high",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)"
+              },
+              {
+                "content": "Run tests to ensure everything is green and no regressions were introduced",
+                "priority": "high",
+                "status": "pending"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_YicBhHFuWIBrOz4R7xkV",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 43640,
+        "completion_tokens": 230,
+        "cached_tokens": 39473,
+        "cost_usd": 0.01443945,
+        "extra": {
+          "reasoning_tokens": 22
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 21,
+      "timestamp": "2026-07-15T06:06:59.402000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_edit_tcbiIhGapIdvLu0kQYtH",
+          "function_name": "edit",
+          "arguments": {
+            "oldString": "def dedupe_tradelines(tradelines: List[ParsedTradeline]) -> List[ParsedTradeline]:\n    seen: set[str] = set()\n    out: List[ParsedTradeline] = []\n    for tl in tradelines:\n        key = f\"{(tl.creditor or '')}|{tl.account_number or ''}\"\n        if key in seen:\n            continue\n        seen.add(key)\n        out.append(tl)\n    return out",
+            "filePath": "/app/loangen-agent/agent/documents/credit_pdf/junk_filter.py",
+            "newString": "def dedupe_tradelines(tradelines: List[ParsedTradeline]) -> List[ParsedTradeline]:\n    seen: set[str] = set()\n    out: List[ParsedTradeline] = []\n    for tl in tradelines:\n        key = f\"{(tl.creditor or '').lower()}|{(tl.account_number or '').lower()}\"\n        if key in seen:\n            continue\n        seen.add(key)\n        out.append(tl)\n    return out"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_edit_tcbiIhGapIdvLu0kQYtH",
+            "content": "Edit applied successfully."
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 43944,
+        "completion_tokens": 264,
+        "cost_usd": 0.068454,
+        "extra": {
+          "reasoning_tokens": 18
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 22,
+      "timestamp": "2026-07-15T06:07:04.073000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_nlcQZiCK0rb3KeZ8kdzt",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Run existing tests to verify baseline status"
+              },
+              {
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D",
+                "priority": "high",
+                "status": "completed"
+              },
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)"
+              },
+              {
+                "status": "completed",
+                "priority": "high",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)"
+              },
+              {
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)",
+                "status": "in_progress",
+                "priority": "high"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)"
+              },
+              {
+                "status": "pending",
+                "priority": "high",
+                "content": "Run tests to ensure everything is green and no regressions were introduced"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_nlcQZiCK0rb3KeZ8kdzt",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 44221,
+        "completion_tokens": 230,
+        "cached_tokens": 39307,
+        "cost_usd": 0.01560705,
+        "extra": {
+          "reasoning_tokens": 30
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 23,
+      "timestamp": "2026-07-15T06:07:09.160000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Analyzing Code Snippet**\n\nI'm currently focused on editing the `normalize.py` file, specifically within the `credit_pdf` directory. My immediate task is to re-examine the `is_address_or_contact_line` function to ensure precise application of the 'C' edit.\n\n**Refining Address Detection**\n\nI'm refining the regular expression for street abbreviations by adding a word boundary (`\\b`) to prevent partial matches and ensure accuracy in address parsing. This aims to improve the robustness of detecting address lines.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_edit_J06jSxJoHi8hxLwx149N",
+          "function_name": "edit",
+          "arguments": {
+            "oldString": "    if re.match(\n        r\"^(blvd|st|street|ave|avenue|dr|drive|rd|road|way|lane|ln|ct|court|ste|suite)\\.?\",\n        text,\n        re.I,\n    ):",
+            "newString": "    if re.match(\n        r\"^(blvd|st|street|ave|avenue|dr|drive|rd|road|way|lane|ln|ct|court|ste|suite)\\b\\.?\",\n        text,\n        re.I,\n    ):",
+            "filePath": "/app/loangen-agent/agent/documents/credit_pdf/normalize.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_edit_J06jSxJoHi8hxLwx149N",
+            "content": "Edit applied successfully."
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 44533,
+        "completion_tokens": 165,
+        "cached_tokens": 39161,
+        "cost_usd": 0.02026815,
+        "extra": {
+          "reasoning_tokens": 539
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 24,
+      "timestamp": "2026-07-15T06:07:15.604000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_XBMjWVPy0df6Erf148DI",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Run existing tests to verify baseline status"
+              },
+              {
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D",
+                "priority": "high",
+                "status": "completed"
+              },
+              {
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)",
+                "priority": "high",
+                "status": "completed"
+              },
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)"
+              },
+              {
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)",
+                "priority": "high",
+                "status": "completed"
+              },
+              {
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)",
+                "priority": "high",
+                "status": "in_progress"
+              },
+              {
+                "priority": "high",
+                "status": "pending",
+                "content": "Run tests to ensure everything is green and no regressions were introduced"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_XBMjWVPy0df6Erf148DI",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 45232,
+        "completion_tokens": 230,
+        "cached_tokens": 39163,
+        "cost_usd": 0.01729095,
+        "extra": {
+          "reasoning_tokens": 27
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 25,
+      "timestamp": "2026-07-15T06:07:17.519000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "reasoning_content": "**Refining Bureau Tag Parsing**\n\nI'm currently focused on refining the bureau tag parsing within the `normalize.py` file, specifically targeting the edits for Finding D concerning EFX. My current steps involve a thorough code review of the `bureau_tags_from_text` function.\n\n",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_edit_tY4m82PURPosF9A7fJUK",
+          "function_name": "edit",
+          "arguments": {
+            "oldString": "def bureau_tags_from_text(text: str) -> Set[str]:\n    \"\"\"Map TUC-B1 / EXP-B1 / EQX-B1 (and comma-separated) to bureau keys.\"\"\"\n    found: Set[str] = set()\n    upper = (text or \"\").upper()\n    for token in re.findall(r\"\\b(TUC|EXP|EQX|TU)-B\\d*\\b\", upper):",
+            "filePath": "/app/loangen-agent/agent/documents/credit_pdf/normalize.py",
+            "newString": "def bureau_tags_from_text(text: str) -> Set[str]:\n    \"\"\"Map TUC-B1 / EXP-B1 / EQX-B1 (and comma-separated) to bureau keys.\"\"\"\n    found: Set[str] = set()\n    upper = (text or \"\").upper()\n    for token in re.findall(r\"\\b(TUC|EXP|EQX|EFX|TU)-B\\d*\\b\", upper):"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_edit_tY4m82PURPosF9A7fJUK",
+            "content": "Edit applied successfully."
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 45541,
+        "completion_tokens": 247,
+        "cached_tokens": 39022,
+        "cost_usd": 0.0198528,
+        "extra": {
+          "reasoning_tokens": 222
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 26,
+      "timestamp": "2026-07-15T06:07:20.760000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_5Ng4bgk5EvoPrk1bJkpT",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Run existing tests to verify baseline status",
+                "priority": "high",
+                "status": "completed"
+              },
+              {
+                "status": "completed",
+                "priority": "high",
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D"
+              },
+              {
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)",
+                "status": "completed",
+                "priority": "high"
+              },
+              {
+                "status": "completed",
+                "priority": "high",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)"
+              },
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)"
+              },
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)"
+              },
+              {
+                "status": "in_progress",
+                "priority": "high",
+                "content": "Run tests to ensure everything is green and no regressions were introduced"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_5Ng4bgk5EvoPrk1bJkpT",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 46005,
+        "completion_tokens": 230,
+        "cached_tokens": 39016,
+        "cost_usd": 0.0187659,
+        "extra": {
+          "reasoning_tokens": 40
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 27,
+      "timestamp": "2026-07-15T06:07:22.980000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_bash_e608bBPgQdcJlpodU7PH",
+          "function_name": "bash",
+          "arguments": {
+            "command": "python -m pytest tests/test_credit_pdf_pipeline.py -v",
+            "workdir": "/app/loangen-agent"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_bash_e608bBPgQdcJlpodU7PH",
+            "content": "/usr/local/lib/python3.12/site-packages/pytest_asyncio/plugin.py:208: PytestDeprecationWarning: The configuration option \"asyncio_default_fixture_loop_scope\" is unset.\nThe event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: \"function\", \"class\", \"module\", \"package\", \"session\"\n\n  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))\n============================= test session starts ==============================\nplatform linux -- Python 3.12.13, pytest-8.3.4, pluggy-1.6.0 -- /usr/local/bin/python\ncachedir: .pytest_cache\nrootdir: /app/loangen-agent\nplugins: anyio-4.14.2, asyncio-0.24.0\nasyncio: mode=Mode.STRICT, default_loop_scope=None\ncollecting ... collected 7 items\n\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_accepts_real_creditor PASSED [ 14%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_one_dollar_artifact_tradeline PASSED [ 28%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_past_due_label PASSED [ 42%]\ntests/test_credit_pdf_pipeline.py::JunkFilterTests::test_rejects_table_artifact_creditor PASSED [ 57%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_assigns_tagged_tradeline_to_one_bureau PASSED [ 71%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_broadcasts_untagged_tradelines_to_all_scored_bureaus PASSED [ 85%]\ntests/test_credit_pdf_pipeline.py::BureauRouterTests::test_filters_junk_before_assignment PASSED [100%]\n\n============================== 7 passed in 0.13s ===============================\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 46327,
+        "completion_tokens": 43,
+        "cached_tokens": 38881,
+        "cost_usd": 0.01782915,
+        "extra": {
+          "reasoning_tokens": 49
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 28,
+      "timestamp": "2026-07-15T06:07:31.018000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_write_MCKSZjusVe5uQt0KLx82",
+          "function_name": "write",
+          "arguments": {
+            "content": "import sys\nsys.path.insert(0, '/app/loangen-agent')\n\nfrom agent.documents.credit_pdf.junk_filter import is_junk_creditor_name, dedupe_tradelines\nfrom agent.documents.credit_pdf.normalize import is_address_or_contact_line, bureau_tags_from_text\nfrom agent.documents.credit_pdf.models import ParsedTradeline\n\ndef test_finding_a():\n    # Finding A: case-insensitive filter of filler tokens\n    assert is_junk_creditor_name(\"unknown\") is True\n    assert is_junk_creditor_name(\"Unknown\") is True\n    assert is_junk_creditor_name(\"UNKNOWN\") is True\n    assert is_junk_creditor_name(\"UNKNOWN CREDITOR\") is True\n    assert is_junk_creditor_name(\"N/A\") is True\n    assert is_junk_creditor_name(\"na\") is True\n    # real creditor is not junk\n    assert is_junk_creditor_name(\"JPMCB CARD SERVICES\") is False\n\ndef test_finding_b():\n    # Finding B: Same account, creditor spelled with different capitalisation gets deduped\n    tl1 = ParsedTradeline(creditor=\"Chase Bank\", account_number=\"12345\", balance=100.0)\n    tl2 = ParsedTradeline(creditor=\"CHASE BANK\", account_number=\"12345\", balance=100.0)\n    tls = [tl1, tl2]\n    deduped = dedupe_tradelines(tls)\n    assert len(deduped) == 1\n    assert deduped[0].creditor == \"Chase Bank\"\n\ndef test_finding_c():\n    # Finding C: Real creditor lines like \"State Street Bank\", \"Sterling Jewelers\", \"DriveTime\" are not filtered\n    assert is_address_or_contact_line(\"State Street Bank\") is False\n    assert is_address_or_contact_line(\"Sterling Jewelers\") is False\n    assert is_address_or_contact_line(\"DriveTime\") is False\n    # Address/contact lines are still recognized\n    assert is_address_or_contact_line(\"St. Jude\") is True\n    assert is_address_or_contact_line(\"PO Box 123\") is True\n    assert is_address_or_contact_line(\"123 Main St\") is True\n    assert is_address_or_contact_line(\"Street Road\") is True\n\ndef test_finding_d():\n    # Finding D: EFX-B1 tag should assign to equifax\n    tags = bureau_tags_from_text(\"EFX-B1\")\n    assert \"equifax\" in tags\n\nif __name__ == \"__main__\":\n    test_finding_a()\n    test_finding_b()\n    test_finding_c()\n    test_finding_d()\n    print(\"ALL TESTS PASSED SUCCESSFULLY!\")\n",
+            "filePath": "/tmp/opencode/test_bugs.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_write_MCKSZjusVe5uQt0KLx82",
+            "content": "Wrote file successfully."
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 46957,
+        "completion_tokens": 704,
+        "cost_usd": 0.0784545,
+        "extra": {
+          "reasoning_tokens": 187
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 29,
+      "timestamp": "2026-07-15T06:07:32.828000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_bash_4R6OhjsOeoFWAJCuHt9b",
+          "function_name": "bash",
+          "arguments": {
+            "command": "python /tmp/opencode/test_bugs.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_bash_4R6OhjsOeoFWAJCuHt9b",
+            "content": "ALL TESTS PASSED SUCCESSFULLY!\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 47848,
+        "completion_tokens": 25,
+        "cost_usd": 0.072231,
+        "extra": {
+          "reasoning_tokens": 26
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 30,
+      "timestamp": "2026-07-15T06:07:35.187000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_bash_wViorbEDoWIYeAzHw60W",
+          "function_name": "bash",
+          "arguments": {
+            "workdir": "/app/loangen-agent",
+            "command": "git diff"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_bash_wViorbEDoWIYeAzHw60W",
+            "content": "diff --git a/loangen-agent/agent/documents/credit_pdf/junk_filter.py b/loangen-agent/agent/documents/credit_pdf/junk_filter.py\nindex c7202fb..f6b3cd5 100644\n--- a/loangen-agent/agent/documents/credit_pdf/junk_filter.py\n+++ b/loangen-agent/agent/documents/credit_pdf/junk_filter.py\n@@ -36,7 +36,7 @@ def is_junk_creditor_name(creditor: str) -> bool:\n         return True\n     if not is_plausible_creditor_line(name):\n         return True\n-    if name in _UNKNOWN_CREDITOR:\n+    if name.lower() in _UNKNOWN_CREDITOR:\n         return True\n     for pattern in _JUNK_CREDITOR_PATTERNS:\n         if pattern.search(name):\n@@ -65,7 +65,7 @@ def dedupe_tradelines(tradelines: List[ParsedTradeline]) -> List[ParsedTradeline\n     seen: set[str] = set()\n     out: List[ParsedTradeline] = []\n     for tl in tradelines:\n-        key = f\"{(tl.creditor or '')}|{tl.account_number or ''}\"\n+        key = f\"{(tl.creditor or '').lower()}|{(tl.account_number or '').lower()}\"\n         if key in seen:\n             continue\n         seen.add(key)\ndiff --git a/loangen-agent/agent/documents/credit_pdf/normalize.py b/loangen-agent/agent/documents/credit_pdf/normalize.py\nindex fbfc459..12a5edb 100644\n--- a/loangen-agent/agent/documents/credit_pdf/normalize.py\n+++ b/loangen-agent/agent/documents/credit_pdf/normalize.py\n@@ -82,7 +82,7 @@ def bureau_tags_from_text(text: str) -> Set[str]:\n     \"\"\"Map TUC-B1 / EXP-B1 / EQX-B1 (and comma-separated) to bureau keys.\"\"\"\n     found: Set[str] = set()\n     upper = (text or \"\").upper()\n-    for token in re.findall(r\"\\b(TUC|EXP|EQX|TU)-B\\d*\\b\", upper):\n+    for token in re.findall(r\"\\b(TUC|EXP|EQX|EFX|TU)-B\\d*\\b\", upper):\n         prefix = token.split(\"-\")[0]\n         bureau = _BUREAU_TAG_MAP.get(prefix)\n         if bureau:\n@@ -150,7 +150,7 @@ def is_address_or_contact_line(line: str) -> bool:\n     if re.match(r\"^\\d+\\s+\\w\", text):  # street address\n         return True\n     if re.match(\n-        r\"^(blvd|st|street|ave|avenue|dr|drive|rd|road|way|lane|ln|ct|court|ste|suite)\\.?\",\n+        r\"^(blvd|st|street|ave|avenue|dr|drive|rd|road|way|lane|ln|ct|court|ste|suite)\\b\\.?\",\n         text,\n         re.I,\n     ):\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 47904,
+        "completion_tokens": 28,
+        "cached_tokens": 46666,
+        "cost_usd": 0.0099909,
+        "extra": {
+          "reasoning_tokens": 98
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 31,
+      "timestamp": "2026-07-15T06:07:38.247000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "I will run a command to delete the temporary test file from the `/tmp/opencode` directory to leave the system clean and ensure no leftover files remain.",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_bash_Xmle5PJi3E2EZp2yvbio",
+          "function_name": "bash",
+          "arguments": {
+            "command": "rm -f /tmp/opencode/test_bugs.py"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_bash_Xmle5PJi3E2EZp2yvbio",
+            "content": "(no output)"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 48830,
+        "completion_tokens": 59,
+        "cached_tokens": 38906,
+        "cost_usd": 0.0221349,
+        "extra": {
+          "reasoning_tokens": 98
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 32,
+      "timestamp": "2026-07-15T06:07:42.442000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "tool_todowrite_eikKnEszKzAIXGeRAUiR",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Run existing tests to verify baseline status",
+                "status": "completed",
+                "priority": "high"
+              },
+              {
+                "priority": "high",
+                "content": "Read normalize.py and junk_filter.py to understand Findings A, B, C, D",
+                "status": "completed"
+              },
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Fix Finding A (case-insensitive filter of filler tokens)"
+              },
+              {
+                "priority": "high",
+                "status": "completed",
+                "content": "Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)"
+              },
+              {
+                "status": "completed",
+                "content": "Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)",
+                "priority": "high"
+              },
+              {
+                "priority": "high",
+                "content": "Fix Finding D (case/variant-insensitive bureau tag parsing)",
+                "status": "completed"
+              },
+              {
+                "status": "completed",
+                "content": "Run tests to ensure everything is green and no regressions were introduced",
+                "priority": "high"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "tool_todowrite_eikKnEszKzAIXGeRAUiR",
+            "content": "[\n  {\n    \"content\": \"Run existing tests to verify baseline status\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Read normalize.py and junk_filter.py to understand Findings A, B, C, D\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding A (case-insensitive filter of filler tokens)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding B (deduplicate accounts with case-insensitive creditor name comparisons)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding C (prevent false positive discarding of creditor lines starting like discarded lines)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Fix Finding D (case/variant-insensitive bureau tag parsing)\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run tests to ensure everything is green and no regressions were introduced\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 48990,
+        "completion_tokens": 228,
+        "cached_tokens": 46675,
+        "cost_usd": 0.01280475,
+        "extra": {
+          "reasoning_tokens": 31
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 33,
+      "timestamp": "2026-07-15T06:07:45.495000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/google/gemini-3.5-flash",
+      "message": "I have resolved all findings from the data-integrity audit as follows:\n\n* **Finding A:** Updated `is_junk_creditor_name` in `junk_filter.py` to check for filler tokens case-insensitively using `.lower()`.\n* **Finding B:** Updated `dedupe_tradelines` in `junk_filter.py` to compare creditor names and account numbers case-insensitively via `.lower()`.\n* **Finding C:** Added a word boundary (`\\b`) to the address suffix regex in `is_address_or_contact_line` within `normalize.py` to prevent false positive matching on prefixes (e.g., matching \"State\" or \"DriveTime\" against \"st\" or \"dr\").\n* **Finding D:** Added the missing `EFX` (Equifax abbreviation) to the regex pattern in `bureau_tags_from_text` within `normalize.py`.",
+      "reasoning_content": "**Preparing to Respond**\n\nI'm ready to present the solution. My focus is now on crafting an extremely concise and direct explanation, adhering to the professional tone required for a CLI environment.\n\n",
+      "metrics": {
+        "prompt_tokens": 49299,
+        "completion_tokens": 198,
+        "cached_tokens": 38769,
+        "cost_usd": 0.02413935,
+        "extra": {
+          "reasoning_tokens": 83
+        }
+      },
+      "llm_call_count": 1
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 1111784,
+    "total_completion_tokens": 4444,
+    "total_cached_tokens": 697599,
+    "total_cost_usd": 0.90608835,
+    "total_steps": 33
+  }
+}

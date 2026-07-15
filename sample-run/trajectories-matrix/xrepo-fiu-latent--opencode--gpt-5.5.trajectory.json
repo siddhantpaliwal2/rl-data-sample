@@ -1,0 +1,1067 @@
+{
+  "schema_version": "ATIF-v1.7",
+  "session_id": "ses_09b1d1b04ffe0V0mXbuh215Dch",
+  "agent": {
+    "name": "opencode",
+    "version": "1.18.1",
+    "model_name": "openrouter/openai/gpt-5.5"
+  },
+  "steps": [
+    {
+      "step_id": 1,
+      "source": "user",
+      "message": "<uploaded_files>/app</uploaded_files>\n\n# Partner escalation digest - FIU adapter interop issues\n\nRolled-up tickets from our Account Aggregator partners against the FIU adapter\n(the service that talks to Account Aggregators on behalf of a\nfinancial-information user). The build is clean and the shipped checks pass, so\nnone of this is caught before deploy. Both reporters emphasise the same\npattern: ordinary traffic is fine, and the failures key off the *content* of\nspecific values rather than load, timing, or sequence.\n\n---\n\n**AA partner (ticket #4471):**\n> Your adapter is rejecting a subset of our callbacks as `invalid` on the\n> transaction / consent identifier, and the rejected ids are well-formed UUIDs -\n> canonical form, straight from our generator. Most UUIDs go through. We diffed\n> accepted vs rejected ids and cannot see what distinguishes them; whatever\n> validity check you run is *almost* right, and genuinely malformed ids are\n> still (correctly) refused.\n\n**AA partner (ticket #4488):**\n> Separately: your outgoing notification timestamps are wrong in the afternoon.\n> An event we both logged at 13:47 UTC arrives stamped 01:47 on the same date.\n> Date, minutes, seconds all agree; mornings are fine. Our parser now rejects\n> some of your afternoon messages outright.\n\n---\n\n**Triage note (ops):** these two are the ones partners have pinned down, but\nour own sweep says they are not isolated. A few more of the adapter's small,\ndeterministic helpers in the same family - identifier and payload handling,\nfield validation - drift in exactly the same way: correct on the ordinary\nvalues the system produces for itself, wrong by a hair on one specific edge\nform that routine traffic never feeds them. Away from those edges everything\nbehaves, which is why the shipped checks never surface any of it.\n\nThis is all pure string / date / pattern logic - no persistence, no external\ncalls. Restore correct behaviour on these content-dependent edge inputs without\nchanging anything on the paths that already behave; the project's checks pass\nnow and must stay passing.\n\nDo not add or modify anything under `src/test/`.\n\nVerify the build with:\n\n    cd /app && mvn -o -q -pl webservice test\n"
+    },
+    {
+      "step_id": 2,
+      "timestamp": "2026-07-15T08:27:01.800000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "I\u2019ll inspect the adapter helpers and existing non-test coverage first, then patch the smallest string/date validation logic that explains these content-dependent edge failures.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_M2VVlduCSouEmfs64OhB2fvd",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Locate FIU adapter helper code for UUID, timestamps, identifiers, and payload validation",
+                "status": "in_progress",
+                "priority": "high"
+              },
+              {
+                "content": "Patch edge-case logic without touching src/test",
+                "status": "pending",
+                "priority": "high"
+              },
+              {
+                "content": "Run mvn -o -q -pl webservice test",
+                "status": "pending",
+                "priority": "high"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_M2VVlduCSouEmfs64OhB2fvd",
+            "content": "[\n  {\n    \"content\": \"Locate FIU adapter helper code for UUID, timestamps, identifiers, and payload validation\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Patch edge-case logic without touching src/test\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run mvn -o -q -pl webservice test\",\n    \"status\": \"pending\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 6447,
+        "completion_tokens": 126,
+        "cached_tokens": 5632,
+        "cost_usd": 0.010671
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 3,
+      "timestamp": "2026-07-15T08:27:05.904000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_qeV7ElLYSAWcU0VmnVOmim5Y",
+          "function_name": "glob",
+          "arguments": {
+            "pattern": "**/*.java",
+            "path": "/app"
+          }
+        },
+        {
+          "tool_call_id": "call_lepajrLzp6JveqaUSvT2SNSv",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "UUID|uuid|DateTimeFormatter|SimpleDateFormat|timestamp|Timestamp|LocalDateTime|OffsetDateTime|Pattern|matches|regex|Base64|base64|identifier|transaction|consent",
+            "path": "/app",
+            "include": "*.java"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_qeV7ElLYSAWcU0VmnVOmim5Y",
+            "content": "/app/kms/src/main/java/com/finbit/fiuadapter/kms/service/impl/GCPKMSService.java\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/service/impl/AWSKMSService.java\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/service/KMSService.java\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/exception/KMSException.java\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/configuration/KMSConfiguration.java\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/constants/KMSType.java\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/constants/KMSConstants.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/util/SigningGeneralConstants.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/util/NullEmptyUtils.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/util/JwsUtil.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/util/JsonUtil.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/service/SignatureServiceImpl.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/service/SignatureService.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/SymmetricServiceImpl.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/ECCServiceImpl.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/DHEServiceImpl.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/CipherServiceImpl.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/SymmetricService.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/ECCService.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/DHEService.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/CipherService.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/repository/SignatureRepository.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/pojo/SecretKeyPair.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/pojo/KeyMaterial.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/pojo/DHPublicKey.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/pojo/DHProperties.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/pojo/CipherResponse.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/pojo/Verification.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/exceptions/DHException.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/httpcache/CachedBodyServletInputStream.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/httpcache/CachedBodyHttpServletRequest.java\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/dhdto/SerializedKeyPair.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/exception/JWSSignatureException.java\n/app/jws-signature/src/main/java/com/finbit/fiuadapter/jwssignature/entity/SignatureEntity.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/NullEmptyUtils.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/JwtTokenUtil.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/HttpContentExtractorUtil.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/FileUtil.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/BeansUtils.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/uiresponse/UIResponse.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/uiresponse/UIErrorMessage.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/symmetricencryptdecrypt/SymmetricEncryptDecryptServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/symmetricencryptdecrypt/SymmetricEncryptDecryptService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/sahamti/token/SahamtiTokenManagementServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/sahamti/token/SahamtiTokenManagementService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/sahamti/token/SahamatiCentralRegistryServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/sahamti/token/SahamatiCentralRegistryService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/restapi/RestAPIServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/restapi/RestAPIService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/purpose/PurposeServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/purpose/PurposeService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/notificationcallback/NotificationCallBackFIUImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/notificationcallback/NotificationCallBackFIU.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/mailservice/MailServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/mailservice/MailService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/audit/AuditServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/audit/AuditService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/firequest/FiRequestServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/firequest/FiRequestService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/aarestapi/AaRestApiServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/aarestapi/AaRestApiService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FINotificationServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FINotificationService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidation.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/UserDetailsServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/SignatureVerificationFilter.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/JwtUsernameAndPasswordAuthenticationFilter.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/JwtTokenAuthenticationFilter.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/JwtConfig.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/CustomUser.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/CustomAuthenticationFailureHandler.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/fetchfidata/FiDataServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/fetchfidata/FiDataService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/schedulers/ScheduledTasks.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/schedulers/RefreshCrEntitiesScheduler.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/externalentity/AAEntityServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/externalentity/AAEntityService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/entitydetails/EntityDetailServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/entitydetails/EntityDetailService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidationImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidation.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationUpdateImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationUpdate.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationProcessServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationProcessService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentinit/ConsentInitServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentinit/ConsentInitService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentconfiguration/ConsentConfigurationServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentconfiguration/ConsentConfigurationService.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/representation/response/sahamti/token/TokenAPIResponse.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactServiceImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactService.java\n\n(Results are truncated: showing first 100 results. Consider using a more specific path or pattern.)"
+          },
+          {
+            "source_call_id": "call_lepajrLzp6JveqaUSvT2SNSv",
+            "content": "Found 100 matches (more matches available)\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/service/impl/GCPKMSService.java:\n  Line 3: import java.util.Base64;\n\n  Line 84:             String encryptData = Base64.getEncoder().encodeToString(response.getCiphertext().toByteArray());\n\n  Line 122:             long cipherTextCrc32c = getCrc32cAsLong(Base64.getDecoder().decode(encryptedData));\n\n  Line 126:                     .setCiphertext(ByteString.copyFrom(Base64.getDecoder().decode(encryptedData)))\n\n\n/app/kms/src/main/java/com/finbit/fiuadapter/kms/service/impl/AWSKMSService.java:\n  Line 3: import java.util.Base64;\n\n  Line 73:             return Base64.getEncoder().encodeToString(encryptResult.getResult());\n\n  Line 122:                     Base64.getDecoder().decode(encryptedData.getBytes()));\n\n  Line 127:             // the entire context matches.\n\n\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/SymmetricServiceImpl.java:\n  Line 3: import java.util.Base64;\n\n  Line 49:             byte[] encodedKey = Base64.getDecoder().decode(publicKey);\n\n  Line 66:         return Base64.getEncoder().encodeToString(cipherData);\n\n  Line 73:      * @param base64EncodedData\n\n  Line 79:     public String symmetricDecryption( String base64EncodedData, String publicKey ) throws DHException\n\n  Line 85:             byte[] encodedKey = Base64.getDecoder().decode(publicKey);\n\n  Line 95:             cipherData = cipher.doFinal(Base64.getDecoder().decode(base64EncodedData));\n\n\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/ECCServiceImpl.java:\n  Line 9: import java.text.SimpleDateFormat;\n\n  Line 51:         DateFormat df = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"); // Quoted \"Z\" to indicate UTC, no timezone offset\n\n  Line 55:         String nonce = Base64.getEncoder().encodeToString(UUID.randomUUID().toString().replaceAll(\"-\",\"\").getBytes());\n\n  Line 77:         sb.append(new String(Base64.getEncoder().encode(pkcs8KeySpec.getEncoded())));\n\n  Line 112:             final byte[] pkcs8EncodedKey = Base64.getDecoder().decode(encodedKey);\n\n\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/DHEServiceImpl.java:\n  Line 5: import java.util.Base64;\n\n  Line 42:         return Base64.getEncoder().encodeToString(secretKey);\n\n\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/impl/CipherServiceImpl.java:\n  Line 5: import java.util.Base64;\n\n  Line 47:     public String decrypt( PrivateKey ourPrivatekey, PublicKey remotePublicKey, String base64YourNonce,\n\n  Line 48:             String base64RemoteNonce, String base64EncodedData, String algorithm, String provider ) throws DHException\n\n  Line 55:             byte[] xoredNonce = xor(Base64.getDecoder().decode(base64YourNonce),\n\n  Line 56:                     Base64.getDecoder().decode(base64RemoteNonce));\n\n  Line 57:             String key = getSessionKey(Base64.getDecoder().decode(sharedSecret), xoredNonce);\n\n  Line 59:             SecretKeySpec keySpec = new SecretKeySpec(Base64.getDecoder().decode(key), \"AES\");\n\n  Line 64:             cipherData = cipher.doFinal(Base64.getDecoder().decode(base64EncodedData));\n\n  Line 71:         return Base64.getEncoder().encodeToString(cipherData);\n\n  Line 75:     public String encrypt( PrivateKey ourPrivatekey, PublicKey remotePublicKey, String base64YourNonce,\n\n  Line 76:             String base64RemoteNonce, String data, String algorithm, String provider ) throws DHException\n\n  Line 86:             byte[] xoredNonce = xor(Base64.getDecoder().decode(base64YourNonce),\n\n  Line 87:                     Base64.getDecoder().decode(base64RemoteNonce));\n\n  Line 89:             String key = getSessionKey(Base64.getDecoder().decode(sharedSecret), xoredNonce);\n\n  Line 92:             SecretKeySpec keySpec = new SecretKeySpec(Base64.getDecoder().decode(key), \"AES\");\n\n  Line 99:             return Base64.getEncoder().encodeToString(cipherData);\n\n  Line 129:         return Base64.getEncoder().encodeToString(result);\n\n\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/service/CipherService.java:\n  Line 16:     String decrypt( PrivateKey ourPrivatekey, PublicKey remotePublicKey, String base64YourNonce,\n\n  Line 17:             String base64RemoteNonce, String base64EncodedData, String algorithm, String provider ) throws DHException;\n\n  Line 21:     String encrypt( PrivateKey ourPrivatekey, PublicKey remotePublicKey, String base64YourNonce,\n\n  Line 22:             String base64RemoteNonce, String data, String algorithm, String provider ) throws DHException;\n\n\n/app/diffie-hellman-services/src/main/java/com/finbit/diffiehellman/pojo/CipherResponse.java:\n  Line 15:     String base64Data;\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java:\n  Line 5: import java.util.UUID;\n\n  Line 6: import java.util.regex.Pattern;\n\n  Line 11: public class UUIDGenerator {\n\n  Line 14:      * This method is used to generate UUID\n\n  Line 16:     public static String generateUUID()\n\n  Line 18:         return UUID.randomUUID().toString();\n\n  Line 20:     public static boolean regaxUUIDvalidation(String uuid){\n\n  Line 21:         return Pattern.matches(GeneralConstants.VALID_PATTERN_UUID, uuid);\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java:\n  Line 11: import java.text.SimpleDateFormat;\n\n  Line 20:     public boolean validateTimeStamp(String timestamp, String txnId) throws InvalidRequestException {\n\n  Line 23:             SimpleDateFormat sdf = new SimpleDateFormat(\"yyyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n\n  Line 25:             Date date = sdf.parse(timestamp);\n\n  Line 27:             long fifteenAgo = System.currentTimeMillis() - (applicationConfigurationBean.getApplicationConfigurationBean().getTimestampValidity()*60*1000);\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/JwtTokenUtil.java:\n  Line 4: import java.time.LocalDateTime;\n\n  Line 67:         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(jwtConfig.getSecret()))\n\n  Line 95:         claims.put(\"creation\", LocalDateTime.now());\n\n  Line 110:                 .signWith(SignatureAlgorithm.HS512, DatatypeConverter.parseBase64Binary(jwtConfig.getSecret()))\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java:\n  Line 8: import org.joda.time.format.DateTimeFormatter;\n\n  Line 48:         DateTimeFormatter formatter = DateTimeFormat.forPattern(\"yyyy-MM-dd'T'hh:mm:ss.SSS'Z'\");\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java:\n  Line 4: import java.util.Base64;\n\n  Line 15: public class Base64Decoder {\n\n  Line 19:         return JsonUtil.convertJsonToObject(new String(Base64.getDecoder().decode(body), StandardCharsets.UTF_8),\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/symmetricencryptdecrypt/SymmetricEncryptDecryptServiceImpl.java:\n  Line 3: import java.util.Base64;\n\n  Line 105:                 symmetricKey.setKey(Base64.getEncoder().encodeToString(secretKey.getEncoded()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java:\n  Line 30: import java.sql.Timestamp;\n\n  Line 31: import java.text.SimpleDateFormat;\n\n  Line 68:         String base64EncodedBody = split_string.get(1);\n\n  Line 69:         Base64.Decoder decoder = Base64.getDecoder();\n\n  Line 72:             body = new String(decoder.decode(base64EncodedBody));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentconfiguration/ConsentConfigurationServiceImpl.java:\n  Line 1: package com.finbit.fiuadapter.webservice.service.consentconfiguration;\n\n  Line 32: import com.finbit.fiuadapter.webservice.utils.UUIDGenerator;\n\n  Line 44:     private ConsentConfigurationRepository consentConfigurationRepository;\n\n  Line 56:      * This service is used to Create the default consent detail using\n\n  Line 58:      * @param consentConfigurationRequest\n\n  Line 64:             ConsentConfigurationRequest consentConfigurationRequest, String fiuId ) throws DataException, InvalidRequestException {\n\n  Line 65:         ConsentConfigurationEntity consentConfigurationEntity = new ConsentConfigurationEntity();\n\n  Line 66:         consentConfigurationEntity.setFiuId(fiuId);\n\n  Line 67:         consentConfigurationEntity.setIsActive(true);\n\n  Line 68:         buildConsentDetail(consentConfigurationRequest);\n\n  Line 69:         consentConfigurationEntity.setConsentConfigurationRequest(consentConfigurationRequest);\n\n  Line 70:         consentConfigurationEntity.setConsentTemplateId(UUIDGenerator.generateUUID());\n\n  Line 71:         return saveDefaultConsentDetails(consentConfigurationEntity);\n\n  Line 75:      * This service is used to update the default consent details\n\n  Line 77:      * @param consentConfigurationRequest\n\n  Line 83:             ConsentConfigurationRequest consentConfigurationRequest, String fiuId, String consentConfigId )\n\n  Line 85:         ConsentConfigurationEntity consentConfigurationEntity = getByConsentTemplateId(consentConfigId, fiuId);\n\n  Line 86:         consentConfigurationEntity.setFiuId(fiuId);\n\n  Line 87:         buildConsentDetail(consentConfigurationRequest);\n\n  Line 88:         consentConfigurationEntity.setConsentConfigurationRequest(consentConfigurationRequest);\n\n  Line 89:         return saveDefaultConsentDetails(consentConfigurationEntity);\n\n  Line 93:     public ConsentConfigurationEntity getByConsentTemplateId( String consentTemplateId, String fiuId )\n\n  Line 96:         Optional<ConsentConfigurationEntity> defaultConsentDetail = consentConfigurationRepository\n\n  Line 97:                 .findByConsentTemplateIdAndFiuId(consentTemplateId, fiuId);\n\n  Line 100:             log.error(\"Default Consent Details is not present for the template id : \" + consentTemplateId);\n\n  Line 101:             throw new DataException(GeneralConstants.BAD_REQUEST, \"Invalid Consent Template Id : \" + consentTemplateId,\n\n  Line 107:             log.error(\"This Use case has been deleted. template id \" + consentTemplateId);\n\n\n(Results truncated. Consider using a more specific path or pattern.)"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 6697,
+        "completion_tokens": 105,
+        "cached_tokens": 6144,
+        "cost_usd": 0.008987
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 4,
+      "timestamp": "2026-07-15T08:27:07.550000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "I found the likely family: UUID validation uses a project regex, and outgoing timestamps are formatted with a 12-hour clock. I\u2019m checking adjacent helper constants for the same \u201calmost right except one edge form\u201d pattern before editing.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_hJY5tHGz5G9YwaO1haZm8iym",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java",
+            "offset": 1,
+            "limit": 120
+          }
+        },
+        {
+          "tool_call_id": "call_Tf2brg6tzi23ySfKgssie4SS",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "VALID_PATTERN_UUID|VALID_PATTERN|Pattern.matches|DateTimeFormat.forPattern|SimpleDateFormat\\(",
+            "path": "/app/webservice/src/main/java",
+            "include": "*.java"
+          }
+        },
+        {
+          "tool_call_id": "call_GapytbdyqkmZzjtfLDAfiwzF",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java",
+            "offset": 1,
+            "limit": 160
+          }
+        },
+        {
+          "tool_call_id": "call_SMjf0pEGw7lyMe8GU7ThvRBS",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java",
+            "offset": 1,
+            "limit": 120
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_hJY5tHGz5G9YwaO1haZm8iym",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.utils;\n2: \n3: import com.finbit.fiuadapter.webservice.constants.GeneralConstants;\n4: \n5: import java.util.UUID;\n6: import java.util.regex.Pattern;\n7: \n8: /**\n9:  * @author manjunathr created at 08-06-2020\n10:  */\n11: public class UUIDGenerator {\n12: \n13:     /**\n14:      * This method is used to generate UUID\n15:      */\n16:     public static String generateUUID()\n17:     {\n18:         return UUID.randomUUID().toString();\n19:     }\n20:     public static boolean regaxUUIDvalidation(String uuid){\n21:         return Pattern.matches(GeneralConstants.VALID_PATTERN_UUID, uuid);\n22:     }\n23: }\n\n(End of file - total 23 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_Tf2brg6tzi23ySfKgssie4SS",
+            "content": "Found 4 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java:\n  Line 21:         return Pattern.matches(GeneralConstants.VALID_PATTERN_UUID, uuid);\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java:\n  Line 23:             SimpleDateFormat sdf = new SimpleDateFormat(\"yyyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java:\n  Line 48:         DateTimeFormatter formatter = DateTimeFormat.forPattern(\"yyyy-MM-dd'T'hh:mm:ss.SSS'Z'\");\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java:\n  Line 43:     public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{11}$\";\n"
+          },
+          {
+            "source_call_id": "call_GapytbdyqkmZzjtfLDAfiwzF",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.utils;\n2: \n3: import java.util.Calendar;\n4: \n5: import org.joda.time.DateTime;\n6: import org.joda.time.DateTimeZone;\n7: import org.joda.time.format.DateTimeFormat;\n8: import org.joda.time.format.DateTimeFormatter;\n9: \n10: /**\n11:  * @author manjunathr created at 30-06-2020\n12:  *         <p>\n13:  *         This is the Util class used for the opertations related to Date and time\n14:  */\n15: public class DateTimeUtil {\n16: \n17:     /**\n18:      * This method is used to add the number of days and number of months to the given date\n19:      *\n20:      * @param currentMilliSecond\n21:      * @param days\n22:      * @param month\n23:      *\n24:      * @return result DateTime\n25:      */\n26:     public static String getAddedDate( Long currentMilliSecond, int days, int month )\n27:     {\n28:         DateTime date = new DateTime(currentMilliSecond, DateTimeZone.UTC);\n29:         Calendar c = Calendar.getInstance();\n30:         c.setTime(date.toDate());\n31:         c.add(Calendar.DATE, days);\n32:         c.add(Calendar.MONTH, month);\n33:         return getISOTimeStamp(new DateTime(c.getTimeInMillis(), DateTimeZone.UTC).getMillis());\n34:     }\n35: \n36:     /**\n37:      * This method returns DateTime in UTC format\n38:      *\n39:      * @return DateTime\n40:      */\n41:     public static DateTime getcurrentUTCTimeStamp()\n42:     {\n43:         return new DateTime(DateTimeZone.UTC);\n44:     }\n45: \n46:     public static String getISOTimeStamp( Long milliSecond )\n47:     {\n48:         DateTimeFormatter formatter = DateTimeFormat.forPattern(\"yyyy-MM-dd'T'hh:mm:ss.SSS'Z'\");\n49:         DateTime currentDate = new DateTime(milliSecond, DateTimeZone.UTC);\n50:         return currentDate.toString(formatter);\n51:     }\n52: }\n\n(End of file - total 52 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_SMjf0pEGw7lyMe8GU7ThvRBS",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.utils;\n2: \n3: import com.finbit.fiuadapter.webservice.config.ApplicationConfiguration;\n4: import com.finbit.fiuadapter.webservice.constants.GeneralConstants;\n5: import com.finbit.fiuadapter.webservice.exceptions.InvalidRequestException;\n6: import org.springframework.beans.factory.annotation.Autowired;\n7: import org.springframework.http.HttpStatus;\n8: import org.springframework.stereotype.Service;\n9: \n10: import java.text.ParseException;\n11: import java.text.SimpleDateFormat;\n12: import java.util.Date;\n13: import java.util.TimeZone;\n14: \n15: @Service\n16: public class TimeStampValidation {\n17:     @Autowired\n18:     ApplicationConfiguration applicationConfigurationBean;\n19: \n20:     public boolean validateTimeStamp(String timestamp, String txnId) throws InvalidRequestException {\n21:         //creates a formatter that parses the date in the given format\n22:         try {\n23:             SimpleDateFormat sdf = new SimpleDateFormat(\"yyyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n24:             sdf.setTimeZone(TimeZone.getTimeZone(\"UTC\"));\n25:             Date date = sdf.parse(timestamp);\n26:             long timeInMillis = date.getTime();\n27:             long fifteenAgo = System.currentTimeMillis() - (applicationConfigurationBean.getApplicationConfigurationBean().getTimestampValidity()*60*1000);\n28:             if(new Date().before(date)){\n29:                 throw new InvalidRequestException(txnId, GeneralConstants.INVALID_REQUEST,GeneralConstants.TIMESTAMP_FUTURE, HttpStatus.BAD_REQUEST);\n30:             }\n31:             if (timeInMillis < fifteenAgo) {\n32:                 return false;\n33:             }\n34:             else{\n35:                 return true;\n36:             }\n37:         } catch (ParseException e){\n38:             throw new InvalidRequestException(txnId,GeneralConstants.INVALID_REQUEST,GeneralConstants.DATE_PARSING_ERROR, HttpStatus.BAD_REQUEST);\n39:         }\n40:     }\n41: }\n\n(End of file - total 41 lines)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 11817,
+        "completion_tokens": 251,
+        "cached_tokens": 6144,
+        "cost_usd": 0.039237,
+        "extra": {
+          "reasoning_tokens": 9
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 5,
+      "timestamp": "2026-07-15T08:27:19.304000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_87qmnzIc5f0wQIqRw9DtDFir",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "regaxUUIDvalidation|VALID_PATTERN_UUID|getISOTimeStamp|validateTimeStamp\\(",
+            "path": "/app/webservice/src/main/java",
+            "include": "*.java"
+          }
+        },
+        {
+          "tool_call_id": "call_4xOCIkVXAUKuM5SqZfxJYkqi",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "substring\\(|charAt\\(|split\\(|length\\(\\)|matches\\(|Base64\\.getDecoder|Base64\\.getUrlDecoder|replaceAll\\(|replace\\(",
+            "path": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils",
+            "include": "*.java"
+          }
+        },
+        {
+          "tool_call_id": "call_ZjraMBOW1197WgFuCpc26sXk",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "matches\\(|Pattern\\.matches|substring\\(|charAt\\(|length\\(\\)|DateTimeFormat\\.forPattern|SimpleDateFormat\\(|Base64\\.getDecoder",
+            "path": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service",
+            "include": "*.java"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_87qmnzIc5f0wQIqRw9DtDFir",
+            "content": "Found 48 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java:\n  Line 20:     public static boolean regaxUUIDvalidation(String uuid){\n\n  Line 21:         return Pattern.matches(GeneralConstants.VALID_PATTERN_UUID, uuid);\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java:\n  Line 20:     public boolean validateTimeStamp(String timestamp, String txnId) throws InvalidRequestException {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java:\n  Line 33:         return getISOTimeStamp(new DateTime(c.getTimeInMillis(), DateTimeZone.UTC).getMillis());\n\n  Line 46:     public static String getISOTimeStamp( Long milliSecond )\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consent/ConsentServiceImpl.java:\n  Line 92:             statusResponseToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 106:         consentsRequestToAA.setTimestamp(DateTimeUtil.getISOTimeStamp(consentEntity.getCreatedAt().getMillis()));\n\n  Line 137:         statusResponseToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 142:         consentNotificationRequestToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 247:         if(!timeStampValidation.validateTimeStamp(consentCreateResponseFromAA.getTimestamp(), consentCreateResponseFromAA.getTxnid())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/callbackapi/CallBackServiceImpl.java:\n  Line 152:                 fiDataNotificationRequestToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 155:                 fiDataNotificationRequestToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/restapi/RestAPIServiceImpl.java:\n  Line 248:         uiErrorMessage.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/aarestapi/AaRestApiServiceImpl.java:\n  Line 266:             if(!timeStampValidation.validateTimeStamp(consentHandleResponseFromAA.getTimestamp(), consentHandleResponseFromAA.getTxnid())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/notificationcallback/NotificationCallBackFIUImpl.java:\n  Line 41:         consentNotificationRequestErrorToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/SignatureVerificationFilter.java:\n  Line 138:             uiErrorMessage.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 149:             message.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 160:             message.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/JwtUsernameAndPasswordAuthenticationFilter.java:\n  Line 112:         res.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/firequest/FiRequestServiceImpl.java:\n  Line 212:         fiRequestEntity.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 530:         if(!timeStampValidation.validateTimeStamp(fiRequestResponseFromAA.getTimestamp(), fiRequestResponseFromAA.getTxnid())) {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/security/CustomAuthenticationFailureHandler.java:\n  Line 34:         uiErrorMessage.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FINotificationServiceImpl.java:\n  Line 105:             fiNotificationErrorResponseToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java:\n  Line 67:         if(!UUIDGenerator.regaxUUIDvalidation(fiNotificationRequest.getTxnid())){\n\n  Line 71:         if(!timeStampValidation.validateTimeStamp(fiNotificationRequest.getTimestamp(), fiNotificationRequest.getTxnid())){\n\n  Line 75:         if(!UUIDGenerator.regaxUUIDvalidation(fiNotificationRequest.getFIStatusNotification().getSessionId())){\n\n  Line 140: //                                if (!UUIDGenerator.regaxUUIDvalidation(fiNotificationAccount.getLinkRefNumber())) {\n\n  Line 222:         fiNotificationErrorResponseToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/fetchfidata/FiDataServiceImpl.java:\n  Line 522:         if(!timeStampValidation.validateTimeStamp(fiFetchResponseFromAA.getTimestamp(), fiFetchResponseFromAA.getTxnid())) {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidationImpl.java:\n  Line 51:         if(!UUIDGenerator.regaxUUIDvalidation(consentNotificationRequest.getTxnid())){\n\n  Line 55:         if(!timeStampValidation.validateTimeStamp(consentNotificationRequest.getTimestamp(), consentNotificationRequest.getTxnid())){\n\n  Line 59:         if(!UUIDGenerator.regaxUUIDvalidation(consentNotificationRequest.getConsentStatusNotification().getConsentHandle())){\n\n  Line 64:             if(!UUIDGenerator.regaxUUIDvalidation(consentNotificationRequest.getConsentStatusNotification().getConsentId())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationUpdateImpl.java:\n  Line 110:         consentNotificationRequestToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentinit/ConsentInitServiceImpl.java:\n  Line 146:         consentDetail.setConsentStart(DateTimeUtil.getISOTimeStamp(consentStart));\n\n  Line 177:         fiDataRange.setTo(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactServiceImpl.java:\n  Line 252:             if(!timeStampValidation.validateTimeStamp(getConsentByIdResponse.getCreateTimestamp(), getConsentByIdResponse.getTxnid())) {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/exceptions/GlobalException.java:\n  Line 53:         uiErrorMessage.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 71:         uiErrorMessage.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 97:         uiErrorMessage.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 114:         message.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 135:         message.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 155:         message.setTimeStamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 171:         consentNotificationExceptionResponse.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 190:         invalidRequestErrorResponse.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/AbstractController.java:\n  Line 59:         t.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n  Line 75:         t.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java:\n  Line 43:     public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{11}$\";\n"
+          },
+          {
+            "source_call_id": "call_4xOCIkVXAUKuM5SqZfxJYkqi",
+            "content": "Found 4 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java:\n  Line 21:         return Pattern.matches(GeneralConstants.VALID_PATTERN_UUID, uuid);\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/JwtTokenUtil.java:\n  Line 158:             return header.replace(jwtConfig.getPrefix(), \"\");\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java:\n  Line 19:         return body.split(\"\\\\.\")[2];\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java:\n  Line 19:         return JsonUtil.convertJsonToObject(new String(Base64.getDecoder().decode(body), StandardCharsets.UTF_8),\n"
+          },
+          {
+            "source_call_id": "call_ZjraMBOW1197WgFuCpc26sXk",
+            "content": "Found 5 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java:\n  Line 69:         Base64.Decoder decoder = Base64.getDecoder();\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/fetchfidata/FiDataServiceImpl.java:\n  Line 306:                     .getEncryptedData(new String(Base64.getDecoder().decode(cipherResponse.getBase64Data()))));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/entitydetails/EntityDetailServiceImpl.java:\n  Line 176:                     String plaintext = new String(Base64.getDecoder().decode(entityDetails.getCertificate()));\n\n  Line 410:             byte[] publicKeyByte = Base64.getDecoder().decode(dhKeyPair.getPublicKey());\n\n  Line 411:             byte[] privateKeyByte = Base64.getDecoder().decode(dhKeyPair.getPrivateKey());\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 13587,
+        "completion_tokens": 216,
+        "cached_tokens": 11264,
+        "cost_usd": 0.030027,
+        "extra": {
+          "reasoning_tokens": 210
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 6,
+      "timestamp": "2026-07-15T08:27:22.374000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "reasoning_content": "**Identifying validation fixes**\n\nI need to gather a few more small helpers for family identifier and payload handling, making sure field validation is consistent. It's important to identify hidden tests and address issues not related to src/test. I must inspect constants and validation patterns, perhaps focusing on specific edge cases. I'll take a look at GeneralConstants and validators to troubleshoot and ensure everything is in line.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_Y7Dc52stsbJVI1rUyesuVjzS",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java",
+            "offset": 1,
+            "limit": 220
+          }
+        },
+        {
+          "tool_call_id": "call_pESCZ41jcLvni7AZI3ZFvQ9S",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java",
+            "offset": 1,
+            "limit": 80
+          }
+        },
+        {
+          "tool_call_id": "call_OsrC4CW2QDb2d8dSYzjp92g6",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java",
+            "offset": 1,
+            "limit": 80
+          }
+        },
+        {
+          "tool_call_id": "call_pVI1QBsveqG2kzx9kUk0abH3",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/NullEmptyUtils.java",
+            "offset": 1,
+            "limit": 120
+          }
+        },
+        {
+          "tool_call_id": "call_UfqkLrw9uEOJWUSHnIwss4Oj",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/HttpContentExtractorUtil.java",
+            "offset": 1,
+            "limit": 120
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_Y7Dc52stsbJVI1rUyesuVjzS",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.constants;\n2: \n3: /**\n4:  * @author manjunathr created at 01-06-2020\n5:  */\n6: public class GeneralConstants {\n7:     public static final String CREATE_CONSENT = \"CREATE_CONSENT\";\n8:     public static final String CREATE_CONSENT_ARTIFACT = \"CREATE_CONSENT_ARTIFACT\";\n9:     public static final String EMPTY_NOTIFIER_AND_CONSENT_STATUS_NOTIFICATION = \"Notifier and consent notification status should not be null or empty\";\n10:     public static final String SCHEMATIC_ERROR_MSG = \"fields are invalid\";\n11:     public static final String REQUEST_STATUS = \"FAILED\";\n12:     public static final String INVALID_AA_RESPONSE = \"Invalid consent creation response from AA\";\n13:     public static final String INVALID_CONSENT_NOTIFICATION_REQUEST = \"Invalid consent notification request as request status is failed for given consent Handle: \";\n14:     public static final String INVALID_FI_NOTIFICATION_REQUEST = \"Invalid FI notification request as request status is failed for given sessionId: \";\n15:     public static final String ERROR_MESSAGE = \"field is invalid\";\n16:     public static final String DATA_TYPE_MISMATCH = \" datatype is wrong\";\n17:     public static final String EXCEPTION = \"Exception\";\n18:     public static final String BAD_REQUEST = \"InvalidRequest\";\n19:     public static final String BAD_CREDENTIALS = \"Bad Credentials\";\n20:     public static final String SOMETHING_WENT_WRONG = \"Something went wrong\";\n21:     public static final String SYNTAX_VALIDATION = \"Syntax validation failed\";\n22:     public static final String APPLICATION_CONTROLLER_PATH = \"com.finbit.fiuadapter.webservice.controller\";\n23:     public static final String WEBSERVICE_REPOSITORY_PATH = \"com.finbit.fiuadapter.webservice.repository\";\n24:     public static final String WEBSERVICE_BASE_PATH = \"com.finbit.fiuadapter.webservice\";\n25:     public static final String JWS_SIGNATURE_REPOSITORY_PATH = \"com.finbit.fiuadapter.jwssignature.repository\";\n26:     public static final String JWS_SIGNATURE_BASE_PATH = \"com.finbit.fiuadapter.jwssignature\";\n27:     public static final String DIFFIE_HELLMAN_BASE_PATH = \"com.finbit.diffiehellman\";\n28:     public static final String KMS_BASE_PATH = \"com.finbit.fiuadapter.kms\";\n29:     public static final String INVALID_REQUEST = \"InvalidRequest\";\n30:     public static final String NO_SUCH_VERSION = \"NoSuchVersion\";\n31:     public static final String INVALID_SIGNATURE = \"SignatureDoesNotMatch\";\n32:     public static final String INVALID_SIGNATURE_MSG = \"Signature verification failed\";\n33:     public static final String DATA_LIFE_MUST_GTR_ZERO = \"dataLife value should be greater then zero as consent mode is given STORE\";\n34:     public static final String DATA_LIFE_MUST_ZERO = \"dataLife value must be zero\";\n35:     public static final String TIMESTAMP_OLDER = \"timestamp can not be older then 15 minutes\";\n36:     public static final String TIMESTAMP_FUTURE = \"timestamp can not be future date\";\n37:     public static final String DATE_PARSING_ERROR = \"given timestamp format is not valid\";\n38:     public static final String STRING_SEPARATOR = \"#\";\n39:     public static final String INVALID_FIELD_VALUE = \"Invalid request parameter value should not be null or empty\";\n40:     public static final String INVALID_CONSENT_STATUS_MSG = \"Consent status value should be as given [ACTIVE, PAUSED, REVOKED, EXPIRED, PENDING, REJECTED]\";\n41:     public static final String INVALID_CONSENT_STATUS = \"InvalidConsentStatus\";\n42:     public static final String INVALID_VERSION = \"Invalid Api version\";\n43:     public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{11}$\";\n44:     public static final String FI_DATA_READY = \"FI_DATA_READY\";\n45:     public static final String NOTIFIER_AA = \"AA\";\n46:     public static final String INVALID_NOTIFIER = \"InvalidNotifier\";\n47:     public static final String INVALID_NOTIFIER_MSG = \"Notifier Type is not AA\";\n48:     public static final String INVALID_CONSENT_ID = \"InvalidConsentId\";\n49:     public static final String INVALID_CONSENT_HANDLE = \"InvalidConsentHandle\";\n50:     public static final String INVALID_CONSENT_HANDLE_MSG = \"Invalid Consent Handle: \";\n51:     public static final String INVALID_CONSENT_ID_MESSAGE= \"Invalid Consent ID : \";\n52:     public static final String INVALID_CONSENT_ID_MSG = \"Consent handle did not match for given consent ID\";\n53:     public static final String IDEMPOTENCY_ERROR = \"IdempotencyError\";\n54:     public static final String IDEMPOTENCY_ERROR_MSG = \"TxnId should be unique\";\n55:     public static final String INVALID_SESSION_ID = \"InvalidSessionId\";\n56:     public static final String INVALID_SESSION_STATUS = \"InvalidSessionStatus\";\n57:     public static final String INVALID_SESSION_STATUS_MSG = \"Session Status should be one of them [ACTIVE, COMPLETED, EXPIRED, FAILED]\";\n58:     public static final String INVALID_FI_STATUS = \"InvalidFIStatus\";\n59:     public static final String INVALID_FI_STATUS_MSG = \"FI Status Should be one of them [READY, DENIED, PENDING, DELIVERED, TIMEOUT]\";\n60:     public static final String FI_STATUS_MSG = \"FI fetch is not possible as FI status is : \";\n61:     public static final String FI_STATUS_DELIVERED = \"FI notification is already send to FIU\";\n62:     public static final String EMPTY_AA_API_KEY_MSG = \"aa_api_key header is missing or empty.\";\n63:     public static final String INVALID_AA_API_KEY_PROVIDED = \"Invalid aa_api_key header value provided.\";\n64:     public static final String UNAUTHORIZED = \"Unauthorized\";\n65:     public static final String INVALID_REF_URI = \"Invalid RefUri\";\n66:     public static final String INVALID_TXN_ID = \"invalid TxnId\";\n67:     public static final String INVALID_CUSTOMER_ID = \"invalid customer ID\";\n68:     public static final String AA_API_KEY_TOKEN_EXPIRED = \"API key is expired\";\n69:     public static final String REQUEST_TIMEOUT = \"REQUEST_TIMEOUT\";\n70:     public static final String INVALID_NOTIFIER_ID = \"Notifier id is not correct\";\n71:     public static final String INVALID_AA=\"Invalid AA ID.\";\n72:     public static final String INVALID_CONSENT_USE= \"Invalid ConsentUse.logUri field.\";\n73:     public static final String INVALID_FIP_ID = \"Invalid FIP ID.\";\n74:     public static final String INVALID_CLIENT_ID=\"Invalid client id provided in the api key\";\n75: }\n\n(End of file - total 75 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_pESCZ41jcLvni7AZI3ZFvQ9S",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.utils;\n2: \n3: import java.nio.charset.StandardCharsets;\n4: import java.util.Base64;\n5: \n6: import com.finbit.fiuadapter.jwssignature.exception.JWSSignatureException;\n7: import com.finbit.fiuadapter.jwssignature.util.JsonUtil;\n8: \n9: /**\n10:  * @author ashvinikumar\n11:  * @version 1.0\n12:  * @ fiu-adapter\n13:  * @since 6/8/20\n14:  */\n15: public class Base64Decoder {\n16: \n17:     public static Object getDecodedObject( String body, Class<?> type ) throws JWSSignatureException\n18:     {\n19:         return JsonUtil.convertJsonToObject(new String(Base64.getDecoder().decode(body), StandardCharsets.UTF_8),\n20:                 type);\n21: \n22:     }\n23: \n24: }\n\n(End of file - total 24 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_OsrC4CW2QDb2d8dSYzjp92g6",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.utils;\n2: \n3: /**\n4:  * @author ashvinikumar\n5:  * @version 1.0\n6:  * @ fiu-adapter\n7:  * @since 6/24/20\n8:  */\n9: public class GetDetachedBody {\n10: \n11:     /**\n12:      * this method is used for extracting signature in the form of c\n13:      * \n14:      * @param body\n15:      * @return c\n16:      */\n17:     public static String getDetached( String body )\n18:     {\n19:         return body.split(\"\\\\.\")[2];\n20: \n21:     }\n22: }\n\n(End of file - total 22 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_pVI1QBsveqG2kzx9kUk0abH3",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/NullEmptyUtils.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.utils;\n2: \n3: import java.util.Collection;\n4: import java.util.List;\n5: import java.util.Map;\n6: \n7: /**\n8:  * @author manjunathr created at 01-06-2020\n9:  */\n10: public class NullEmptyUtils {\n11: \n12:     public static boolean isNullorEmpty( String val )\n13:     {\n14:         return isNull(val) || val.isEmpty() || val.equals(\"null\");\n15:     }\n16: \n17:     public static boolean isNullorEmpty( List<?> val )\n18:     {\n19:         return isNull(val) || val.isEmpty();\n20:     }\n21: \n22:     public static boolean isNullorEmpty( Collection<?> val )\n23:     {\n24:         return isNull(val) || val.isEmpty();\n25:     }\n26: \n27:     public static boolean isNullorEmpty( Number val )\n28:     {\n29:         return isNull(val) || val.doubleValue() == 0.0D || val.intValue() == 0;\n30:     }\n31: \n32:     public static boolean isNullorEmpty( Map<?, ?> val )\n33:     {\n34:         return isNull(val) || val.isEmpty();\n35:     }\n36: \n37:     public static boolean isNull( Object val )\n38:     {\n39:         return val == null;\n40:     }\n41: \n42:     public static boolean isRowNull( String[] xlsxValue )\n43:     {\n44: \n45:         for( String value : xlsxValue )\n46:         {\n47:             if( !NullEmptyUtils.isNullorEmpty(value) )\n48:             {\n49:                 return false;\n50:             }\n51:         }\n52:         return true;\n53:     }\n54: }\n\n(End of file - total 54 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_UfqkLrw9uEOJWUSHnIwss4Oj",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/HttpContentExtractorUtil.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.utils;\n2: \n3: import java.io.BufferedReader;\n4: import java.io.InputStream;\n5: import java.io.InputStreamReader;\n6: import java.util.Enumeration;\n7: import java.util.HashMap;\n8: import java.util.stream.Collectors;\n9: \n10: import com.fasterxml.jackson.core.JsonProcessingException;\n11: import com.fasterxml.jackson.databind.JsonNode;\n12: import com.fasterxml.jackson.databind.ObjectMapper;\n13: import com.fasterxml.jackson.databind.node.JsonNodeType;\n14: import com.finbit.fiuadapter.jwssignature.exception.JWSSignatureException;\n15: import com.finbit.fiuadapter.jwssignature.httpcache.CachedBodyHttpServletRequest;\n16: import com.finbit.fiuadapter.jwssignature.util.JsonUtil;\n17: import com.finbit.fiuadapter.webservice.constants.GeneralConstants;\n18: import com.finbit.fiuadapter.webservice.exceptions.ConsentNotificationException;\n19: import com.finbit.fiuadapter.webservice.exceptions.DataException;\n20: \n21: import com.finbit.fiuadapter.webservice.exceptions.JsonFormatException;\n22: import lombok.extern.slf4j.Slf4j;\n23: import org.springframework.http.HttpStatus;\n24: \n25: /**\n26:  * @author manjunathr Created on 18-07-2020\n27:  *\n28:  *         This Util class is used for the IO stream operations\n29:  */\n30: @Slf4j\n31: public class HttpContentExtractorUtil {\n32: \n33:     /**\n34:      * This method is used to get the request body from the HTTP Servlet Request Object\n35:      *\n36:      * @param inputStream\n37:      * @return converted request body to JSON String\n38:      * @throws JWSSignatureException\n39:      */\n40:     public static String getDataByInputStream( InputStream inputStream ) throws DataException, JsonFormatException {\n41:         try\n42:         {\n43:             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));\n44:             return bufferedReader.lines().collect(Collectors.joining());\n45:         } catch( Exception e )\n46:         {\n47:             log.error(\"Error while getting Request body\", e);\n48:             throw new DataException(e);\n49:         }\n50:     }\n51: \n52:     public static String handleRequest( CachedBodyHttpServletRequest req ) throws JWSSignatureException\n53:     {\n54:         HashMap<String, String> paramsHashMap = new HashMap<>();\n55:         Enumeration<String> parameterNames = req.getParameterNames();\n56: \n57:         while( parameterNames.hasMoreElements() )\n58:         {\n59:             String paramName = parameterNames.nextElement();\n60: \n61:             String[] paramValues = req.getParameterValues(paramName);\n62:             for( String paramValue : paramValues )\n63:             {\n64:                 paramsHashMap.put(paramName, paramValue);\n65:             }\n66: \n67:         }\n68:         return JsonUtil.convertObjectToJson(paramsHashMap);\n69:     }\n70: }\n\n(End of file - total 70 lines)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 16228,
+        "completion_tokens": 235,
+        "cached_tokens": 13312,
+        "cost_usd": 0.029786,
+        "extra": {
+          "reasoning_tokens": 50
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 7,
+      "timestamp": "2026-07-15T08:27:26.368000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "reasoning_content": "**Exploring helpers for validation**\n\nI think I need to look into adding more helpers specifically for field validation. Maybe I can utilize something like a \"Glob\" or a utility function that could help streamline the process. I want to ensure everything works smoothly, so focusing on field validation is key. It\u2019s essential to make sure that any inputs are properly validated to avoid any unexpected issues. Let\u2019s see what kind of utility options are out there!",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_tS5w5sTi2pGS6OXKqDGHJVaW",
+          "function_name": "glob",
+          "arguments": {
+            "pattern": "webservice/src/main/java/com/finbit/fiuadapter/webservice/**/*Validation*.java",
+            "path": "/app"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_tS5w5sTi2pGS6OXKqDGHJVaW",
+            "content": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidation.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidationImpl.java\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidation.java"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 19751,
+        "completion_tokens": 41,
+        "cached_tokens": 15872,
+        "cost_usd": 0.029011,
+        "extra": {
+          "reasoning_tokens": 15
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 8,
+      "timestamp": "2026-07-15T08:27:31.342000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_sW9vS5UdkUbx8o5kx9wgFwLq",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java",
+            "offset": 1,
+            "limit": 280
+          }
+        },
+        {
+          "tool_call_id": "call_WcgvFoxZiE7A7rLBEduyJNW5",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidationImpl.java",
+            "offset": 1,
+            "limit": 180
+          }
+        },
+        {
+          "tool_call_id": "call_C0PQyw450AHNGlzAaoYsxsYz",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "contains\\(|equals\\(|equalsIgnoreCase\\(|compareTo\\(|[<>]=?|==",
+            "path": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service",
+            "include": "*Validation*.java"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_sW9vS5UdkUbx8o5kx9wgFwLq",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.service.finotification;\n2: \n3: import com.finbit.fiuadapter.jwssignature.exception.JWSSignatureException;\n4: import com.finbit.fiuadapter.webservice.constants.FIStatus;\n5: import com.finbit.fiuadapter.webservice.constants.GeneralConstants;\n6: import com.finbit.fiuadapter.webservice.constants.SessionStatus;\n7: import com.finbit.fiuadapter.webservice.entity.ConsentArtifact;\n8: import com.finbit.fiuadapter.webservice.entity.ConsentEntity;\n9: import com.finbit.fiuadapter.webservice.entity.FIRequestEntity;\n10: import com.finbit.fiuadapter.webservice.exceptions.DataException;\n11: import com.finbit.fiuadapter.webservice.exceptions.InvalidRequestException;\n12: import com.finbit.fiuadapter.webservice.repository.ConsentArtifactRepository;\n13: import com.finbit.fiuadapter.webservice.repository.FiRequestRepository;\n14: import com.finbit.fiuadapter.webservice.representation.pojo.ApplicationConfigurationBean;\n15: import com.finbit.fiuadapter.webservice.representation.pojo.FIStatusResponse;\n16: import com.finbit.fiuadapter.webservice.representation.request.ConsentNotificationRequest;\n17: import com.finbit.fiuadapter.webservice.representation.request.FINotificationRequest;\n18: import com.finbit.fiuadapter.webservice.representation.request.FiNotificationAccount;\n19: import com.finbit.fiuadapter.webservice.representation.response.FINotificationErrorResponseToFIU;\n20: import com.finbit.fiuadapter.webservice.service.callbackapi.CallBackService;\n21: import com.finbit.fiuadapter.webservice.service.firequest.FiRequestService;\n22: import com.finbit.fiuadapter.webservice.utils.DateTimeUtil;\n23: import com.finbit.fiuadapter.webservice.utils.NullEmptyUtils;\n24: import com.finbit.fiuadapter.webservice.utils.TimeStampValidation;\n25: import com.finbit.fiuadapter.webservice.utils.UUIDGenerator;\n26: import org.slf4j.MDC;\n27: import org.springframework.beans.factory.annotation.Autowired;\n28: import org.springframework.http.HttpStatus;\n29: import org.springframework.stereotype.Service;\n30: \n31: import java.text.ParseException;\n32: import java.util.HashMap;\n33: \n34: @Service\n35: public class FIDataNotificationValidationImpl implements FIDataNotificationValidation {\n36:     @Autowired\n37:     TimeStampValidation timeStampValidation;\n38: \n39:     @Autowired\n40:     ApplicationConfigurationBean applicationConfigurationBean;\n41: \n42:     @Autowired\n43:     CallBackService  callBackService;\n44: \n45:     @Autowired\n46:     FiRequestRepository fiRequestRepository;\n47: \n48:     @Autowired\n49:     private FiRequestService fiRequestService;\n50: \n51:     @Autowired\n52:     ConsentArtifactRepository consentArtifactRepository;\n53: \n54:     public void validateRequestFields(FINotificationRequest fiNotificationRequest, ConsentEntity consentEntity, FIRequestEntity fiRequestEntity) throws InvalidRequestException, ParseException, JWSSignatureException, DataException {\n55:         String errorMessage = schematicErrorCheck(fiNotificationRequest);\n56:         if(errorMessage.split(\",\").length == 1 && errorMessage !=\"\"){\n57:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST,errorMessage+GeneralConstants.ERROR_MESSAGE,HttpStatus.BAD_REQUEST);\n58:         }\n59:         if(!NullEmptyUtils.isNullorEmpty(errorMessage)){\n60:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST,errorMessage+GeneralConstants.SCHEMATIC_ERROR_MSG,HttpStatus.BAD_REQUEST);\n61:         }\n62: \n63:         if(!fiNotificationRequest.getVer().equalsIgnoreCase(applicationConfigurationBean.getFiuConnectVersion())){\n64:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.NO_SUCH_VERSION,GeneralConstants.INVALID_VERSION, HttpStatus.NOT_FOUND);\n65:         }\n66: \n67:         if(!UUIDGenerator.regaxUUIDvalidation(fiNotificationRequest.getTxnid())){\n68:             throw new InvalidRequestException(UUIDGenerator.generateUUID(),GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n69:         }\n70: \n71:         if(!timeStampValidation.validateTimeStamp(fiNotificationRequest.getTimestamp(), fiNotificationRequest.getTxnid())){\n72:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST,GeneralConstants.TIMESTAMP_OLDER, HttpStatus.BAD_REQUEST);\n73:         }\n74: \n75:         if(!UUIDGenerator.regaxUUIDvalidation(fiNotificationRequest.getFIStatusNotification().getSessionId())){\n76:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n77:         }\n78: \n79:         if(!fiNotificationRequest.getNotifier().getId().equals(consentEntity.getAaId())) {\n80:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_AA, HttpStatus.BAD_REQUEST);\n81:         }\n82: \n83:         System.out.println(\"Client id in the api key: \"+ MDC.get(\"key_client_id\"));\n84:         String clientId =  MDC.get(\"key_client_id\");\n85:         if(!clientId.equals(consentEntity.getAaId())){\n86:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_AA, HttpStatus.BAD_REQUEST);\n87:         }\n88: \n89:         if(NullEmptyUtils.isNullorEmpty(fiNotificationRequest.getFIStatusNotification().getSessionStatus())){\n90:             throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n91:         } else {\n92:             boolean isSessionStatusPresent = false;\n93:             for (SessionStatus c : SessionStatus.values()) {\n94:                 if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n95:                     isSessionStatusPresent = true;\n96:                     break;\n97:                 }\n98:             }\n99:             if (!isSessionStatusPresent) {\n100:                 throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_SESSION_STATUS, GeneralConstants.INVALID_SESSION_STATUS_MSG, HttpStatus.BAD_REQUEST);\n101:             }\n102: \n103:             //TODO: Revisit FI status code\n104: //            if (fiNotificationRequest.getFIStatusNotification().getSessionStatus().equalsIgnoreCase(SessionStatus.EXPIRED.toString()) || fiNotificationRequest.getFIStatusNotification().getSessionStatus().equalsIgnoreCase(SessionStatus.FAILED.toString())) {\n105: //                //check if consent artifact does not exist already\n106: //                ConsentArtifact consentArtifact = consentArtifactRepository\n107: //                        .findByConsentHandleAndConsentId(consentEntity.getConsentHandle(), consentEntity.getConsentId());\n108: //                if (consentArtifact != null) {\n109: //                    fiNotificationCallBack(consentEntity, fiRequestEntity, fiNotificationRequest.getFIStatusNotification().getSessionStatus());\n110: //                    //fiRequestService.fiRequestMethod(consentArtifact, MDC.get(applicationConfigurationBean.getMdcLogId()));\n111: //                } else {\n112: //                    throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, GeneralConstants.INVALID_REQUEST, HttpStatus.BAD_REQUEST);\n113: //                }\n114: //            }\n115:             if (!checkSessionStatus(fiNotificationRequest)) {\n116:                 throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_SESSION_STATUS, GeneralConstants.INVALID_SESSION_STATUS_MSG, HttpStatus.BAD_REQUEST);\n117:             }\n118: \n119:             if (!fiNotificationRequest.getNotifier().getType().equalsIgnoreCase(GeneralConstants.NOTIFIER_AA)) {\n120:                 throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_NOTIFIER,GeneralConstants.INVALID_NOTIFIER_MSG, HttpStatus.BAD_REQUEST);\n121:             }\n122: \n123:             if (fiNotificationRequest.getFIStatusNotification().getFIStatusResponse().size() == 0) {\n124:                 throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n125:             } else {\n126:                 for (FIStatusResponse fiStatusResponse : fiNotificationRequest.getFIStatusNotification().getFIStatusResponse()\n127:                 ) {\n128:                     if (NullEmptyUtils.isNullorEmpty(fiStatusResponse.getFipID())) {\n129:                         throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, fiStatusResponse.getFipID() + GeneralConstants.ERROR_MESSAGE, HttpStatus.BAD_REQUEST);\n130:                     }\n131:                     if (fiStatusResponse.getAccounts().size() < 1) {\n132:                         throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n133:                     } else {\n134:                         for (FiNotificationAccount fiNotificationAccount : fiStatusResponse.getAccounts()\n135:                         ) {\n136:                             if (NullEmptyUtils.isNullorEmpty(fiNotificationAccount.getDescription())) {\n137:                                 throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, fiNotificationAccount.getDescription() + GeneralConstants.ERROR_MESSAGE, HttpStatus.BAD_REQUEST);\n138:                             }\n139:                             if (!NullEmptyUtils.isNullorEmpty(fiNotificationAccount.getLinkRefNumber())) {\n140: //                                if (!UUIDGenerator.regaxUUIDvalidation(fiNotificationAccount.getLinkRefNumber())) {\n141: //                                    throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n142: //                                }\n143:                             } else {\n144:                                 throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, fiNotificationAccount.getLinkRefNumber() + GeneralConstants.ERROR_MESSAGE, HttpStatus.BAD_REQUEST);\n145:                             }\n146: \n147:                             if (NullEmptyUtils.isNull(fiNotificationAccount.getFIStatus())) {\n148:                                 throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_REQUEST, fiNotificationAccount.getFIStatus() + GeneralConstants.ERROR_MESSAGE, HttpStatus.BAD_REQUEST);\n149:                             } else {\n150:                                 boolean isFIStatusPresent = false;\n151:                                 for (FIStatus c : FIStatus.values()) {\n152:                                     if (c.name().equals(fiNotificationAccount.getFIStatus())) {\n153:                                         isFIStatusPresent = true;\n154:                                         break;\n155:                                     }\n156:                                 }\n157:                                 if (!isFIStatusPresent) {\n158:                                     throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_FI_STATUS, GeneralConstants.INVALID_FI_STATUS_MSG, HttpStatus.BAD_REQUEST);\n159:                                 }\n160: \n161:                                 //TODO: Revisit FI Status code\n162: //                                if (fiNotificationAccount.getFIStatus().equals(FIStatus.PENDING)) {\n163: //                                    fiNotificationCallBack(consentEntity, fiRequestEntity, fiNotificationAccount.getFIStatus());\n164: //                                    throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_FI_STATUS, GeneralConstants.FI_STATUS_MSG + fiNotificationAccount.getFIStatus(), HttpStatus.OK);\n165: //                                }\n166: //                                if (fiNotificationAccount.getFIStatus().equals(FIStatus.TIMEOUT)) {\n167: //                                    fiNotificationCallBack(consentEntity, fiRequestEntity, fiNotificationAccount.getFIStatus());\n168: //                                    throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_FI_STATUS, GeneralConstants.FI_STATUS_MSG + fiNotificationAccount.getFIStatus(), HttpStatus.OK);\n169: //                                }\n170: //                                if (fiNotificationAccount.getFIStatus().equals(FIStatus.DENIED)) {\n171: //                                    fiRequestEntity.setRequestStatus(GeneralConstants.REQUEST_STATUS);\n172: //                                    fiRequestRepository.save(fiRequestEntity);\n173: //                                    fiNotificationCallBack(consentEntity, fiRequestEntity, fiNotificationAccount.getFIStatus());\n174: //                                    throw new InvalidRequestException(fiNotificationRequest.getTxnid(),GeneralConstants.INVALID_FI_STATUS, GeneralConstants.FI_STATUS_MSG + fiNotificationAccount.getFIStatus(), HttpStatus.OK);\n175: //                                }\n176:                             }\n177:                         }\n178:                     }\n179:                 }\n180:             }\n181:         }\n182:     }\n183: \n184:     String schematicErrorCheck(FINotificationRequest fiNotificationRequest){\n185:         HashMap<String, Object> stringObjectHashMap = new HashMap<>();\n186:         String errorMessage = \"\";\n187:         stringObjectHashMap.put(\"version\", fiNotificationRequest.getVer());\n188:         stringObjectHashMap.put(\"timeStamp\", fiNotificationRequest.getTimestamp());\n189:         stringObjectHashMap.put(\"txnId\", fiNotificationRequest.getTxnid());\n190:         stringObjectHashMap.put(\"notifier\", fiNotificationRequest.getNotifier());\n191:         stringObjectHashMap.put(\"fiNotificationRequest.FIStatus\", fiNotificationRequest.getFIStatusNotification());\n192:         stringObjectHashMap.put(\"fiNotificationRequest.FiStatusNotification.SessionId\", fiNotificationRequest.getFIStatusNotification().getSessionId());\n193:         stringObjectHashMap.put(\"fiNotificationRequest.FiStatusNotification.sessionStatus\", fiNotificationRequest.getFIStatusNotification().getSessionStatus());\n194:         stringObjectHashMap.put(\"fiNotificationRequest.FiStatusNotification.FIStatusResponse\", fiNotificationRequest.getFIStatusNotification().getFIStatusResponse());\n195:         stringObjectHashMap.put(\"notifier.Id\", fiNotificationRequest.getNotifier().getId());\n196:         stringObjectHashMap.put(\"notifier.type\", fiNotificationRequest.getNotifier().getType());\n197:         // iterate map and set the message for empty or null values\n198:         for (String key : stringObjectHashMap.keySet())\n199:         {\n200:             if(NullEmptyUtils.isNull(stringObjectHashMap.get(key)) ||stringObjectHashMap.get(key).equals(\"\")){\n201:                 errorMessage = errorMessage + key+\",\";\n202:             }\n203:         }\n204:         return errorMessage;\n205:     }\n206: \n207:     boolean checkSessionStatus(FINotificationRequest fiNotificationRequest){\n208:         boolean isSessionStatusPresent = false;\n209:         for (SessionStatus c : SessionStatus.values()) {\n210:             if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n211:                 isSessionStatusPresent = true;\n212:             }\n213:         }\n214:         return isSessionStatusPresent;\n215:     }\n216: \n217:     void fiNotificationCallBack(ConsentEntity consentEntity, FIRequestEntity fiRequestEntity, String fiStatus) throws JWSSignatureException, DataException {\n218:         FINotificationErrorResponseToFIU fiNotificationErrorResponseToFIU = new FINotificationErrorResponseToFIU();\n219:         fiNotificationErrorResponseToFIU.setFiuConnectSessionId(consentEntity.getFiuConnectSessionId());\n220:         fiNotificationErrorResponseToFIU.setFiStatus(fiStatus);\n221:         fiNotificationErrorResponseToFIU.setVer(applicationConfigurationBean.getFiuConnectVersion());\n222:         fiNotificationErrorResponseToFIU.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n223:         fiNotificationErrorResponseToFIU.setTxnid(UUIDGenerator.generateUUID());\n224:         fiNotificationErrorResponseToFIU.setErrorMsg(GeneralConstants.FI_STATUS_MSG+fiStatus);\n225:         fiNotificationErrorResponseToFIU.setErrorCode(GeneralConstants.INVALID_REQUEST);\n226:         callBackService.fiNotificationCallBack(fiNotificationErrorResponseToFIU,\n227:                 consentEntity.getConsentDetail().getDataConsumer().getId(), MDC.get(applicationConfigurationBean.getMdcLogId()));\n228: \n229:     }\n230: }\n\n(End of file - total 230 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_WcgvFoxZiE7A7rLBEduyJNW5",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidationImpl.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.service.consentnotification;\n2: \n3: import com.finbit.fiuadapter.webservice.constants.GeneralConstants;\n4: import com.finbit.fiuadapter.webservice.constants.Status;\n5: import com.finbit.fiuadapter.webservice.entity.ConsentEntity;\n6: import com.finbit.fiuadapter.webservice.exceptions.DataException;\n7: import com.finbit.fiuadapter.webservice.exceptions.InvalidRequestException;\n8: import com.finbit.fiuadapter.webservice.representation.pojo.ApplicationConfigurationBean;\n9: import com.finbit.fiuadapter.webservice.representation.request.ConsentNotificationRequest;\n10: import com.finbit.fiuadapter.webservice.service.consent.ConsentService;\n11: import com.finbit.fiuadapter.webservice.utils.NullEmptyUtils;\n12: import com.finbit.fiuadapter.webservice.utils.TimeStampValidation;\n13: import com.finbit.fiuadapter.webservice.utils.UUIDGenerator;\n14: import org.slf4j.MDC;\n15: import org.springframework.beans.factory.annotation.Autowired;\n16: import org.springframework.http.HttpStatus;\n17: import org.springframework.stereotype.Service;\n18: \n19: import java.lang.reflect.Field;\n20: import java.text.ParseException;\n21: import java.util.HashMap;\n22: \n23: @Service\n24: public class ConsentNotificationValidationImpl implements ConsentNotificationValidation{\n25: \n26:     @Autowired\n27:     TimeStampValidation timeStampValidation;\n28: \n29:     @Autowired\n30:     ApplicationConfigurationBean applicationConfigurationBean;\n31: \n32:     @Autowired\n33:     ConsentService consentService;\n34: \n35:     @Override\n36:     public void validateRequestFields(ConsentNotificationRequest consentNotificationRequest) throws InvalidRequestException, ParseException, DataException {\n37:         String errorMsg = schematicErrorCheck(consentNotificationRequest);\n38: \n39:         if(errorMsg.split(\",\").length == 1 && errorMsg != \"\"){\n40:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,errorMsg+GeneralConstants.ERROR_MESSAGE,HttpStatus.BAD_REQUEST);\n41:         }\n42: \n43:         if(!NullEmptyUtils.isNullorEmpty(errorMsg)){\n44:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,errorMsg+GeneralConstants.SCHEMATIC_ERROR_MSG,HttpStatus.BAD_REQUEST);\n45:         }\n46: \n47:         if(!consentNotificationRequest.getVer().equalsIgnoreCase(applicationConfigurationBean.getFiuConnectVersion())){\n48:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.NO_SUCH_VERSION,GeneralConstants.INVALID_VERSION, HttpStatus.NOT_FOUND);\n49:         }\n50: \n51:         if(!UUIDGenerator.regaxUUIDvalidation(consentNotificationRequest.getTxnid())){\n52:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n53:         }\n54: \n55:         if(!timeStampValidation.validateTimeStamp(consentNotificationRequest.getTimestamp(), consentNotificationRequest.getTxnid())){\n56:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.TIMESTAMP_OLDER, HttpStatus.BAD_REQUEST);\n57:         }\n58: \n59:         if(!UUIDGenerator.regaxUUIDvalidation(consentNotificationRequest.getConsentStatusNotification().getConsentHandle())){\n60:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n61:         }\n62: \n63:         if(!consentNotificationRequest.getConsentStatusNotification().getConsentStatus().equals(\"REJECTED\")){\n64:             if(!UUIDGenerator.regaxUUIDvalidation(consentNotificationRequest.getConsentStatusNotification().getConsentId())){\n65:                 throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_FIELD_VALUE, HttpStatus.BAD_REQUEST);\n66:             }\n67:         }\n68: \n69:         if(!NullEmptyUtils.isNullorEmpty(consentNotificationRequest.getConsentStatusNotification().getConsentStatus())){\n70:             boolean isConsentStatusPresent = false;\n71:             for (Status c : Status.values()) {\n72:                 if (c.name().equals(consentNotificationRequest.getConsentStatusNotification().getConsentStatus())) {\n73:                     isConsentStatusPresent = true;\n74:                 }\n75:             }\n76:             if(!isConsentStatusPresent){\n77:                 throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_CONSENT_STATUS,GeneralConstants.INVALID_CONSENT_STATUS_MSG, HttpStatus.BAD_REQUEST);\n78:             }\n79:         } else {\n80:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_CONSENT_STATUS,GeneralConstants.INVALID_CONSENT_STATUS_MSG, HttpStatus.BAD_REQUEST);\n81:         }\n82: \n83:         if(!consentNotificationRequest.getNotifier().getType().equalsIgnoreCase(GeneralConstants.NOTIFIER_AA)){\n84:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_NOTIFIER_MSG, HttpStatus.BAD_REQUEST);\n85:         }\n86: \n87:         ConsentEntity consentEntity = consentService.getConsentByConsentHandle(consentNotificationRequest.getConsentStatusNotification().getConsentHandle(), consentNotificationRequest.getTxnid());\n88: \n89:         if(!NullEmptyUtils.isNullorEmpty(consentEntity.getRequestStatus()) && consentEntity.getRequestStatus().equalsIgnoreCase(GeneralConstants.REQUEST_STATUS)){\n90:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_CONSENT_NOTIFICATION_REQUEST+consentEntity.getConsentHandle(), HttpStatus.BAD_REQUEST);\n91:         }\n92: \n93:         if(!consentEntity.getAaId().equals(consentNotificationRequest.getNotifier().getId())){\n94:             // This condition is for same consent details for alternate aaId\n95:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_AA, HttpStatus.BAD_REQUEST);\n96:         }\n97: \n98:         System.out.println(\"Consent notification Client id in the api key: \"+ MDC.get(\"key_client_id\"));\n99:         String clientId =  MDC.get(\"key_client_id\");\n100:         if(!clientId.equals(consentEntity.getAaId())){\n101:             throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_REQUEST,GeneralConstants.INVALID_AA, HttpStatus.BAD_REQUEST);\n102:         }\n103: \n104:         if(!consentEntity.getConsentStatus().equals(Status.PENDING.name())){\n105:             if(!consentEntity.getConsentId().equals(consentNotificationRequest.getConsentStatusNotification().getConsentId())){\n106:                 throw new InvalidRequestException(consentNotificationRequest.getTxnid(), GeneralConstants.INVALID_CONSENT_ID,GeneralConstants.INVALID_CONSENT_ID_MESSAGE+consentNotificationRequest.getConsentStatusNotification().getConsentId(), HttpStatus.BAD_REQUEST);\n107:             }\n108:         }\n109: \n110:     }\n111: \n112:     String schematicErrorCheck(ConsentNotificationRequest consentNotificationRequest){\n113:         HashMap<String, Object> stringObjectHashMap = new HashMap<>();\n114:         String errorMessage =\"\";\n115:         stringObjectHashMap.put(\"version\", consentNotificationRequest.getVer());\n116:         stringObjectHashMap.put(\"timeStamp\", consentNotificationRequest.getTimestamp());\n117:         stringObjectHashMap.put(\"txnId\", consentNotificationRequest.getTxnid());\n118:         stringObjectHashMap.put(\"notifier\", consentNotificationRequest.getNotifier());\n119:         stringObjectHashMap.put(\"consentNotificationStatus\", consentNotificationRequest.getConsentStatusNotification());\n120:         stringObjectHashMap.put(\"consentNotificationStatus.consenthandle\", consentNotificationRequest.getConsentStatusNotification().getConsentHandle());\n121:         stringObjectHashMap.put(\"consentNotificationStatus.consentId\", consentNotificationRequest.getConsentStatusNotification().getConsentId());\n122:         stringObjectHashMap.put(\"consentNotificationStatus.consentStatus\", consentNotificationRequest.getConsentStatusNotification().getConsentStatus());\n123:         stringObjectHashMap.put(\"notifier.Id\", consentNotificationRequest.getNotifier().getId());\n124:         stringObjectHashMap.put(\"notifier.type\", consentNotificationRequest.getNotifier().getType());\n125:         // iterate map and set the message for empty or null values\n126:         for (String key : stringObjectHashMap.keySet())\n127:         {\n128:             if(NullEmptyUtils.isNull(stringObjectHashMap.get(key)) || stringObjectHashMap.get(key).equals(\"\")){\n129:                 if(key.equals(\"consentNotificationStatus.consentId\") &&\n130:                         consentNotificationRequest.getConsentStatusNotification().getConsentStatus().equals(\"REJECTED\")){\n131:                     continue;\n132:                 }\n133:                 errorMessage = errorMessage + key+\",\";\n134:             }\n135:         }\n136:         return errorMessage.trim();\n137:     }\n138: }\n\n(End of file - total 138 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_C0PQyw450AHNGlzAaoYsxsYz",
+            "content": "Found 30 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java:\n  Line 56:         if(errorMessage.split(\",\").length == 1 && errorMessage !=\"\"){\n\n  Line 63:         if(!fiNotificationRequest.getVer().equalsIgnoreCase(applicationConfigurationBean.getFiuConnectVersion())){\n\n  Line 79:         if(!fiNotificationRequest.getNotifier().getId().equals(consentEntity.getAaId())) {\n\n  Line 85:         if(!clientId.equals(consentEntity.getAaId())){\n\n  Line 94:                 if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n\n  Line 104: //            if (fiNotificationRequest.getFIStatusNotification().getSessionStatus().equalsIgnoreCase(SessionStatus.EXPIRED.toString()) || fiNotificationRequest.getFIStatusNotification().getSessionStatus().equalsIgnoreCase(SessionStatus.FAILED.toString())) {\n\n  Line 119:             if (!fiNotificationRequest.getNotifier().getType().equalsIgnoreCase(GeneralConstants.NOTIFIER_AA)) {\n\n  Line 123:             if (fiNotificationRequest.getFIStatusNotification().getFIStatusResponse().size() == 0) {\n\n  Line 131:                     if (fiStatusResponse.getAccounts().size() < 1) {\n\n  Line 152:                                     if (c.name().equals(fiNotificationAccount.getFIStatus())) {\n\n  Line 162: //                                if (fiNotificationAccount.getFIStatus().equals(FIStatus.PENDING)) {\n\n  Line 166: //                                if (fiNotificationAccount.getFIStatus().equals(FIStatus.TIMEOUT)) {\n\n  Line 170: //                                if (fiNotificationAccount.getFIStatus().equals(FIStatus.DENIED)) {\n\n  Line 185:         HashMap<String, Object> stringObjectHashMap = new HashMap<>();\n\n  Line 200:             if(NullEmptyUtils.isNull(stringObjectHashMap.get(key)) ||stringObjectHashMap.get(key).equals(\"\")){\n\n  Line 210:             if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidationImpl.java:\n  Line 39:         if(errorMsg.split(\",\").length == 1 && errorMsg != \"\"){\n\n  Line 47:         if(!consentNotificationRequest.getVer().equalsIgnoreCase(applicationConfigurationBean.getFiuConnectVersion())){\n\n  Line 63:         if(!consentNotificationRequest.getConsentStatusNotification().getConsentStatus().equals(\"REJECTED\")){\n\n  Line 72:                 if (c.name().equals(consentNotificationRequest.getConsentStatusNotification().getConsentStatus())) {\n\n  Line 83:         if(!consentNotificationRequest.getNotifier().getType().equalsIgnoreCase(GeneralConstants.NOTIFIER_AA)){\n\n  Line 89:         if(!NullEmptyUtils.isNullorEmpty(consentEntity.getRequestStatus()) && consentEntity.getRequestStatus().equalsIgnoreCase(GeneralConstants.REQUEST_STATUS)){\n\n  Line 93:         if(!consentEntity.getAaId().equals(consentNotificationRequest.getNotifier().getId())){\n\n  Line 100:         if(!clientId.equals(consentEntity.getAaId())){\n\n  Line 104:         if(!consentEntity.getConsentStatus().equals(Status.PENDING.name())){\n\n  Line 105:             if(!consentEntity.getConsentId().equals(consentNotificationRequest.getConsentStatusNotification().getConsentId())){\n\n  Line 113:         HashMap<String, Object> stringObjectHashMap = new HashMap<>();\n\n  Line 128:             if(NullEmptyUtils.isNull(stringObjectHashMap.get(key)) || stringObjectHashMap.get(key).equals(\"\")){\n\n  Line 129:                 if(key.equals(\"consentNotificationStatus.consentId\") &&\n\n  Line 130:                         consentNotificationRequest.getConsentStatusNotification().getConsentStatus().equals(\"REJECTED\")){\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 19944,
+        "completion_tokens": 176,
+        "cached_tokens": 19456,
+        "cost_usd": 0.017448
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 9,
+      "timestamp": "2026-07-15T08:27:48.735000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "reasoning_content": "**Debugging date and payload issues**\n\nI\u2019m noticing some issues with parsing and formatting dates. The timestamp should use a strict \"yyyy\" format instead of \"yyyyy\", but I\u2019m wondering if \"yyyyy\" can still parse dates like \"2020\". Also, it feels like there\u2019s a bug in field validation \u2014 the session status shouldn\u2019t accept substrings or prefixes. I see it should rely on exact matches instead. For payload handling, using split might lead to errors if the segments aren't managed correctly.**Investigating JWS signature issues**\n\nI\u2019m noticing that for detached JWS, the payload segment might be empty. However, the method name `getDetached` returns the signature at index [2]. I need to inspect how this method is used to understand if it's causing any confusion or issues. It\u2019s a bit puzzling since I\u2019m wondering if the empty payload is affecting how the signature is processed or returned. I should figure out the implications of this behavior.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_g3ScrtIwFMyQvffzqoL1Qb2N",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "GetDetachedBody|getDetached\\(|getDecodedObject\\(|Base64Decoder",
+            "path": "/app",
+            "include": "*.java"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_g3ScrtIwFMyQvffzqoL1Qb2N",
+            "content": "Found 7 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java:\n  Line 9: public class GetDetachedBody {\n\n  Line 17:     public static String getDetached( String body )\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java:\n  Line 15: public class Base64Decoder {\n\n  Line 17:     public static Object getDecodedObject( String body, Class<?> type ) throws JWSSignatureException\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java:\n  Line 22: import com.finbit.fiuadapter.webservice.utils.Base64Decoder;\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/firequest/FiRequestServiceImpl.java:\n  Line 230:         consent.setDigitalSignature(GetDetachedBody.getDetached(consentArtifact.getSignedConsent()));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactServiceImpl.java:\n  Line 178:             return (ConsentDetailFromArtifact) Base64Decoder.getDecodedObject(signedConsent.split(\"\\\\.\")[1],\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 26423,
+        "completion_tokens": 44,
+        "cached_tokens": 19456,
+        "cost_usd": 0.068953,
+        "extra": {
+          "reasoning_tokens": 769
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 10,
+      "timestamp": "2026-07-15T08:27:54.318000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "The adjacent edge cases are in the same small helpers/validators: session status validation uses substring matching, timestamp parsing uses a five-digit year pattern, and detached JWS parsing uses `split` in a way that drops empty payload segments. I\u2019m applying targeted fixes that leave exact ordinary values unchanged.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_gmojpY0dm4EozNzR067veWw0",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/firequest/FiRequestServiceImpl.java",
+            "offset": 210,
+            "limit": 40
+          }
+        },
+        {
+          "tool_call_id": "call_Lu18FnGFqzrS8LPk3K095Whj",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactServiceImpl.java",
+            "offset": 160,
+            "limit": 40
+          }
+        },
+        {
+          "tool_call_id": "call_qdChhUAioJc7bmxQA9gIJFiM",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/SessionStatus.java",
+            "offset": 1,
+            "limit": 80
+          }
+        },
+        {
+          "tool_call_id": "call_jtBHPJUn5SmsMxoMeH0viN00",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/FIStatus.java",
+            "offset": 1,
+            "limit": 80
+          }
+        },
+        {
+          "tool_call_id": "call_r1xLA6ZqP3GPq3oNDgH2QgIF",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/Status.java",
+            "offset": 1,
+            "limit": 80
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_gmojpY0dm4EozNzR067veWw0",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/firequest/FiRequestServiceImpl.java</path>\n<type>file</type>\n<content>\n210:         fiRequestEntity.setVer(consentArtifact.getVer());\n211:         fiRequestEntity.setTxnid(UUIDGenerator.generateUUID());\n212:         fiRequestEntity.setTimestamp(DateTimeUtil.getISOTimeStamp(System.currentTimeMillis()));\n213: \n214:         //set data range for periodic fetch if the fetch type is periodic\n215:         if( consentArtifact.getConsentDetailFromArtifact().getFetchType()\n216:                 .equals(ConsentRequestEnum.FetchType.PERIODIC) )\n217:         {\n218:             FIDataRange fiDataRange = getDataRange(consentArtifact);\n219:             fiRequestEntity.setFIDataRange(fiDataRange);\n220:         }\n221:         else\n222:         {\n223:             fiRequestEntity.setFIDataRange(consentArtifact.getConsentDetailFromArtifact().getFIDataRange());\n224: \n225:         }\n226: \n227:         FiRequestConsent consent = new FiRequestConsent();\n228:         consent.setId(consentArtifact.getConsentId());\n229: \n230:         consent.setDigitalSignature(GetDetachedBody.getDetached(consentArtifact.getSignedConsent()));\n231: \n232:         fiRequestEntity.setConsent(consent);\n233: \n234:         SerializedKeyPair serializedKeyPair = eccService.getKeyPair(entityDetailService.getDhKeyPairByEntityId(\n235:                 consentArtifact.getConsentDetailFromArtifact().getDataConsumer().getId()), dhProperties);\n236: \n237:         log.info(\"serialized key pair\");\n238: \n239:         KeyMaterial keyMaterial = serializedKeyPair.getKeyMaterials();\n240: \n241:         DHPublicKey dhPublicKey = new DHPublicKey();\n242:         dhPublicKey.setExpiry(keyMaterial.getDHPublicKey().getExpiry());\n243:         dhPublicKey.setKeyValue(keyMaterial.getDHPublicKey().getKeyValue());\n244:         dhPublicKey.setParameters(keyMaterial.getDHPublicKey().getParameters());\n245: \n246:         KeyMaterial keyMaterial1 = new KeyMaterial();\n247:         keyMaterial1.setCryptoAlg(keyMaterial.getCryptoAlg());\n248:         keyMaterial1.setCurve(keyMaterial.getCurve());\n249:         keyMaterial1.setDHPublicKey(dhPublicKey);\n\n(Showing lines 210-249 of 582. Use offset=250 to continue.)\n</content>"
+          },
+          {
+            "source_call_id": "call_Lu18FnGFqzrS8LPk3K095Whj",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactServiceImpl.java</path>\n<type>file</type>\n<content>\n160:         try\n161:         {\n162: \n163:             if( NullEmptyUtils.isNullorEmpty(signedConsent) )\n164:             {\n165:                 throw new InvalidRequestException(txnId, GeneralConstants.BAD_REQUEST, \"signed consent is empty from consent id\",\n166:                         HttpStatus.BAD_REQUEST);\n167:             }\n168: \n169:             AACrEntityCollection aaCrEntityCollection = aaCrEntityRepository.findByEntityId(entityId);\n170:             String certificateJson = JsonUtil.convertObjectToJson(aaCrEntityCollection.getEntityinfo().getCertificate());\n171:             SignatureEntity.Keys[] keys = {(SignatureEntity.Keys) JsonUtil.convertJsonToObject(certificateJson, SignatureEntity.Keys.class)};\n172:             SignatureEntity signatureEntity = new SignatureEntity(keys);\n173: \n174:             signatureService.signatureVerification(new Verification(\n175:                     new String(getUrlDecoder().decode(signedConsent.split(\"\\\\.\")[1]), StandardCharsets.UTF_8),\n176:                     signedConsent, signatureEntity));\n177: \n178:             return (ConsentDetailFromArtifact) Base64Decoder.getDecodedObject(signedConsent.split(\"\\\\.\")[1],\n179:                     ConsentDetailFromArtifact.class);\n180: \n181:         }\n182:         catch( Exception e )\n183:         {\n184:             log.error(\"error in get consent detail:: signed consent= \" + signedConsent, e);\n185:             throw new InvalidRequestException(e);\n186:         }\n187: \n188:     }\n189: \n190:     /**\n191:      * get consent artifact by fiuConnectSessionId\n192:      * \n193:      * @param consentArtifactRequestFromFIU\n194:      * @return ConsentArtifactResponseToFIU\n195:      */\n196:     @Override\n197:     public ConsentArtifactResponseToFIU getConsentArtifactByFiuConnectSessionId(\n198:             ConsentArtifactRequestFromFIU consentArtifactRequestFromFIU ) throws DataException\n199:     {\n\n(Showing lines 160-199 of 291. Use offset=200 to continue.)\n</content>"
+          },
+          {
+            "source_call_id": "call_qdChhUAioJc7bmxQA9gIJFiM",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/SessionStatus.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.constants;\n2: \n3: /**\n4:  * @author ashvinikumar\n5:  * @version 1.0\n6:  * @ fiu-adapter\n7:  * @since 6/25/20\n8:  */\n9: public enum SessionStatus {\n10:         ACTIVE, COMPLETED, EXPIRED, FAILED\n11: }\n\n(End of file - total 11 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_jtBHPJUn5SmsMxoMeH0viN00",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/FIStatus.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.constants;\n2: \n3: /**\n4:  * @author ashvinikumar\n5:  * @version 1.0\n6:  * @ fiu-adapter\n7:  * @since 6/19/20\n8:  */\n9: public enum FIStatus {\n10:         READY, DENIED, PENDING, DELIVERED, TIMEOUT\n11: }\n\n(End of file - total 11 lines)\n</content>"
+          },
+          {
+            "source_call_id": "call_r1xLA6ZqP3GPq3oNDgH2QgIF",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/Status.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.constants;\n2: \n3: /**\n4:  *\n5:  */\n6: \n7: /**\n8:  * @author ashvinikumar\n9:  * @version 1.0\n10:  * @fiu-adapter\n11:  * @since 6/4/20\n12:  *\n13:  * Consent Status\n14:  * 1. PENDING : Consent is created in the AA and waiting for customer response\n15:  * 2. ACTIVE : Consent is approved by the customer\n16:  * 3. REVOKED : Consent is revoked by the customer\n17:  * 4. PAUSED : Consent in paused by the customer\n18:  * 5. REJECTED : Consent is rejected by the customer\n19:  * 6. EXPIRED : Consent is expired\n20:  **/\n21: public enum Status {\n22: \n23:         ACTIVE, PAUSED, REVOKED, EXPIRED, PENDING, REJECTED\n24: }\n\n(End of file - total 24 lines)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 27505,
+        "completion_tokens": 306,
+        "cached_tokens": 26112,
+        "cost_usd": 0.029201
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 11,
+      "timestamp": "2026-07-15T08:28:01.286000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_7D4A2GiOGHEKtSZyqASRqy0k",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java",
+            "offset": 1,
+            "limit": 120
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_7D4A2GiOGHEKtSZyqASRqy0k",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.controller.developer;\n2: \n3: import java.io.IOException;\n4: import java.text.ParseException;\n5: import java.util.Base64;\n6: import java.util.Date;\n7: import java.util.HashMap;\n8: \n9: import javax.servlet.http.HttpServletRequest;\n10: import javax.validation.constraints.NotNull;\n11: \n12: import com.fasterxml.jackson.core.JsonProcessingException;\n13: import com.finbit.fiuadapter.webservice.entity.AACrEntityCollection;\n14: import com.finbit.fiuadapter.webservice.exceptions.InvalidRequestException;\n15: import com.finbit.fiuadapter.kms.exception.KMSException;\n16: import com.finbit.fiuadapter.kms.service.KMSService;\n17: import com.finbit.fiuadapter.webservice.exceptions.JsonFormatException;\n18: import com.finbit.fiuadapter.webservice.repository.AACrEntityRepository;\n19: import com.finbit.fiuadapter.webservice.representation.response.sahamti.token.TokenAPIResponse;\n20: import com.finbit.fiuadapter.webservice.service.sahamti.token.SahamatiCentralRegistryService;\n21: import com.finbit.fiuadapter.webservice.service.sahamti.token.SahamtiTokenManagementService;\n22: import com.finbit.fiuadapter.webservice.utils.Base64Decoder;\n23: import org.jose4j.lang.JoseException;\n24: import org.springframework.beans.factory.annotation.Autowired;\n25: import org.springframework.http.HttpStatus;\n26: import org.springframework.http.ResponseEntity;\n27: import org.springframework.web.bind.annotation.*;\n28: \n29: import com.finbit.fiuadapter.jwssignature.entity.SignatureEntity;\n30: import com.finbit.fiuadapter.jwssignature.exception.JWSSignatureException;\n31: import com.finbit.fiuadapter.jwssignature.httpcache.CachedBodyHttpServletRequest;\n32: import com.finbit.fiuadapter.jwssignature.pojo.Verification;\n33: import com.finbit.fiuadapter.jwssignature.service.SignatureService;\n34: import com.finbit.fiuadapter.jwssignature.util.JsonUtil;\n35: import com.finbit.fiuadapter.webservice.constants.RestEndPoints;\n36: import com.finbit.fiuadapter.webservice.controller.AbstractController;\n37: import com.finbit.fiuadapter.webservice.entity.EntityDetails;\n38: import com.finbit.fiuadapter.webservice.exceptions.DataException;\n39: import com.finbit.fiuadapter.webservice.representation.pojo.ApplicationConfigurationBean;\n40: import com.finbit.fiuadapter.webservice.representation.response.StringResponseToFIU;\n41: import com.finbit.fiuadapter.webservice.service.entitydetails.EntityDetailService;\n42: import com.finbit.fiuadapter.webservice.service.externalentity.AAEntityService;\n43: import com.finbit.fiuadapter.webservice.service.fetchfidata.FiDataService;\n44: import com.finbit.fiuadapter.webservice.utils.HttpContentExtractorUtil;\n45: import com.finbit.fiuadapter.webservice.utils.NullEmptyUtils;\n46: import com.finbit.fiuadapter.webservice.utils.UUIDGenerator;\n47: \n48: import io.swagger.annotations.ApiImplicitParam;\n49: import io.swagger.annotations.ApiImplicitParams;\n50: import io.swagger.annotations.ApiOperation;\n51: import lombok.extern.slf4j.Slf4j;\n52: \n53: /**\n54:  * @author manjunathr created at 22-06-2020\n55:  * \n56:  *         This Controller is used for the signature related services\n57:  */\n58: \n59: @RestController\n60: @RequestMapping( RestEndPoints.DEVELOPER_CONTROLLER )\n61: @Slf4j\n62: public class DeveloperController extends AbstractController {\n63: \n64:     @Autowired\n65:     private SignatureService signatureService;\n66: \n67:     @Autowired\n68:     private FiDataService fiDataService;\n69: \n70:     @Autowired\n71:     private AAEntityService AAEntityService;\n72: \n73:     @Autowired\n74:     private ApplicationConfigurationBean applicationConfigurationBean;\n75: \n76:     @Autowired\n77:     private EntityDetailService entityDetailService;\n78: \n79:     @Autowired\n80:     KMSService kmsService;\n81: \n82:     @Autowired\n83:     SahamtiTokenManagementService sahamtiTokenManagementService;\n84: \n85:     @Autowired\n86:     SahamatiCentralRegistryService sahamatiCentralRegistryService;\n87: \n88:     @Autowired\n89:     AACrEntityRepository aaCrEntityRepository;\n90: \n91: \n92: \n93:     /**\n94:      * This method is used to generate the Signature\n95:      * \n96:      * @param payload\n97:      */\n98:     @ApiOperation( value = \"Generate Signature\", response = String.class, notes = \"This API is used to generate the Signature\" )\n99:     @PostMapping( value = \"/sign\" )\n100:     public ResponseEntity generateSignature( @RequestBody @NotNull Object payload,\n101:             @RequestParam @NotNull String entityId ) throws JWSSignatureException, DataException, KMSException\n102:     {\n103:         EntityDetails entityDetails = entityDetailService.getEntityByEntityId(entityId);\n104:         return buildResponseToFIU(\n105:                 new StringResponseToFIU(signatureService.getSignature(payload, kmsService.decrypt(entityDetails.getCertificate()))));\n106:     }\n107: \n108:     /**\n109:      * This method is used to get the public key using fiu id\n110:      *\n111:      */\n112:     @ApiOperation( value = \"Get Public Key\", response = String.class, notes = \"This API is used to get the public key\" )\n113:     @PostMapping( value = \"/getPublicKey\" )\n114:     public ResponseEntity getPublicKey( @RequestParam @NotNull String entityId )\n115:             throws JWSSignatureException, DataException, KMSException\n116:     {\n117:         EntityDetails entityDetails = entityDetailService.getEntityByEntityId(entityId);\n118:         String jsonString = kmsService.decrypt(entityDetails.getCertificate());\n119:         HashMap<String, String> publicKey = new HashMap<>();\n120:         SignatureEntity signatureEntity = (SignatureEntity) JsonUtil.convertJsonToObject(jsonString,\n\n(Showing lines 1-120 of 220. Use offset=121 to continue.)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 29425,
+        "completion_tokens": 50,
+        "cached_tokens": 27136,
+        "cost_usd": 0.029903,
+        "extra": {
+          "reasoning_tokens": 113
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 12,
+      "timestamp": "2026-07-15T08:28:03.193000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_ox6hf2QEKmJ7OHciQ3IbubcD",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "Base64Decoder",
+            "path": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer",
+            "include": "*.java"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_ox6hf2QEKmJ7OHciQ3IbubcD",
+            "content": "Found 1 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java:\n  Line 22: import com.finbit.fiuadapter.webservice.utils.Base64Decoder;\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 31014,
+        "completion_tokens": 47,
+        "cached_tokens": 29184,
+        "cost_usd": 0.025152
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 13,
+      "timestamp": "2026-07-15T08:28:15.740000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_lSMjSt3hcigXr0twgCX2yXHW",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "isNullorEmpty\\([^\\n]+\\)",
+            "path": "/app/webservice/src/main/java",
+            "include": "*.java"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_lSMjSt3hcigXr0twgCX2yXHW",
+            "content": "Found 86 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/NullEmptyUtils.java:\n  Line 12:     public static boolean isNullorEmpty( String val )\n\n  Line 17:     public static boolean isNullorEmpty( List<?> val )\n\n  Line 22:     public static boolean isNullorEmpty( Collection<?> val )\n\n  Line 27:     public static boolean isNullorEmpty( Number val )\n\n  Line 32:     public static boolean isNullorEmpty( Map<?, ?> val )\n\n  Line 47:             if( !NullEmptyUtils.isNullorEmpty(value) )\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java:\n  Line 53:         if(NullEmptyUtils.isNullorEmpty(aaApiKey)){\n\n  Line 106:             if(NullEmptyUtils.isNullorEmpty(xJwsSignature)){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consent/ConsentServiceImpl.java:\n  Line 84:         if( consentOptional.isPresent() && !NullEmptyUtils.isNullorEmpty(consentOptional.get().getConsentStatus()) )\n\n  Line 235:         if(!NullEmptyUtils.isNullorEmpty(errorMessage)){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/restapi/RestAPIServiceImpl.java:\n  Line 94:             if( !NullEmptyUtils.isNullorEmpty(genericRestTemplate.getHeadersMap()) )\n\n  Line 155:             if( !NullEmptyUtils.isNullorEmpty(response) )\n\n  Line 232:         if( NullEmptyUtils.isNullorEmpty(genericRestTemplate.getHeadersMap()) )\n\n  Line 261:         if(!NullEmptyUtils.isNullorEmpty(aaId)){\n\n  Line 262:             if(!NullEmptyUtils.isNullorEmpty(httpHeaders.getFirst(\"x-jws-signature\"))){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/callbackapi/CallBackServiceImpl.java:\n  Line 87:             if( !NullEmptyUtils.isNullorEmpty(entityDetails.getCallbackUrl()) )\n\n  Line 149:             if( !NullEmptyUtils.isNullorEmpty(entityDetails.getCallbackUrl()) )\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/audit/AuditServiceImpl.java:\n  Line 73:         if( !NullEmptyUtils.isNullorEmpty(requestBodyString) )\n\n  Line 76:         if( !NullEmptyUtils.isNullorEmpty(responseBodyString) )\n\n  Line 107:             if( !NullEmptyUtils.isNullorEmpty(String.valueOf(responseBody.get(\"txnid\"))) )\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/aarestapi/AaRestApiServiceImpl.java:\n  Line 249:         if(NullEmptyUtils.isNullorEmpty(consentHandleResponseFromAA.getVer())) {\n\n  Line 261:         if(NullEmptyUtils.isNullorEmpty(consentHandleResponseFromAA.getTimestamp())){\n\n  Line 273:         if(NullEmptyUtils.isNullorEmpty(consentHandleResponseFromAA.getTxnid())){\n\n  Line 285:         if(NullEmptyUtils.isNullorEmpty(consentHandleResponseFromAA.getConsentHandle())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/firequest/FiRequestServiceImpl.java:\n  Line 354:         if( NullEmptyUtils.isNullorEmpty(consentFrequency.getNextRun()) )\n\n  Line 380:         if( !NullEmptyUtils.isNullorEmpty(consentFrequency.getNextRun()) )\n\n  Line 518:         if(!NullEmptyUtils.isNullorEmpty(errorMsg)){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FINotificationServiceImpl.java:\n  Line 94:         if(!NullEmptyUtils.isNullorEmpty(fiRequest.getRequestStatus()) && fiRequest.getRequestStatus().equalsIgnoreCase(GeneralConstants.REQUEST_STATUS)){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java:\n  Line 59:         if(!NullEmptyUtils.isNullorEmpty(errorMessage)){\n\n  Line 89:         if(NullEmptyUtils.isNullorEmpty(fiNotificationRequest.getFIStatusNotification().getSessionStatus())){\n\n  Line 128:                     if (NullEmptyUtils.isNullorEmpty(fiStatusResponse.getFipID())) {\n\n  Line 136:                             if (NullEmptyUtils.isNullorEmpty(fiNotificationAccount.getDescription())) {\n\n  Line 139:                             if (!NullEmptyUtils.isNullorEmpty(fiNotificationAccount.getLinkRefNumber())) {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/fetchfidata/FiDataServiceImpl.java:\n  Line 136:         if( !NullEmptyUtils.isNullorEmpty(fiFetchResponseFromAAResponse.getFi()) )\n\n  Line 163:                 if( !NullEmptyUtils.isNullorEmpty(fi.getData()) ){\n\n  Line 175:                     if(NullEmptyUtils.isNullorEmpty(fiData.getEncryptedFI())){\n\n  Line 199:             if( !NullEmptyUtils.isNullorEmpty(fiFetchResponseFromAAFormEntity.getFi()) )\n\n  Line 207:                 if( !NullEmptyUtils.isNullorEmpty(eachFIFromAA.getData()) )\n\n  Line 219:                     if( !NullEmptyUtils.isNullorEmpty(fiFromFiDataEntity.getData()) )\n\n  Line 368:         if( NullEmptyUtils.isNullorEmpty(fiDataEntityList) )\n\n  Line 397:                     && !NullEmptyUtils.isNullorEmpty(fiDataEntity.getFiFetchResponse().getFi()) )\n\n  Line 403:                 if( !NullEmptyUtils.isNullorEmpty(eachFi.getData()) )\n\n  Line 510:         if(!NullEmptyUtils.isNullorEmpty(errorMsg)){\n\n  Line 535: //        if(NullEmptyUtils.isNullorEmpty(fiFetchResponseFromAA.getTxnid())){\n\n  Line 555:         if(!NullEmptyUtils.isNullorEmpty(fidata) && fidata.size()>0){\n\n  Line 572:                         if(NullEmptyUtils.isNullorEmpty(fiData.getEncryptedFI())){\n\n  Line 576:                         if(NullEmptyUtils.isNullorEmpty(fiData.getEncryptedFI())){\n\n  Line 580:                         if(NullEmptyUtils.isNullorEmpty(fiData.getMaskedAccNumber())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/externalentity/AAEntityServiceImpl.java:\n  Line 108:         if( NullEmptyUtils.isNullorEmpty(vua) )\n\n  Line 121: //            if(NullEmptyUtils.isNullorEmpty((Collection<?>) aaCrEntityCollection)) {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/entitydetails/EntityDetailServiceImpl.java:\n  Line 126:         if(!NullEmptyUtils.isNullorEmpty(signUpRequest.getClientId()) &&\n\n  Line 127:                 !NullEmptyUtils.isNullorEmpty(signUpRequest.getClientSecret())) {\n\n  Line 148:             if( NullEmptyUtils.isNullorEmpty(entityDetails.getUserName()) )\n\n  Line 151:             if( NullEmptyUtils.isNullorEmpty(entityDetails.getPassword()) )\n\n  Line 197:             if( NullEmptyUtils.isNullorEmpty(entityDetails.getDefaultConsentTemplateId()) )\n\n  Line 202:             if( !NullEmptyUtils.isNullorEmpty(entityDetails.getApiKey()) )\n\n  Line 302:         if( !NullEmptyUtils.isNullorEmpty(updateFIUDetailsRequest.getAaDetails()) )\n\n  Line 319:         if( !NullEmptyUtils.isNullorEmpty(updateFIUDetailsRequest.getPassword()) )\n\n  Line 330:         if(!NullEmptyUtils.isNullorEmpty(updateFIUDetailsRequest.getClientId()) &&\n\n  Line 331:                 !NullEmptyUtils.isNullorEmpty(updateFIUDetailsRequest.getClientSecret())) {\n\n  Line 336:         if(!NullEmptyUtils.isNullorEmpty(updateFIUDetailsRequest.getCompanyName())){\n\n  Line 339:         if(!NullEmptyUtils.isNullorEmpty(updateFIUDetailsRequest.getCompanyColor())){\n\n  Line 342:         if(!NullEmptyUtils.isNullorEmpty(updateFIUDetailsRequest.getCompanyLogo())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentnotification/ConsentNotificationValidationImpl.java:\n  Line 43:         if(!NullEmptyUtils.isNullorEmpty(errorMsg)){\n\n  Line 69:         if(!NullEmptyUtils.isNullorEmpty(consentNotificationRequest.getConsentStatusNotification().getConsentStatus())){\n\n  Line 89:         if(!NullEmptyUtils.isNullorEmpty(consentEntity.getRequestStatus()) && consentEntity.getRequestStatus().equalsIgnoreCase(GeneralConstants.REQUEST_STATUS)){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentinit/ConsentInitServiceImpl.java:\n  Line 91:         if( !NullEmptyUtils.isNullorEmpty(customerId) )\n\n  Line 148:         if (!NullEmptyUtils.isNullorEmpty(consentConfigurationRequest.getDataFilter())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentconfiguration/ConsentConfigurationServiceImpl.java:\n  Line 151:         if( NullEmptyUtils.isNullorEmpty(consentConfigurationRequest.getConsentTypes()) )\n\n  Line 160:         if( NullEmptyUtils.isNullorEmpty(consentConfigurationRequest.getFiTypes()) )\n\n  Line 210:         if( NullEmptyUtils.isNull(consentConfigurationRequest.getPurpose()) || NullEmptyUtils.isNullorEmpty(consentConfigurationRequest.getPurpose().getCode()))\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactServiceImpl.java:\n  Line 163:             if( NullEmptyUtils.isNullorEmpty(signedConsent) )\n\n  Line 234:         if(NullEmptyUtils.isNullorEmpty(getConsentByIdResponse.getVer())){\n\n  Line 247:         if(NullEmptyUtils.isNullorEmpty(getConsentByIdResponse.getCreateTimestamp())){\n\n  Line 260: //        if(NullEmptyUtils.isNullorEmpty(getConsentByIdResponse.getTxnid())){\n\n  Line 272:         if(NullEmptyUtils.isNullorEmpty(getConsentByIdResponse.getConsentId())) {\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/representation/pojo/CipherParameter.java:\n  Line 42:         if( NullEmptyUtils.isNullorEmpty(fi.getKeyMaterial().getNonce()) )\n\n  Line 46:         if( NullEmptyUtils.isNullorEmpty(fi.getKeyMaterial().getCryptoAlg()) )\n\n  Line 50:         if( NullEmptyUtils.isNullorEmpty(fi.getKeyMaterial().getCurve()) )\n\n  Line 54:         if( NullEmptyUtils.isNullorEmpty(fi.getKeyMaterial().getDHPublicKey().getExpiry()) )\n\n  Line 58:         if( NullEmptyUtils.isNullorEmpty(fi.getKeyMaterial().getDHPublicKey().getKeyValue()) )\n\n  Line 62:         if( NullEmptyUtils.isNullorEmpty(fiRequestEntity.getKeyMaterial().getNonce()) )\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/config/CustomRequestInterceptor.java:\n  Line 52:         if( NullEmptyUtils.isNullorEmpty(responseBody) )\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/fidata/FiDataController.java:\n  Line 77:                 || NullEmptyUtils.isNullorEmpty(fiNotificationRequest.getFIStatusNotification().getSessionId())){\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java:\n  Line 146:         if( NullEmptyUtils.isNullorEmpty(signature) )\n\n  Line 153:         if( NullEmptyUtils.isNullorEmpty(signature) )\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 31119,
+        "completion_tokens": 45,
+        "cached_tokens": 30720,
+        "cost_usd": 0.033885,
+        "extra": {
+          "reasoning_tokens": 506
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 14,
+      "timestamp": "2026-07-15T08:28:17.999000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_26V0ywuja0eHn1C0ue2IsRZM",
+          "function_name": "apply_patch",
+          "arguments": {
+            "patchText": "*** Begin Patch\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java\n@@\n-    public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{11}$\";\n+    public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\";\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java\n@@\n-        DateTimeFormatter formatter = DateTimeFormat.forPattern(\"yyyy-MM-dd'T'hh:mm:ss.SSS'Z'\");\n+        DateTimeFormatter formatter = DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\n@@\n-            SimpleDateFormat sdf = new SimpleDateFormat(\"yyyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n+            SimpleDateFormat sdf = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java\n@@\n     public static Object getDecodedObject( String body, Class<?> type ) throws JWSSignatureException\n     {\n-        return JsonUtil.convertJsonToObject(new String(Base64.getDecoder().decode(body), StandardCharsets.UTF_8),\n-                type);\n+        byte[] decodedBody;\n+        try\n+        {\n+            decodedBody = Base64.getUrlDecoder().decode(body);\n+        }\n+        catch( IllegalArgumentException e )\n+        {\n+            decodedBody = Base64.getDecoder().decode(body);\n+        }\n+        return JsonUtil.convertJsonToObject(new String(decodedBody, StandardCharsets.UTF_8), type);\n \n     }\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java\n@@\n     public static String getDetached( String body )\n     {\n-        return body.split(\"\\\\.\")[2];\n+        return body.split(\"\\\\.\", -1)[2];\n \n     }\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java\n@@\n-                if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n+                if (c.name().equals(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n@@\n-            if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n+            if (c.name().equals(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n*** End Patch"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_26V0ywuja0eHn1C0ue2IsRZM",
+            "content": "Success. Updated the following files:\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 34287,
+        "completion_tokens": 742,
+        "cached_tokens": 30720,
+        "cost_usd": 0.055995,
+        "extra": {
+          "reasoning_tokens": 18
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 15,
+      "timestamp": "2026-07-15T08:28:31.438000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_0B2GoX5bkq9FVsGjVjvt9mAV",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "contains\\(fiNotificationRequest|getDecoder\\(\\)\\.decode\\(signedConsent\\.split|split\\(\"\\\\\\\\\\.\"\\)",
+            "path": "/app/webservice/src/main/java",
+            "include": "*.java"
+          }
+        },
+        {
+          "tool_call_id": "call_4TaSq2QzABc995corUYf8YW6",
+          "function_name": "grep",
+          "arguments": {
+            "pattern": "forPattern\\(\"yyyy-MM-dd'T'hh|SimpleDateFormat\\(\"yyyyy|VALID_PATTERN_UUID",
+            "path": "/app/webservice/src/main/java",
+            "include": "*.java"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_0B2GoX5bkq9FVsGjVjvt9mAV",
+            "content": "Found 4 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java:\n  Line 60:         List<String> split_string = Arrays.asList(aaApiKey.split(\"\\\\.\"));\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/consentartifactupdate/ConsentArtifactServiceImpl.java:\n  Line 175:                     new String(getUrlDecoder().decode(signedConsent.split(\"\\\\.\")[1]), StandardCharsets.UTF_8),\n\n  Line 178:             return (ConsentDetailFromArtifact) Base64Decoder.getDecodedObject(signedConsent.split(\"\\\\.\")[1],\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java:\n  Line 196:         String[] split_string = signature.split(\"\\\\.\");\n"
+          },
+          {
+            "source_call_id": "call_4TaSq2QzABc995corUYf8YW6",
+            "content": "Found 2 matches\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/UUIDGenerator.java:\n  Line 21:         return Pattern.matches(GeneralConstants.VALID_PATTERN_UUID, uuid);\n\n\n/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java:\n  Line 43:     public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\";\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 35198,
+        "completion_tokens": 130,
+        "cached_tokens": 33792,
+        "cost_usd": 0.036646,
+        "extra": {
+          "reasoning_tokens": 294
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 16,
+      "timestamp": "2026-07-15T08:28:34.041000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_GpaQWheBRPjKu0C5AKMIBOsZ",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java",
+            "offset": 180,
+            "limit": 35
+          }
+        },
+        {
+          "tool_call_id": "call_EoptQRQDZBs42bJCBcuEngon",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java",
+            "offset": 45,
+            "limit": 80
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_GpaQWheBRPjKu0C5AKMIBOsZ",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/controller/developer/DeveloperController.java</path>\n<type>file</type>\n<content>\n180:     public ResponseEntity getFiDataFetch( @RequestParam @NotNull String sessionId,\n181:             @RequestParam( required = false ) String fipId, @RequestParam( required = false ) String[] linkRefNumber )\n182:             throws DataException, JWSSignatureException, InvalidRequestException, ParseException {\n183:         fiDataService.fetchFiData(sessionId, UUIDGenerator.generateUUID(), UUIDGenerator.generateUUID());\n184:         return buildResponseToFIU(new StringResponseToFIU(\"Fi Data fetch successfully completed\"));\n185:     }\n186: \n187:     @PostMapping(\"/fiu/token\")\n188:     public void getFIUToken(@RequestBody SignatureEntity signatureEntity, HttpServletRequest httpServletRequest) throws JWSSignatureException, DataException, JsonFormatException, IOException, JoseException {\n189:         //TokenAPIResponse tokenAPIResponse = sahamtiTokenManagementService.getClientAPIToken(\"finbit-fiu-uat\", \"cd9fff84-e4eb-4f6b-b388-138481c4b138\");\n190:         //sahamatiCentralRegistryService.fetchCentralRegistryEntities();\n191: \n192:         CachedBodyHttpServletRequest cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(\n193:                 httpServletRequest);\n194:         String signature = cachedBodyHttpServletRequest.getHeader(applicationConfigurationBean.getJwsSignature());\n195: \n196:         String[] split_string = signature.split(\"\\\\.\");\n197:         String base64EncodedHeader = split_string[0];\n198:         String base64EncodedBody = split_string[1];\n199: \n200:         System.out.println(\"~~~~~~~~~ JWT Header ~~~~~~~\");\n201:         Base64.Decoder decoder = Base64.getDecoder();\n202:         String header = new String(decoder.decode(base64EncodedHeader));\n203:         System.out.println(\"JWT Header : \" + header);\n204: \n205:         System.out.println(\"~~~~~~~~~ JWT Body ~~~~~~~\");\n206:         String body = new String(decoder.decode(base64EncodedBody));\n207:         System.out.println(\"JWT Body : \"+body);\n208: \n209:         signatureService.signatureVerification(new Verification(\n210:                 body, signature,\n211:                 signatureEntity));\n212:     }\n213: \n214:     @PostMapping(\"/refresh/cr\")\n\n(Showing lines 180-214 of 220. Use offset=215 to continue.)\n</content>"
+          },
+          {
+            "source_call_id": "call_EoptQRQDZBs42bJCBcuEngon",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java</path>\n<type>file</type>\n<content>\n45: \n46:     @Autowired\n47:     AACrEntityRepository aaCrEntityRepository;\n48: \n49: \n50:     @Override\n51:     public String verifyAAApiKey(String aaApiKey) throws JWSSignatureException, DataException, InvalidRequestException, JoseException {\n52: \n53:         if(NullEmptyUtils.isNullorEmpty(aaApiKey)){\n54:             throw new DataException(\n55:                     GeneralConstants.UNAUTHORIZED,\n56:                     GeneralConstants.EMPTY_AA_API_KEY_MSG,\n57:                     HttpStatus.UNAUTHORIZED);\n58:         }\n59: \n60:         List<String> split_string = Arrays.asList(aaApiKey.split(\"\\\\.\"));\n61:         if(split_string.size() < 3){\n62:             throw new DataException(\n63:                     GeneralConstants.UNAUTHORIZED,\n64:                     GeneralConstants.INVALID_AA_API_KEY_PROVIDED,\n65:                     HttpStatus.UNAUTHORIZED);\n66:         }\n67: \n68:         String base64EncodedBody = split_string.get(1);\n69:         Base64.Decoder decoder = Base64.getDecoder();\n70:         String body = \"\";\n71:         try {\n72:             body = new String(decoder.decode(base64EncodedBody));\n73:         } catch (IllegalArgumentException ile){\n74:             throw new DataException(\n75:                     GeneralConstants.UNAUTHORIZED,\n76:                     GeneralConstants.INVALID_AA_API_KEY_PROVIDED,\n77:                     HttpStatus.UNAUTHORIZED);\n78:         }\n79: \n80: \n81:         SignatureEntity signatureEntity = sahamtiTokenManagementService.getSahamatiPublicKey();\n82:         signatureService.signatureVerification(new Verification(\n83:                 body, aaApiKey,\n84:                 signatureEntity));\n85:         System.out.println(\"aa_api_key verified.\");\n86:         TokenRequestBody tokenRequestBody = (TokenRequestBody) JsonUtil.convertJsonToObject(body, TokenRequestBody.class);\n87:         MDC.put(\"key_client_id\", tokenRequestBody.getClientId());\n88:         long currentTimeinMills = Calendar.getInstance().getTimeInMillis();\n89:         System.out.println(currentTimeinMills);\n90:         Date date=new Date(tokenRequestBody.getExp() * 1000);\n91:         System.out.println(\"Expiry Date: \" + date);\n92:         if((tokenRequestBody.getExp() * 1000) < currentTimeinMills){\n93:             throw new DataException(\n94:                     GeneralConstants.INVALID_REQUEST,\n95:                     GeneralConstants.AA_API_KEY_TOKEN_EXPIRED,\n96:                     HttpStatus.BAD_REQUEST);\n97:         }\n98: \n99:         return tokenRequestBody.getClientId();\n100:     }\n101: \n102:     @Override\n103:     public void verifyXJwsSignature(String xJwsSignature, String requestBody, String aaId) throws DataException {\n104:         try\n105:         {\n106:             if(NullEmptyUtils.isNullorEmpty(xJwsSignature)){\n107:                 throw new DataException(\n108:                         GeneralConstants.INVALID_SIGNATURE,\n109:                         GeneralConstants.INVALID_SIGNATURE_MSG,\n110:                         HttpStatus.BAD_REQUEST);\n111:             }\n112: \n113:             AACrEntityCollection aaCrEntityCollection = aaCrEntityRepository.findByEntityId(aaId);\n114: \n115:             if(NullEmptyUtils.isNull(aaCrEntityCollection)){\n116:                 throw new DataException(GeneralConstants.INVALID_REQUEST, GeneralConstants.INVALID_CLIENT_ID,\n117:                         HttpStatus.BAD_REQUEST) ;\n118:             }\n119: \n120:             //AAEntityCollection aaEntityCollection = aaEntityService.getAAIdByNotifierId(aaId);\n121: \n122:             String certificateJson = JsonUtil.convertObjectToJson(aaCrEntityCollection.getEntityinfo().getCertificate());\n123: \n124:             SignatureEntity.Keys[] keys = {(SignatureEntity.Keys) JsonUtil.convertJsonToObject(certificateJson, SignatureEntity.Keys.class)};\n\n(Showing lines 45-124 of 145. Use offset=125 to continue.)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 35953,
+        "completion_tokens": 115,
+        "cached_tokens": 34816,
+        "cost_usd": 0.027023,
+        "extra": {
+          "reasoning_tokens": 16
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 17,
+      "timestamp": "2026-07-15T08:28:38.209000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_8dRpZL1U3HwQbqUwSgPzKtRD",
+          "function_name": "read",
+          "arguments": {
+            "filePath": "/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java",
+            "offset": 1,
+            "limit": 45
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_8dRpZL1U3HwQbqUwSgPzKtRD",
+            "content": "<path>/app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java</path>\n<type>file</type>\n<content>\n1: package com.finbit.fiuadapter.webservice.service.signature.verification;\n2: \n3: import com.finbit.fiuadapter.jwssignature.entity.SignatureEntity;\n4: import com.finbit.fiuadapter.jwssignature.exception.JWSSignatureException;\n5: import com.finbit.fiuadapter.jwssignature.httpcache.CachedBodyHttpServletRequest;\n6: import com.finbit.fiuadapter.jwssignature.pojo.Verification;\n7: import com.finbit.fiuadapter.jwssignature.service.SignatureService;\n8: import com.finbit.fiuadapter.jwssignature.util.JsonUtil;\n9: import com.finbit.fiuadapter.webservice.constants.GeneralConstants;\n10: import com.finbit.fiuadapter.webservice.entity.AACrEntityCollection;\n11: import com.finbit.fiuadapter.webservice.entity.AAEntityCollection;\n12: import com.finbit.fiuadapter.webservice.exceptions.DataException;\n13: import com.finbit.fiuadapter.webservice.exceptions.InvalidRequestException;\n14: import com.finbit.fiuadapter.webservice.repository.AACrEntityRepository;\n15: import com.finbit.fiuadapter.webservice.representation.pojo.sahamti.token.TokenRequestBody;\n16: import com.finbit.fiuadapter.webservice.representation.request.ConsentNotificationRequest;\n17: import com.finbit.fiuadapter.webservice.representation.request.FINotificationRequest;\n18: import com.finbit.fiuadapter.webservice.service.externalentity.AAEntityService;\n19: import com.finbit.fiuadapter.webservice.service.sahamti.token.SahamtiTokenManagementService;\n20: import com.finbit.fiuadapter.webservice.utils.HttpContentExtractorUtil;\n21: import com.finbit.fiuadapter.webservice.utils.JwtTokenUtil;\n22: import com.finbit.fiuadapter.webservice.utils.NullEmptyUtils;\n23: import com.google.api.client.json.Json;\n24: import org.jose4j.lang.JoseException;\n25: import org.slf4j.MDC;\n26: import org.springframework.beans.factory.annotation.Autowired;\n27: import org.springframework.http.HttpStatus;\n28: import org.springframework.stereotype.Service;\n29: \n30: import java.sql.Timestamp;\n31: import java.text.SimpleDateFormat;\n32: import java.util.*;\n33: \n34: @Service\n35: public class HeaderTokenSignatureVerificationServiceImpl implements HeaderTokenSignatureVerificationService{\n36: \n37:     @Autowired\n38:     private SignatureService signatureService;\n39: \n40:     @Autowired\n41:     SahamtiTokenManagementService sahamtiTokenManagementService;\n42: \n43:     @Autowired\n44:     AAEntityService aaEntityService;\n45: \n\n(Showing lines 1-45 of 145. Use offset=46 to continue.)\n</content>"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 37546,
+        "completion_tokens": 55,
+        "cached_tokens": 35840,
+        "cost_usd": 0.03134,
+        "extra": {
+          "reasoning_tokens": 108
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 18,
+      "timestamp": "2026-07-15T08:28:41.588000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "I also found the AA API key verifier decoding JWT/JWS payloads with the basic Base64 alphabet, which fails only when a valid base64url segment contains `-` or `_`. I\u2019m making that decoder accept base64url while preserving the existing standard Base64 path.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_6JHw9dBSaz2b49XVH5uDL6m4",
+          "function_name": "apply_patch",
+          "arguments": {
+            "patchText": "*** Begin Patch\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\n@@\n             SimpleDateFormat sdf = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n+            sdf.setLenient(false);\n             sdf.setTimeZone(TimeZone.getTimeZone(\"UTC\"));\n*** Update File: /app/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java\n@@\n-        Base64.Decoder decoder = Base64.getDecoder();\n         String body = \"\";\n         try {\n-            body = new String(decoder.decode(base64EncodedBody));\n+            body = new String(decodeBase64Segment(base64EncodedBody));\n         } catch (IllegalArgumentException ile){\n             throw new DataException(\n                     GeneralConstants.UNAUTHORIZED,\n@@\n \n         return tokenRequestBody.getClientId();\n     }\n+\n+    private byte[] decodeBase64Segment(String value) {\n+        try\n+        {\n+            return Base64.getUrlDecoder().decode(value);\n+        }\n+        catch( IllegalArgumentException e )\n+        {\n+            return Base64.getDecoder().decode(value);\n+        }\n+    }\n \n     @Override\n     public void verifyXJwsSignature(String xJwsSignature, String requestBody, String aaId) throws DataException {\n*** End Patch"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_6JHw9dBSaz2b49XVH5uDL6m4",
+            "content": "Success. Updated the following files:\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\nM webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 38346,
+        "completion_tokens": 422,
+        "cached_tokens": 37376,
+        "cost_usd": 0.038868,
+        "extra": {
+          "reasoning_tokens": 89
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 19,
+      "timestamp": "2026-07-15T08:28:46.753000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "reasoning_content": "**Compiling imports in Java**\n\nI need to consider compiling my Java imports, specifically looking at `java.util.*`, which includes Base64 functionality. I think it\u2019s essential to ensure everything is updated properly. I'll also make a point to update my to-do list to keep track of this task. It's important to stay organized and make sure I don\u2019t miss anything, especially when working with imports that may impact the functionality of my code.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_xjX5zZvuVEbcCRMpZgwMSiGt",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Locate FIU adapter helper code for UUID, timestamps, identifiers, and payload validation",
+                "status": "completed",
+                "priority": "high"
+              },
+              {
+                "content": "Patch edge-case logic without touching src/test",
+                "status": "completed",
+                "priority": "high"
+              },
+              {
+                "content": "Run mvn -o -q -pl webservice test",
+                "status": "in_progress",
+                "priority": "high"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_xjX5zZvuVEbcCRMpZgwMSiGt",
+            "content": "[\n  {\n    \"content\": \"Locate FIU adapter helper code for UUID, timestamps, identifiers, and payload validation\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Patch edge-case logic without touching src/test\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run mvn -o -q -pl webservice test\",\n    \"status\": \"in_progress\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 38924,
+        "completion_tokens": 92,
+        "cached_tokens": 37888,
+        "cost_usd": 0.027544,
+        "extra": {
+          "reasoning_tokens": 22
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 20,
+      "timestamp": "2026-07-15T08:28:49.493000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "The targeted fixes are in place. I\u2019m running the requested offline Maven test command now.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_FpGzTTBU9N2NihYEoQlQI2q2",
+          "function_name": "bash",
+          "arguments": {
+            "command": "mvn -o -q -pl webservice test",
+            "timeout": 120000,
+            "workdir": "/app"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_FpGzTTBU9N2NihYEoQlQI2q2",
+            "content": "(no output)"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 39162,
+        "completion_tokens": 64,
+        "cached_tokens": 38400,
+        "cost_usd": 0.02493
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 21,
+      "timestamp": "2026-07-15T08:29:17.346000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "reasoning_content": "**Inspecting a git diff**\n\nI want to check the git diff, so I need to use bash for that. The command should be `git status` and `git diff`. I'm considering if that's allowed. I also want to mention tests but maybe not involve src/test right now. I just need to focus on using `git diff` to see the changes clearly. Getting this right is key, so I\u2019ll double-check everything before finalizing!",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_XwgHrxpkif3Pcpn3YHc279sK",
+          "function_name": "bash",
+          "arguments": {
+            "command": "git status --short",
+            "timeout": 120000,
+            "workdir": "/app"
+          }
+        },
+        {
+          "tool_call_id": "call_7bdSG1bC8NeuPKPAKopLJAEY",
+          "function_name": "bash",
+          "arguments": {
+            "command": "git diff -- webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java",
+            "timeout": 120000,
+            "workdir": "/app"
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_XwgHrxpkif3Pcpn3YHc279sK",
+            "content": " M webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java\n M webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java\n M webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java\n M webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java\n M webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java\n M webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java\n M webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\n"
+          },
+          {
+            "source_call_id": "call_7bdSG1bC8NeuPKPAKopLJAEY",
+            "content": "diff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java\nindex 6925b08..4e25d0b 100644\n--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java\n+++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java\n@@ -40,7 +40,7 @@ public class GeneralConstants {\n     public static final String INVALID_CONSENT_STATUS_MSG = \"Consent status value should be as given [ACTIVE, PAUSED, REVOKED, EXPIRED, PENDING, REJECTED]\";\n     public static final String INVALID_CONSENT_STATUS = \"InvalidConsentStatus\";\n     public static final String INVALID_VERSION = \"Invalid Api version\";\n-    public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{11}$\";\n+    public static final String VALID_PATTERN_UUID = \"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$\";\n     public static final String FI_DATA_READY = \"FI_DATA_READY\";\n     public static final String NOTIFIER_AA = \"AA\";\n     public static final String INVALID_NOTIFIER = \"InvalidNotifier\";\ndiff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java\nindex 90945ab..cbcb039 100644\n--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java\n+++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java\n@@ -91,7 +91,7 @@ public class FIDataNotificationValidationImpl implements FIDataNotificationValid\n         } else {\n             boolean isSessionStatusPresent = false;\n             for (SessionStatus c : SessionStatus.values()) {\n-                if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n+                if (c.name().equals(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n                     isSessionStatusPresent = true;\n                     break;\n                 }\n@@ -207,7 +207,7 @@ public class FIDataNotificationValidationImpl implements FIDataNotificationValid\n     boolean checkSessionStatus(FINotificationRequest fiNotificationRequest){\n         boolean isSessionStatusPresent = false;\n         for (SessionStatus c : SessionStatus.values()) {\n-            if (c.name().contains(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n+            if (c.name().equals(fiNotificationRequest.getFIStatusNotification().getSessionStatus())) {\n                 isSessionStatusPresent = true;\n             }\n         }\ndiff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java\nindex a488671..0caec83 100644\n--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java\n+++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java\n@@ -66,10 +66,9 @@ public class HeaderTokenSignatureVerificationServiceImpl implements HeaderTokenS\n         }\n \n         String base64EncodedBody = split_string.get(1);\n-        Base64.Decoder decoder = Base64.getDecoder();\n         String body = \"\";\n         try {\n-            body = new String(decoder.decode(base64EncodedBody));\n+            body = new String(decodeBase64Segment(base64EncodedBody));\n         } catch (IllegalArgumentException ile){\n             throw new DataException(\n                     GeneralConstants.UNAUTHORIZED,\n@@ -99,6 +98,17 @@ public class HeaderTokenSignatureVerificationServiceImpl implements HeaderTokenS\n         return tokenRequestBody.getClientId();\n     }\n \n+    private byte[] decodeBase64Segment(String value) {\n+        try\n+        {\n+            return Base64.getUrlDecoder().decode(value);\n+        }\n+        catch( IllegalArgumentException e )\n+        {\n+            return Base64.getDecoder().decode(value);\n+        }\n+    }\n+\n     @Override\n     public void verifyXJwsSignature(String xJwsSignature, String requestBody, String aaId) throws DataException {\n         try\ndiff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java\nindex 7458c4a..42d9c67 100644\n--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java\n+++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java\n@@ -16,8 +16,16 @@ public class Base64Decoder {\n \n     public static Object getDecodedObject( String body, Class<?> type ) throws JWSSignatureException\n     {\n-        return JsonUtil.convertJsonToObject(new String(Base64.getDecoder().decode(body), StandardCharsets.UTF_8),\n-                type);\n+        byte[] decodedBody;\n+        try\n+        {\n+            decodedBody = Base64.getUrlDecoder().decode(body);\n+        }\n+        catch( IllegalArgumentException e )\n+        {\n+            decodedBody = Base64.getDecoder().decode(body);\n+        }\n+        return JsonUtil.convertJsonToObject(new String(decodedBody, StandardCharsets.UTF_8), type);\n \n     }\n \ndiff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java\nindex 97b6a24..b0dd085 100644\n--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java\n+++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java\n@@ -45,7 +45,7 @@ public class DateTimeUtil {\n \n     public static String getISOTimeStamp( Long milliSecond )\n     {\n-        DateTimeFormatter formatter = DateTimeFormat.forPattern(\"yyyy-MM-dd'T'hh:mm:ss.SSS'Z'\");\n+        DateTimeFormatter formatter = DateTimeFormat.forPattern(\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n         DateTime currentDate = new DateTime(milliSecond, DateTimeZone.UTC);\n         return currentDate.toString(formatter);\n     }\ndiff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java\nindex 70223c1..92a782d 100644\n--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java\n+++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java\n@@ -16,7 +16,7 @@ public class GetDetachedBody {\n      */\n     public static String getDetached( String body )\n     {\n-        return body.split(\"\\\\.\")[2];\n+        return body.split(\"\\\\.\", -1)[2];\n \n     }\n }\ndiff --git a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\nindex 0eeafef..6cb5bae 100644\n--- a/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\n+++ b/webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java\n@@ -20,7 +20,8 @@ public class TimeStampValidation {\n     public boolean validateTimeStamp(String timestamp, String txnId) throws InvalidRequestException {\n         //creates a formatter that parses the date in the given format\n         try {\n-            SimpleDateFormat sdf = new SimpleDateFormat(\"yyyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n+            SimpleDateFormat sdf = new SimpleDateFormat(\"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\");\n+            sdf.setLenient(false);\n             sdf.setTimeZone(TimeZone.getTimeZone(\"UTC\"));\n             Date date = sdf.parse(timestamp);\n             long timeInMillis = date.getTime();\n"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 39240,
+        "completion_tokens": 225,
+        "cached_tokens": 38912,
+        "cost_usd": 0.028836,
+        "extra": {
+          "reasoning_tokens": 33
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 22,
+      "timestamp": "2026-07-15T08:29:22.625000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "",
+      "reasoning_content": "**Considering compilation issues**\n\nI need to think about those compilation warnings. It\u2019s strange that the tests didn't output anything. I\u2019m wondering if Maven is showing a success message without actually producing output. I should really update my to-do list to reflect this, as it might need my attention sooner than I thought. Keeping track of these details is crucial, especially if it affects the functionality later on.",
+      "tool_calls": [
+        {
+          "tool_call_id": "call_jOvDio8HRHuKPWiRPCNj8470",
+          "function_name": "todowrite",
+          "arguments": {
+            "todos": [
+              {
+                "content": "Locate FIU adapter helper code for UUID, timestamps, identifiers, and payload validation",
+                "status": "completed",
+                "priority": "high"
+              },
+              {
+                "content": "Patch edge-case logic without touching src/test",
+                "status": "completed",
+                "priority": "high"
+              },
+              {
+                "content": "Run mvn -o -q -pl webservice test",
+                "status": "completed",
+                "priority": "high"
+              }
+            ]
+          }
+        }
+      ],
+      "observation": {
+        "results": [
+          {
+            "source_call_id": "call_jOvDio8HRHuKPWiRPCNj8470",
+            "content": "[\n  {\n    \"content\": \"Locate FIU adapter helper code for UUID, timestamps, identifiers, and payload validation\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Patch edge-case logic without touching src/test\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  },\n  {\n    \"content\": \"Run mvn -o -q -pl webservice test\",\n    \"status\": \"completed\",\n    \"priority\": \"high\"\n  }\n]"
+          }
+        ]
+      },
+      "metrics": {
+        "prompt_tokens": 41631,
+        "completion_tokens": 91,
+        "cached_tokens": 38912,
+        "cost_usd": 0.036561,
+        "extra": {
+          "reasoning_tokens": 26
+        }
+      },
+      "llm_call_count": 1
+    },
+    {
+      "step_id": 23,
+      "timestamp": "2026-07-15T08:29:29.174000+00:00",
+      "source": "agent",
+      "model_name": "openrouter/openai/gpt-5.5",
+      "message": "Implemented targeted interop fixes without touching `src/test/`.\n\nChanged:\n- `webservice/src/main/java/com/finbit/fiuadapter/webservice/constants/GeneralConstants.java`\n  - Fixed UUID validation to accept canonical UUIDs with a 12-character final segment and non-v4 UUID versions, while still enforcing canonical lowercase hex, hyphen layout, and RFC variant bits.\n\n- `webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/DateTimeUtil.java`\n  - Changed outgoing timestamp formatting from 12-hour `hh` to 24-hour `HH`, fixing afternoon UTC timestamps like `13:47` being emitted as `01:47`.\n\n- `webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/TimeStampValidation.java`\n  - Fixed incoming timestamp parsing from five-digit year `yyyyy` to `yyyy`.\n  - Disabled lenient parsing so invalid date strings are rejected instead of normalized.\n\n- `webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/Base64Decoder.java`\n  - Added base64url decoding support for JWS/JWT payloads containing `-` or `_`, while preserving the previous standard Base64 fallback.\n\n- `webservice/src/main/java/com/finbit/fiuadapter/webservice/service/signature/verification/HeaderTokenSignatureVerificationServiceImpl.java`\n  - Applied the same base64url-first decoding to AA API key payload verification.\n\n- `webservice/src/main/java/com/finbit/fiuadapter/webservice/utils/GetDetachedBody.java`\n  - Preserved empty JWS segments when splitting detached signatures.\n\n- `webservice/src/main/java/com/finbit/fiuadapter/webservice/service/finotification/FIDataNotificationValidationImpl.java`\n  - Replaced substring matching for `SessionStatus` with exact enum-name matching, so partial invalid statuses no longer pass.\n\nVerification:\n- `mvn -o -q -pl webservice test` passed.",
+      "metrics": {
+        "prompt_tokens": 41871,
+        "completion_tokens": 405,
+        "cached_tokens": 41472,
+        "cost_usd": 0.035541,
+        "extra": {
+          "reasoning_tokens": 22
+        }
+      },
+      "llm_call_count": 1
+    }
+  ],
+  "final_metrics": {
+    "total_prompt_tokens": 622115,
+    "total_completion_tokens": 3983,
+    "total_cached_tokens": 578560,
+    "total_cost_usd": 0.6955450000000001,
+    "total_steps": 23
+  }
+}

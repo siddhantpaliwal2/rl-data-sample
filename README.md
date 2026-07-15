@@ -115,6 +115,58 @@ the 5 planted defects and consistently miss the same one or two - the reward
 signal concentrates exactly on the defects that require cross-code derivation
 rather than search.
 
+## Frontier-model pass@k matrix
+
+Every cell below is measured: one Daytona sandbox per attempt (identical
+2-CPU/4-GB amd64 environments), the agent harness named in the table, models
+via OpenRouter (Claude via the Anthropic API, Muse Spark via the Meta Model
+API). A trial counts toward n only if the verifier emitted real per-test
+verdicts. pass@k uses the unbiased estimator
+**pass@k = 1 − C(n−c, k) / C(n, k)** over n valid attempts with c solves,
+averaged across the eight tasks (k is capped at a cell's n). Full per-trial
+data and trajectories: `sample-run/`.
+
+Model selection (July 2026): each lab's latest frontier coding model available
+by API — GPT-5.6 Sol (Terminal-Bench 2.1 leader) plus GPT-5.5, Gemini 3.5
+Flash (Google's strongest agentic/coding model), GLM-5.2, DeepSeek V4 Pro,
+Muse Spark 1.1, Claude Opus 4.8, and both accessible Amazon Novas. Amazon's
+Nova 2 Pro is preview-gated (not on OpenRouter or generally on Bedrock) and
+could not be included.
+
+### OpenCode harness — 9 models, n≈10 attempts per cell (c/n)
+
+| Model | credit-norm | doc-extract | fin-tools | phone-inv | fiu | txenr | txenr3 | txenr4 | mean pass@1 | mean pass@10 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| gpt-5.6-sol | 4/10 | 5/10 | 0/10 | 1/10 | 1/10 | 4/10 | 1/10 | 0/10 | 0.200 | 0.750 |
+| claude-opus-4.8 | 0/10 | 3/10 | 0/10 | 0/10 | 0/9 | 2/10 | 3/10 | 0/10 | 0.100 | 0.375 |
+| gpt-5.5 | 1/10 | 0/10 | 0/10 | 7/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0.100 | 0.250 |
+| glm-5.2 | 0/8 | 5/10 | 0/9 | 1/10 | 0/10 | 1/10 | 0/10 | 1/13 | 0.097 | 0.471 |
+| gemini-3.5-flash | 0/10 | 0/10 | 2/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0.025 | 0.125 |
+| deepseek-v4-pro | 0/10 | 0/10 | 0/10 | 1/10 | 0/10 | 0/14 | 0/10 | 0/10 | 0.013 | 0.125 |
+| muse-spark-1.1 | 0/10 | 0/12 | 0/10 | 0/10 | 0/10 | 0/11 | 0/10 | 0/10 | 0.000 | 0.000 |
+| nova-2-lite | 0/10 | 0/10 | 0/9 | 0/10 | 0/10 | 0/10 | 0/10 | 0/10 | 0.000 | 0.000 |
+| nova-premier | 0/11 | 0/10 | 0/10 | 0/9 | 0/9 | 0/10 | 0/11 | 0/10 | 0.000 | 0.000 |
+
+### Harness axis — flagships across 5 harnesses, n≈3 per cell (c/n)
+
+| Harness + model | credit-norm | doc-extract | fin-tools | phone-inv | fiu | txenr | txenr3 | txenr4 | mean pass@1 | mean pass@3 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| codex + gpt-5.6-sol | 1/3 | 3/3 | 0/3 | 2/4 | 0/3 | 2/3 | 2/3 | 0/3 | 0.396 | 0.625 |
+| claude-code + claude-opus-4.8 | 0/3 | 3/3 | 0/3 | 0/3 | 0/2 | 2/3 | 1/2 | 0/3 | 0.271 | 0.375 |
+| terminus-2 + gpt-5.6-sol | 0/3 | 2/3 | 0/3 | 1/4 | 0/3 | 0/3 | 1/3 | 0/3 | 0.156 | 0.344 |
+| terminus-2 + claude-opus-4.8 | 0/3 | 0/3 | 0/3 | 0/2 | 0/1 | 1/3 | 1/3 | 0/3 | 0.083 | 0.250 |
+| aider + claude-opus-4.8 | 0/3 | 0/3 | 0/2 | 0/3 | 0/3 | 0/3 | 0/2 | 0/3 | 0.000 | 0.000 |
+
+The mini-swe-agent gate table above is the third harness reference point:
+Opus 4.8 at n=10 per task scores mean pass@1 0.075 there, versus 0.100 on
+OpenCode, 0.271 on claude-code — the same model spans a 3.6× solve-rate range
+on harness choice alone. Two structural observations: (1) every task has at
+least one solve from some (model, harness) pair — including txenr4, cracked
+only by GLM-5.2 — so no task is unverifiable; (2) `fin-tools` and `txenr4`
+hold under 3% pass@1 across all 14 rows, while `doc-extract` is farmable by
+the strongest pairs, mapping the bank's difficulty spread at the current
+frontier.
+
 ## How the harness works
 
 The probe harness is two pieces: **mini-swe-agent** (the solver) and

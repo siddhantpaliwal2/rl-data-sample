@@ -1,0 +1,786 @@
+{
+ "opencode|gemini-3.5-flash|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "claude-code|claude-opus-4.8|xrepo-txenrich4-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "terminus-2|gpt-5.6-sol|latent-financial-tools": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|muse-spark-1.1|latent-phone-invites": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-2-lite|xrepo-txenrich-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gpt-5.6-sol|latent-phone-invites": {
+  "n": 10,
+  "c": 1,
+  "pass@1": 0.1,
+  "pass@10": 1.0,
+  "pass@3": 0.3
+ },
+ "opencode|muse-spark-1.1|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "terminus-2|gpt-5.6-sol|xrepo-txenrich4-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|xrepo-fiu-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "terminus-2|claude-opus-4.8|xrepo-txenrich3-latent": {
+  "n": 3,
+  "c": 1,
+  "pass@1": 0.3333,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|gpt-5.5|xrepo-fiu-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|xrepo-fiu-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|claude-opus-4.8|xrepo-fiu-latent": {
+  "n": 9,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|claude-opus-4.8|latent-doc-extractors": {
+  "n": 10,
+  "c": 3,
+  "pass@1": 0.3,
+  "pass@10": 1.0,
+  "pass@3": 0.7083
+ },
+ "opencode|claude-opus-4.8|xrepo-txenrich-latent": {
+  "n": 10,
+  "c": 2,
+  "pass@1": 0.2,
+  "pass@10": 1.0,
+  "pass@3": 0.5333
+ },
+ "opencode|nova-2-lite|latent-financial-tools": {
+  "n": 9,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gemini-3.5-flash|xrepo-fiu-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-premier|latent-doc-extractors": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-2-lite|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gpt-5.5|xrepo-txenrich-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|xrepo-txenrich-latent": {
+  "n": 10,
+  "c": 1,
+  "pass@1": 0.1,
+  "pass@10": 1.0,
+  "pass@3": 0.3
+ },
+ "aider|claude-opus-4.8|xrepo-txenrich3-latent": {
+  "n": 2,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "terminus-2|claude-opus-4.8|xrepo-txenrich4-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|gpt-5.6-sol|latent-credit-normalize": {
+  "n": 10,
+  "c": 4,
+  "pass@1": 0.4,
+  "pass@10": 1.0,
+  "pass@3": 0.8333
+ },
+ "opencode|gpt-5.6-sol|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 1,
+  "pass@1": 0.1,
+  "pass@10": 1.0,
+  "pass@3": 0.3
+ },
+ "codex|gpt-5.6-sol|latent-credit-normalize": {
+  "n": 3,
+  "c": 1,
+  "pass@1": 0.3333,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|gpt-5.6-sol|xrepo-fiu-latent": {
+  "n": 10,
+  "c": 1,
+  "pass@1": 0.1,
+  "pass@10": 1.0,
+  "pass@3": 0.3
+ },
+ "terminus-2|gpt-5.6-sol|xrepo-txenrich-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|xrepo-txenrich-latent": {
+  "n": 14,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|latent-phone-invites": {
+  "n": 10,
+  "c": 1,
+  "pass@1": 0.1,
+  "pass@10": 1.0,
+  "pass@3": 0.3
+ },
+ "opencode|gpt-5.6-sol|xrepo-txenrich-latent": {
+  "n": 10,
+  "c": 4,
+  "pass@1": 0.4,
+  "pass@10": 1.0,
+  "pass@3": 0.8333
+ },
+ "codex|gpt-5.6-sol|latent-phone-invites": {
+  "n": 4,
+  "c": 2,
+  "pass@1": 0.5,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|nova-2-lite|latent-doc-extractors": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|claude-opus-4.8|latent-credit-normalize": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gemini-3.5-flash|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|muse-spark-1.1|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-premier|xrepo-txenrich3-latent": {
+  "n": 11,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "terminus-2|gpt-5.6-sol|latent-credit-normalize": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|latent-doc-extractors": {
+  "n": 10,
+  "c": 5,
+  "pass@1": 0.5,
+  "pass@10": 1.0,
+  "pass@3": 0.9167
+ },
+ "opencode|gpt-5.5|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-premier|latent-financial-tools": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|muse-spark-1.1|latent-doc-extractors": {
+  "n": 12,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|muse-spark-1.1|latent-credit-normalize": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-premier|xrepo-txenrich-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-2-lite|latent-phone-invites": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "aider|claude-opus-4.8|latent-phone-invites": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "codex|gpt-5.6-sol|xrepo-fiu-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|nova-premier|xrepo-fiu-latent": {
+  "n": 9,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|nova-2-lite|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "terminus-2|gpt-5.6-sol|latent-phone-invites": {
+  "n": 4,
+  "c": 1,
+  "pass@1": 0.25,
+  "pass@10": null,
+  "pass@3": 0.75
+ },
+ "claude-code|claude-opus-4.8|xrepo-txenrich3-latent": {
+  "n": 2,
+  "c": 1,
+  "pass@1": 0.5,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|nova-premier|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|muse-spark-1.1|xrepo-txenrich-latent": {
+  "n": 11,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gemini-3.5-flash|latent-financial-tools": {
+  "n": 10,
+  "c": 2,
+  "pass@1": 0.2,
+  "pass@10": 1.0,
+  "pass@3": 0.5333
+ },
+ "terminus-2|claude-opus-4.8|latent-doc-extractors": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|latent-credit-normalize": {
+  "n": 8,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|latent-financial-tools": {
+  "n": 9,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "aider|claude-opus-4.8|latent-doc-extractors": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|nova-premier|latent-credit-normalize": {
+  "n": 11,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gpt-5.6-sol|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "aider|claude-opus-4.8|xrepo-txenrich-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "terminus-2|gpt-5.6-sol|latent-doc-extractors": {
+  "n": 3,
+  "c": 2,
+  "pass@1": 0.6667,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "codex|gpt-5.6-sol|xrepo-txenrich-latent": {
+  "n": 3,
+  "c": 2,
+  "pass@1": 0.6667,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|claude-opus-4.8|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|muse-spark-1.1|latent-financial-tools": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|muse-spark-1.1|xrepo-fiu-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gemini-3.5-flash|latent-doc-extractors": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "terminus-2|claude-opus-4.8|latent-financial-tools": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|gemini-3.5-flash|xrepo-txenrich-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|latent-credit-normalize": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "claude-code|claude-opus-4.8|xrepo-txenrich-latent": {
+  "n": 3,
+  "c": 2,
+  "pass@1": 0.6667,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|gpt-5.5|latent-credit-normalize": {
+  "n": 10,
+  "c": 1,
+  "pass@1": 0.1,
+  "pass@10": 1.0,
+  "pass@3": 0.3
+ },
+ "opencode|claude-opus-4.8|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 3,
+  "pass@1": 0.3,
+  "pass@10": 1.0,
+  "pass@3": 0.7083
+ },
+ "opencode|gpt-5.5|xrepo-txenrich4-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|claude-opus-4.8|latent-financial-tools": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gpt-5.6-sol|latent-doc-extractors": {
+  "n": 10,
+  "c": 5,
+  "pass@1": 0.5,
+  "pass@10": 1.0,
+  "pass@3": 0.9167
+ },
+ "aider|claude-opus-4.8|xrepo-txenrich4-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "codex|gpt-5.6-sol|latent-doc-extractors": {
+  "n": 3,
+  "c": 3,
+  "pass@1": 1.0,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "terminus-2|claude-opus-4.8|latent-phone-invites": {
+  "n": 2,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|nova-2-lite|latent-credit-normalize": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "claude-code|claude-opus-4.8|latent-phone-invites": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|xrepo-txenrich4-latent": {
+  "n": 13,
+  "c": 1,
+  "pass@1": 0.0769,
+  "pass@10": 0.7692,
+  "pass@3": 0.2308
+ },
+ "aider|claude-opus-4.8|latent-credit-normalize": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|nova-premier|latent-phone-invites": {
+  "n": 9,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "aider|claude-opus-4.8|xrepo-fiu-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "terminus-2|gpt-5.6-sol|xrepo-txenrich3-latent": {
+  "n": 3,
+  "c": 1,
+  "pass@1": 0.3333,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "terminus-2|claude-opus-4.8|xrepo-fiu-latent": {
+  "n": 1,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|gpt-5.5|latent-financial-tools": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "claude-code|claude-opus-4.8|latent-financial-tools": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "claude-code|claude-opus-4.8|xrepo-fiu-latent": {
+  "n": 2,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "terminus-2|gpt-5.6-sol|xrepo-fiu-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|latent-financial-tools": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "aider|claude-opus-4.8|latent-financial-tools": {
+  "n": 2,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|glm-5.2|xrepo-txenrich3-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gemini-3.5-flash|latent-phone-invites": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gemini-3.5-flash|latent-credit-normalize": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "claude-code|claude-opus-4.8|latent-credit-normalize": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "codex|gpt-5.6-sol|latent-financial-tools": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "opencode|claude-opus-4.8|latent-phone-invites": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|latent-phone-invites": {
+  "n": 10,
+  "c": 1,
+  "pass@1": 0.1,
+  "pass@10": 1.0,
+  "pass@3": 0.3
+ },
+ "claude-code|claude-opus-4.8|latent-doc-extractors": {
+  "n": 3,
+  "c": 3,
+  "pass@1": 1.0,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|gpt-5.5|latent-doc-extractors": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|gpt-5.6-sol|latent-financial-tools": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "opencode|deepseek-v4-pro|latent-doc-extractors": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "terminus-2|claude-opus-4.8|xrepo-txenrich-latent": {
+  "n": 3,
+  "c": 1,
+  "pass@1": 0.3333,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|gpt-5.5|latent-phone-invites": {
+  "n": 10,
+  "c": 7,
+  "pass@1": 0.7,
+  "pass@10": 1.0,
+  "pass@3": 0.9917
+ },
+ "codex|gpt-5.6-sol|xrepo-txenrich3-latent": {
+  "n": 3,
+  "c": 2,
+  "pass@1": 0.6667,
+  "pass@10": null,
+  "pass@3": 1.0
+ },
+ "opencode|nova-2-lite|xrepo-fiu-latent": {
+  "n": 10,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": 0.0,
+  "pass@3": 0.0
+ },
+ "codex|gpt-5.6-sol|xrepo-txenrich4-latent": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ },
+ "terminus-2|claude-opus-4.8|latent-credit-normalize": {
+  "n": 3,
+  "c": 0,
+  "pass@1": 0.0,
+  "pass@10": null,
+  "pass@3": 0.0
+ }
+}
