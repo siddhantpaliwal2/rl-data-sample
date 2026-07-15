@@ -140,10 +140,10 @@ day-add), which also pin that the day-field path is undisturbed.
   gestures at the remaining defect families only at noun level ("identifier and
   payload handling, field validation") with no behavior descriptions. Gate
   history: a first digest that described all five wrong behaviors explicitly
-  was solved 2/3 by the Sonnet screen; the pared-back version passed 0/4
+  was solved 2/3 by the Sonnet screen; the pared-back version passed 0/5
   (every trial fully graded, 19 verdicts each). The old misdirection (implying
   the date-shift helper was also wrong, when `getAddedDate` is correct and
-  p2p-only) has been removed. Final gate: Sonnet 0/4, Opus 0/10 — clean, zero
+  p2p-only) has been removed. Final gate: Sonnet 0/5, Opus 0/10 — clean, zero
   crashes, all 10 Opus trials fully graded. Failure spread (fairness evidence):
   base64-alphabet 10/10 and handle-index 10/10 missed (the two families the
   instruction names only at noun level; both pinned by same-file evidence —

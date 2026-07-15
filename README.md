@@ -81,31 +81,28 @@ verifier. The 0–1/10 tasks below carry that audit in their `reference_plan.md`
 All numbers below are clean runs (zero crashed trials counted; a trial only
 counts when the verifier emitted real per-test verdicts). Five tasks were
 measured with `harness/run_attempt.py` (mini-swe-agent, canonical
-swebench.yaml config, 250-step limit, $3 cost cap per attempt). The three
-marked * were re-gated after their instructions were rewritten into
-bug-report/ticket form: same solver and invocation
-(`mini-swe-agent --yolo --model=…`), run at scale on Daytona cloud sandboxes
-(amd64 images of the same task environments; every image null/oracle-verified
-first).
+swebench.yaml config, 250-step limit, $3 cost cap per attempt). Three
+(`latent-credit-normalize`, `latent-doc-extractors`, `xrepo-fiu-latent`) were
+re-gated after their instructions were rewritten into bug-report/ticket form:
+same solver and invocation (`mini-swe-agent --yolo --model=…`), run at scale
+on Daytona cloud sandboxes (amd64 images of the same task environments; every
+image null/oracle-verified first).
 
 | Task | Substrate | Lang | Opus solves/10 | Sonnet solves/5 |
 |---|---|---|---|---|
-| latent-credit-normalize * | loangenus (66k LOC) | Python | 0/10 | 0/5 |
-| latent-doc-extractors * | loangenus | Python | 4/10 | 0/5 |
+| latent-credit-normalize | loangenus (66k LOC) | Python | 0/10 | 0/5 |
+| latent-doc-extractors | loangenus | Python | 4/10 | 0/5 |
 | latent-financial-tools | loangenus | Python | 0/10 | 0/5 |
 | latent-phone-invites | loangenus | Python | 1/10 | 0/5 |
-| xrepo-fiu-latent * | fiu_adapter (264 files) | Java | 0/10 | 0/4 |
+| xrepo-fiu-latent | fiu_adapter (264 files) | Java | 0/10 | 0/5 |
 | xrepo-txenrich-latent | transaction-enrichment | Python | 1/10 | 0/5 |
 | xrepo-txenrich3-latent | transaction-enrichment | Python | 4/10 | 0/5 |
 | xrepo-txenrich4-latent | transaction-enrichment | Python | 0/10 | 0/5 |
 
-`xrepo-fiu-latent` note: the Sonnet screen is reported over 4 trials (a fifth
-was lost to a transient infra failure, not counted either way); the gate is
-decided regardless, since even a solve on a fifth trial would still pass the
-≤ 1/5 bar. Its 0/10 carries the required fairness audit: misses spread across
-distinct defects (base64 alphabet 10/10, handle-index 10/10, UUID-regex
-precision 4/10, whitespace-emptiness 3/10), each pinned by visible same-file
-evidence, and all 10 trials produced full per-test verdicts.
+`xrepo-fiu-latent` note: its 0/10 carries the required fairness audit — misses
+spread across distinct defects (base64 alphabet 10/10, handle-index 10/10,
+UUID-regex precision 4/10, whitespace-emptiness 3/10), each pinned by visible
+same-file evidence, and all 10 trials produced full per-test verdicts.
 
 
 
