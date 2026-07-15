@@ -1,0 +1,322 @@
+{
+ "harness": "opencode (harbor, Daytona sandboxes 2cpu/4GB, k=1 per cell)",
+ "models": {
+  "amazon": "openrouter/amazon/nova-premier-v1",
+  "anthropic": "openrouter/anthropic/claude-opus-4.8"
+ },
+ "cells": [
+  {
+   "task": "latent-credit-normalize",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "14/19",
+   "f2p_fixed": "0/5",
+   "f2p_missed": [
+    "test_mixed_case_placeholder_is_junk",
+    "test_case_differing_duplicates_collapse",
+    "test_name_prefixed_by_suffix_is_not_address",
+    "test_efx_tag_maps_to_equifax",
+    "test_creditor_starting_with_digit_is_plausible"
+   ],
+   "p2p_broken": [],
+   "steps": 16,
+   "agent_wall_sec": 212,
+   "cost_usd": 0.4645,
+   "prompt_tokens": 162639,
+   "completion_tokens": 4634,
+   "trajectory": "trajectories/latent-credit-normalize--nova-premier.trajectory.json"
+  },
+  {
+   "task": "latent-credit-normalize",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "18/19",
+   "f2p_fixed": "4/5",
+   "f2p_missed": [
+    "test_creditor_starting_with_digit_is_plausible"
+   ],
+   "p2p_broken": [],
+   "steps": 21,
+   "agent_wall_sec": 153,
+   "cost_usd": 0.627,
+   "prompt_tokens": 531970,
+   "completion_tokens": 7708,
+   "trajectory": "trajectories/latent-credit-normalize--opus-4.8.trajectory.json"
+  },
+  {
+   "task": "latent-doc-extractors",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "15/19",
+   "f2p_fixed": "0/4",
+   "f2p_missed": [
+    "test_value_exactly_on_100k_floor_is_kept",
+    "test_two_rent_lines_are_summed",
+    "test_loan_exactly_on_minimum_is_kept",
+    "test_top_of_band_score_is_kept"
+   ],
+   "p2p_broken": [],
+   "steps": 15,
+   "agent_wall_sec": 332,
+   "cost_usd": 0.6431,
+   "prompt_tokens": 200133,
+   "completion_tokens": 11424,
+   "trajectory": "trajectories/latent-doc-extractors--nova-premier.trajectory.json"
+  },
+  {
+   "task": "latent-doc-extractors",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "18/19",
+   "f2p_fixed": "4/4",
+   "f2p_missed": [],
+   "p2p_broken": [
+    "test_single_rent_line_is_not_a_roll"
+   ],
+   "steps": 23,
+   "agent_wall_sec": 189,
+   "cost_usd": 0.7182,
+   "prompt_tokens": 626053,
+   "completion_tokens": 6416,
+   "trajectory": "trajectories/latent-doc-extractors--opus-4.8.trajectory.json"
+  },
+  {
+   "task": "latent-financial-tools",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "14/23",
+   "f2p_fixed": "0/9",
+   "f2p_missed": [
+    "test_two_month_series_reports_volatility",
+    "test_two_month_series_wider_spread_reports_volatility",
+    "test_account_exactly_on_near_limit_cutoff_counts",
+    "test_two_accounts_one_exactly_on_cutoff_both_count",
+    "test_minimal_width_summary_yields_monthly_values",
+    "test_minimal_width_three_month_summary_yields_values",
+    "test_single_severe_late_counts_as_severe",
+    "test_not_applicable_sentinel_is_discarded",
+    "test_not_applicable_sentinel_falls_back_to_default"
+   ],
+   "p2p_broken": [],
+   "steps": 10,
+   "agent_wall_sec": 118,
+   "cost_usd": 0.2462,
+   "prompt_tokens": 89209,
+   "completion_tokens": 1855,
+   "trajectory": "trajectories/latent-financial-tools--nova-premier.trajectory.json"
+  },
+  {
+   "task": "latent-financial-tools",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "22/23",
+   "f2p_fixed": "8/9",
+   "f2p_missed": [
+    "test_single_severe_late_counts_as_severe"
+   ],
+   "p2p_broken": [],
+   "steps": 22,
+   "agent_wall_sec": 227,
+   "cost_usd": 1.1077,
+   "prompt_tokens": 983095,
+   "completion_tokens": 7585,
+   "trajectory": "trajectories/latent-financial-tools--opus-4.8.trajectory.json"
+  },
+  {
+   "task": "latent-phone-invites",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "16/17",
+   "f2p_fixed": "4/5",
+   "f2p_missed": [
+    "test_number_valid_in_no_region_keeps_default_interpretation"
+   ],
+   "p2p_broken": [],
+   "steps": 20,
+   "agent_wall_sec": 192,
+   "cost_usd": 0.5534,
+   "prompt_tokens": 491857,
+   "completion_tokens": 6151,
+   "trajectory": "trajectories/latent-phone-invites--opus-4.8.trajectory.json"
+  },
+  {
+   "task": "latent-phone-invites",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "12/17",
+   "f2p_fixed": "0/5",
+   "f2p_missed": [
+    "test_number_valid_in_no_region_keeps_default_interpretation",
+    "test_double_zero_access_prefix_is_treated_as_plus",
+    "test_default_region_wins_over_earlier_fallback_region",
+    "test_unknown_id_is_humanized_word_by_word",
+    "test_mixed_case_id_resolves_to_stored_lowercase_id"
+   ],
+   "p2p_broken": [],
+   "steps": 21,
+   "agent_wall_sec": 193,
+   "cost_usd": 0.6414,
+   "prompt_tokens": 228878,
+   "completion_tokens": 5539,
+   "trajectory": "trajectories/latent-phone-invites--nova-premier.trajectory.json"
+  },
+  {
+   "task": "xrepo-fiu-latent",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "14/19",
+   "f2p_fixed": "0/5",
+   "f2p_missed": [
+    "base64Decoder_usesUrlSafeAlphabet",
+    "validateCustomerId_returnsHandleAfterAtSign",
+    "uuidValidation_acceptsCanonicalVersion4",
+    "isNullorEmpty_treatsWhitespaceOnlyAsEmpty",
+    "getISOTimeStamp_uses24HourClock"
+   ],
+   "p2p_broken": [],
+   "steps": 9,
+   "agent_wall_sec": 91,
+   "cost_usd": 0.2694,
+   "prompt_tokens": 98188,
+   "completion_tokens": 1916,
+   "trajectory": "trajectories/xrepo-fiu-latent--nova-premier.trajectory.json"
+  },
+  {
+   "task": "xrepo-fiu-latent",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "16/19",
+   "f2p_fixed": "2/5",
+   "f2p_missed": [
+    "base64Decoder_usesUrlSafeAlphabet",
+    "validateCustomerId_returnsHandleAfterAtSign",
+    "isNullorEmpty_treatsWhitespaceOnlyAsEmpty"
+   ],
+   "p2p_broken": [],
+   "steps": 53,
+   "agent_wall_sec": 622,
+   "cost_usd": 1.8871,
+   "prompt_tokens": 2067074,
+   "completion_tokens": 18616,
+   "trajectory": "trajectories/xrepo-fiu-latent--opus-4.8.trajectory.json"
+  },
+  {
+   "task": "xrepo-txenrich-latent",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "12/17",
+   "f2p_fixed": "0/5",
+   "f2p_missed": [
+    "test_sixteen_char_zero_prefixed_remark_is_cheque_deposit",
+    "test_six_digit_credit_in_savings_is_salary",
+    "test_credit_mirroring_prior_debit_is_reversal",
+    "test_transfer_payee_follows_direction_keyword",
+    "test_payee_is_final_segment"
+   ],
+   "p2p_broken": [],
+   "steps": 12,
+   "agent_wall_sec": 227,
+   "cost_usd": 0.3234,
+   "prompt_tokens": 112206,
+   "completion_tokens": 3431,
+   "trajectory": "trajectories/xrepo-txenrich-latent--nova-premier.trajectory.json"
+  },
+  {
+   "task": "xrepo-txenrich-latent",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "16/17",
+   "f2p_fixed": "4/5",
+   "f2p_missed": [
+    "test_payee_is_final_segment"
+   ],
+   "p2p_broken": [],
+   "steps": 44,
+   "agent_wall_sec": 496,
+   "cost_usd": 2.8333,
+   "prompt_tokens": 3282040,
+   "completion_tokens": 22286,
+   "trajectory": "trajectories/xrepo-txenrich-latent--opus-4.8.trajectory.json"
+  },
+  {
+   "task": "xrepo-txenrich3-latent",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "14/19",
+   "f2p_fixed": "0/5",
+   "f2p_missed": [
+    "test_six_digit_remark_debit_is_cheque_paid",
+    "test_rupee_one_mandate_is_account_verification",
+    "test_pos_credit_savings_is_card_payment_reversal",
+    "test_ach_bd_nach_payee_is_final_segment",
+    "test_long_reference_payee_group"
+   ],
+   "p2p_broken": [],
+   "steps": 17,
+   "agent_wall_sec": 130,
+   "cost_usd": 0.493,
+   "prompt_tokens": 176520,
+   "completion_tokens": 4134,
+   "trajectory": "trajectories/xrepo-txenrich3-latent--nova-premier.trajectory.json"
+  },
+  {
+   "task": "xrepo-txenrich3-latent",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "18/19",
+   "f2p_fixed": "4/5",
+   "f2p_missed": [
+    "test_rupee_one_mandate_is_account_verification"
+   ],
+   "p2p_broken": [],
+   "steps": 42,
+   "agent_wall_sec": 449,
+   "cost_usd": 4.1662,
+   "prompt_tokens": 5065989,
+   "completion_tokens": 22730,
+   "trajectory": "trajectories/xrepo-txenrich3-latent--opus-4.8.trajectory.json"
+  },
+  {
+   "task": "xrepo-txenrich4-latent",
+   "model": "amazon/nova-premier-v1",
+   "reward": 0.0,
+   "required_passed": "14/19",
+   "f2p_fixed": "0/5",
+   "f2p_missed": [
+    "test_six_digit_remark_debit_is_cheque_paid",
+    "test_neft_credit_payee_name",
+    "test_chq_paid_payee_is_final_segment",
+    "test_rupee_one_validation_is_verification",
+    "test_upi_credit_payee_name"
+   ],
+   "p2p_broken": [],
+   "steps": 16,
+   "agent_wall_sec": 179,
+   "cost_usd": 0.4261,
+   "prompt_tokens": 156615,
+   "completion_tokens": 2763,
+   "trajectory": "trajectories/xrepo-txenrich4-latent--nova-premier.trajectory.json"
+  },
+  {
+   "task": "xrepo-txenrich4-latent",
+   "model": "anthropic/claude-opus-4.8",
+   "reward": 0.0,
+   "required_passed": "14/19",
+   "f2p_fixed": "0/5",
+   "f2p_missed": [
+    "test_six_digit_remark_debit_is_cheque_paid",
+    "test_neft_credit_payee_name",
+    "test_chq_paid_payee_is_final_segment",
+    "test_rupee_one_validation_is_verification",
+    "test_upi_credit_payee_name"
+   ],
+   "p2p_broken": [],
+   "steps": 69,
+   "agent_wall_sec": 862,
+   "cost_usd": 4.9094,
+   "prompt_tokens": 5929405,
+   "completion_tokens": 46190,
+   "trajectory": "trajectories/xrepo-txenrich4-latent--opus-4.8.trajectory.json"
+  }
+ ]
+}
