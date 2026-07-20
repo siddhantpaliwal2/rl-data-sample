@@ -1,0 +1,122 @@
+# Coding RL from Enterprise Codebases
+
+Eight verifier-gated coding tasks planted in real production fintech codebases
+(Python and Java), with a measured 8-model × 4-harness pass@k matrix and full
+agent trajectories. Sample content lives on the **`general-sample`** branch
+(recipient-neutral) and the **`Amazon-sample`** branch; this page is the
+front door: the task–verifier alignment report and the pass@k report.
+
+Each task takes a large private repo, plants five single-token latent defects
+(the visible test suite stays green; only untested edge inputs go wrong), and
+gives the agent a realistic symptom report. Gold tests are injected only at
+grade time — the agent can never read or weaken them — and reward is
+all-or-nothing: every hidden fail-to-pass test must flip green and no passing
+test may regress.
+
+## Task–verifier alignment report
+
+Alignment is enforced in both directions and then validated against agent
+trajectories.
+
+**Direction 1 — every gold test traces to task language.** Each fail-to-pass
+test corresponds to a specific finding, case, or reported symptom in the
+instruction. No hidden test asserts behavior the instruction gives no basis
+for: a hidden test may only reference names that exist in the visible
+codebase, are stated in the instruction, or are forced by a visible import
+site. Per-task mapping:
+
+| Task | Instruction (format) | Instruction elements | f2p tests | Mapping |
+|---|---|---|---|---|
+| latent-credit-normalize | data-integrity audit memo | findings A–D | 5 | A→1, B→1, C→2 (two stated flavours), D→1 |
+| latent-doc-extractors | bug-tracker ticket | cases 1–4 | 4 | 1:1 per case |
+| latent-financial-tools | incident write-up | 4 margin classes | 9 | each class covered by 1–3 tests |
+| latent-phone-invites | field escalation email | reported symptom families | 5 | 1:1 per family |
+| xrepo-fiu-latent | partner-escalation digest | 2 concrete tickets + 3 noun-level families | 5 | tickets→2, families→3 |
+| xrepo-txenrich-latent | customer forum digest | 3 user posts + maintainer note | 5 | 1 per described behavior |
+| xrepo-txenrich3-latent | SEV-1 incident report | listed regressions | 5 | 1:1 |
+| xrepo-txenrich4-latent | QA regression report | findings F-1…F-5 | 5 | 1:1 |
+
+**Direction 2 — every key instruction claim is tested.** Each stated symptom
+has a gold test that fails at the planted state and passes after the fix, and
+each instruction's "nothing that currently works may change" clause is
+enforced by 12–20 pass-to-pass guardrail tests per task pinning adjacent
+behavior on both sides of every boundary. This is not just designed but
+observed: in one measured attempt, a frontier model fixed every reported case
+and then widened a minimum one notch past what the ticket stated — a
+pass-to-pass test caught it and correctly withheld reward. The verifier
+enforces the instruction's stated boundary, not merely the bug list.
+
+**Mechanical alignment gates (run per task before acceptance):**
+
+- **Null**: the untouched planted state scores 0 and every f2p test fails
+  individually (no collection errors) — the defects are real and the tests
+  detect exactly them.
+- **Oracle**: the reference fix scores 1 with all f2p and p2p green — the
+  task is solvable and the verifier satisfiable.
+- **Partial**: fixing roughly half the defects still scores 0 — reward
+  tracks complete task success, not test-count progress.
+- **Alternative-implementation audit**: for each defect, materially different
+  correct fixes (different edit site or idiom with the same behavior) also
+  pass — verified in practice when models fixed defects with different edits
+  than the oracle patch and were rewarded. The tests assert behavior, never
+  the oracle's implementation.
+
+**Trajectory-verified alignment (~780 valid attempts analyzed).** Following
+per-test verdicts across every attempt: failures concentrate on the planted
+defects themselves, not on missing context. Example — on the Java task,
+misses across 10 frontier-model attempts spread over four distinct defect
+families (10/10, 10/10, 4/10, 3/10), each family's correct fix pinned by
+visible same-file evidence; no attempt failed on an assertion the instruction
+and codebase gave no path to. Where an attempt was invalidated by
+infrastructure rather than the model (missing per-test verdicts), it was
+excluded from every reported number.
+
+**Disclosed exceptions** (stated in-repo rather than papered over): one task
+reward-gates four of its five planted defects (the fifth is fixed by the
+oracle but no graded test distinguishes it), and two agent configurations
+were excluded from the matrix after trace review showed harness-level faults
+rather than model failures.
+
+## Pass@k report
+
+Every model attempted every task ~10 times on the OpenCode harness (one
+isolated 2-CPU/4-GB sandbox per attempt; a trial counts only if the verifier
+emitted real per-test verdicts). pass@k uses the unbiased estimator
+1 − C(n−c,k)/C(n,k), averaged over the eight tasks.
+
+| Model (OpenCode, n≈10/cell) | mean pass@1 | mean pass@10 | tasks solved ≥ once |
+|---|---|---|---|
+| gpt-5.6-sol | 0.200 | 0.750 | 6/8 |
+| claude-opus-4.8 | 0.100 | 0.375 | 3/8 |
+| gpt-5.5 | 0.100 | 0.250 | 2/8 |
+| glm-5.2 | 0.097 | 0.471 | 4/8 |
+| gemini-3.5-flash | 0.025 | 0.125 | 1/8 |
+| deepseek-v4-pro | 0.013 | 0.125 | 1/8 |
+| nova-2-lite | 0.000 | 0.000 | 0/8 |
+| nova-premier | 0.000 | 0.000 | 0/8 |
+
+Harness axis (flagships, n≈3 per cell): codex+gpt-5.6-sol 0.396 pass@1 /
+0.625 pass@3 · claude-code+opus-4.8 0.271 / 0.375 · terminus-2+sol 0.156 /
+0.344 · terminus-2+opus 0.083 / 0.250 · mini-swe-agent+opus 0.075 pass@1
+(n=10). The same model spans up to 3.6× on harness choice alone.
+
+Properties worth noting: attempt-scaling rescues capable models and does
+nothing for incapable ones (Sol 0.20→0.75 across k; the zero rows stay zero
+across ~160 attempts); every task has at least one non-oracle solve — the
+two hardest fell to unexpected models (GLM-5.2 alone cracked one at 1/13,
+Gemini alone the other at 2/10) — while those two hold under 3% pass@1
+across all twelve valid configurations. The per-cell c/n matrix, per-trial
+data (`sample-run/passk_matrix.json`), a full analysis with failure
+taxonomies (`sample-run/analysis.md`), and one complete trajectory per
+model×task cell — a solving one wherever any exists, with step counts,
+wall-clock, and cost — are on the sample branches.
+
+## Where to look
+
+- `general-sample` branch — the shareable sample: `tasks/`, `instructions/`
+  (task prompts as they'd arrive from a PM/QA/partner), `gold-tests/`
+  (extracted verifier suites), `sample-run/` (matrix data, analysis,
+  96-trajectory corpus), reproduction harness and image recipes.
+- `Amazon-sample` branch — same bank plus a two-model deep-dive study.
+- Two-minute verification, zero model calls: build any task image and run
+  its null and oracle checks (`HANDOFF.md` on the sample branches).
