@@ -18,23 +18,40 @@ test may regress.
 Alignment is enforced in both directions and then validated against agent
 trajectories.
 
-**Direction 1 — every gold test traces to task language.** Each fail-to-pass
-test corresponds to a specific finding, case, or reported symptom in the
-instruction. No hidden test asserts behavior the instruction gives no basis
-for: a hidden test may only reference names that exist in the visible
-codebase, are stated in the instruction, or are forced by a visible import
-site. Per-task mapping:
+**Direction 1 — every gold test traces to task language.** Each hidden
+fail-to-pass test exists because the instruction reported that exact problem.
+A concrete example from `xrepo-txenrich4-latent`, whose instruction is a QA
+regression report listing five findings:
 
-| Task | Instruction (format) | Instruction elements | f2p tests | Mapping |
-|---|---|---|---|---|
-| latent-credit-normalize | data-integrity audit memo | findings A–D | 5 | A→1, B→1, C→2 (two stated flavours), D→1 |
-| latent-doc-extractors | bug-tracker ticket | cases 1–4 | 4 | 1:1 per case |
-| latent-financial-tools | incident write-up | 4 margin classes | 9 | each class covered by 1–3 tests |
-| latent-phone-invites | field escalation email | reported symptom families | 5 | 1:1 per family |
-| xrepo-fiu-latent | partner-escalation digest | 2 concrete tickets + 3 noun-level families | 5 | tickets→2, families→3 |
-| xrepo-txenrich-latent | customer forum digest | 3 user posts + maintainer note | 5 | 1 per described behavior |
-| xrepo-txenrich3-latent | SEV-1 incident report | listed regressions | 5 | 1:1 |
-| xrepo-txenrich4-latent | QA regression report | findings F-1…F-5 | 5 | 1:1 |
+> **F-5.** A small nominal deposit that a bank posts purely to confirm an
+> account is reachable — the token "is this account live" credit rather than
+> a real payment — is being filed as an ordinary transfer instead of being
+> recognised as an account-verification entry.
+
+maps to exactly one hidden test:
+
+```python
+def test_rupee_one_validation_is_verification(self):
+    # feeds a ₹1 confirmation credit; asserts category == ACCOUNT_VERIFICATION
+```
+
+That pattern holds across the bank — each thing the instruction reports, one
+hidden test verifies. In plain terms, per task:
+
+| Task | What the agent reads | Hidden tests | How they line up |
+|---|---|---|---|
+| latent-credit-normalize | an audit memo reporting 4 data-quality problems in parsed credit reports | 5 | one test per problem; the problem described with two variants gets two tests |
+| latent-doc-extractors | a bug ticket with 4 cases of document fields coming back empty | 4 | one test per case |
+| latent-financial-tools | an incident write-up describing 4 kinds of wrong financial figures | 9 | each kind covered by 1–3 tests |
+| latent-phone-invites | an escalation email listing 5 CRM data-quality complaints | 5 | one test per complaint |
+| xrepo-fiu-latent | 2 partner tickets with concrete symptoms + a triage note that 3 more helpers drift the same way | 5 | one test per ticket, one per drifting helper |
+| xrepo-txenrich-latent | a forum digest: 3 user posts + 1 maintainer repro about mislabeled bank transactions | 5 | one test per described mislabel |
+| xrepo-txenrich3-latent | a SEV-1 incident report listing 5 label regressions | 5 | one test per regression |
+| xrepo-txenrich4-latent | a QA report with findings F-1 to F-5 | 5 | one test per finding |
+
+No hidden test asserts behavior the instruction gives no basis for: a hidden
+test may only reference names that exist in the visible codebase, are stated
+in the instruction, or are forced by a visible import site.
 
 **Direction 2 — every key instruction claim is tested.** Each stated symptom
 has a gold test that fails at the planted state and passes after the fix, and
